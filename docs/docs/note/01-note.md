@@ -1,4 +1,4 @@
-# Project Syntropy: The Autonomous Commerce Protocol
+# The Autonomous Commerce Protocol
 
 > Restoring Economic Equilibrium via x402 & 2-Layer Agent Architecture
 

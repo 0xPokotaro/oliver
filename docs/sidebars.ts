@@ -4,7 +4,7 @@ const sidebars: SidebarsConfig = {
   docsSidebar: [
     {
       type: 'category',
-      label: '1. Introduction (はじめに)',
+      label: '1. Introduction',
       items: [
         'introduction/welcome',
         {
@@ -20,7 +20,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: '2. Architecture (アーキテクチャ)',
+      label: '2. Architecture',
       items: [
         'architecture/system-overview',
         {
@@ -44,7 +44,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: '3. Protocol Specification (プロトコル仕様)',
+      label: '3. Protocol Specification',
       items: [
         {
           type: 'category',
@@ -74,11 +74,11 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: '4. Developer Guide (開発者ガイド)',
+      label: '4. Developer Guide',
       items: [
         {
           type: 'category',
-          label: 'For Merchants (サービス提供者向け)',
+          label: 'For Merchants',
           items: [
             'developer-guide/merchants/getting-started',
             'developer-guide/merchants/middleware-sdk',
@@ -87,7 +87,7 @@ const sidebars: SidebarsConfig = {
         },
         {
           type: 'category',
-          label: 'For Agent Builders (エージェント開発者向け)',
+          label: 'For Agent Builders',
           items: [
             'developer-guide/agent-builders/building-layer2-module',
             'developer-guide/agent-builders/wallet-integration',
@@ -97,7 +97,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: '5. Use Cases (ユースケース)',
+      label: '5. Use Cases',
       items: [
         'use-cases/physical-replenishment',
         'use-cases/on-demand-workforce',
@@ -106,13 +106,24 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: '6. Roadmap (ロードマップ)',
+      label: '6. Roadmap',
       items: [
         'roadmap/phase1-poc',
         'roadmap/phase2-smart-accounts',
         'roadmap/phase3-global-infrastructure',
       ],
     },
+    {
+      type: 'category',
+      label: '7. Note',
+      items: [
+        'note/note',
+        'note/architecture',
+        'note/aa',
+        'note/erc-eip',
+        'note/biconomy',
+      ],
+    }
   ],
 };
 

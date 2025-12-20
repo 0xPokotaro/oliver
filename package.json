@@ -1,11 +1,12 @@
 {
   "name": "oliver",
   "version": "1.0.0",
+  "private": true,
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "evm:node": "pnpm -F evm node",
-    "evm:deploy:erc20": "pnpm -F evm deploy:erc20"
-  },
-  "packageManager": "pnpm@10.14.0"
+    "web:dev": "pnpm --filter web dev",
+    "docs:start": "pnpm --filter docs start",
+    "evm:node": "pnpm --filter evm node",
+    "evm:deploy:erc20": "pnpm --filter evm deploy:erc20"
+  }
 }
