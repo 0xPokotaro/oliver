@@ -50,9 +50,6 @@ importers:
 
   packages/evm:
     dependencies:
-      '@account-abstraction/contracts':
-        specifier: ^0.8.0
-        version: 0.8.0
       '@openzeppelin/contracts':
         specifier: ^5.4.0
         version: 5.4.0
@@ -83,9 +80,6 @@ importers:
         version: 2.43.2(typescript@5.8.3)(zod@3.25.76)
 
 packages:
-
-  '@account-abstraction/contracts@0.8.0':
-    resolution: {integrity: sha512-8krPx/gpnoT+5xAroagVCbeA7FbUigMZWXFKKPm+oghyr29Dksssdx5sI7xGv9212i4JPaDDUGFk58dpuwVgHA==}
 
   '@actions/core@1.11.1':
     resolution: {integrity: sha512-hXJCSrkwfA46Vd9Z3q4cpEpHB1rL5NG04+/rbqW9d3+CSvtB1tYe8UTpAlixa1vj0m/ULglfEK2UKxMGxCxv5A==}
@@ -1819,9 +1813,6 @@ packages:
     resolution: {integrity: sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg==}
     engines: {node: '>=8.0.0'}
 
-  '@openzeppelin/contracts@3.4.2-solc-0.7':
-    resolution: {integrity: sha512-W6QmqgkADuFcTLzHL8vVoNBtkwjvQRpYIAom7KiUNoLKghyx3FgH0GBjt8NRvigV1ZmMOBllvE1By1C+bi8WpA==}
-
   '@openzeppelin/contracts@5.4.0':
     resolution: {integrity: sha512-eCYgWnLg6WO+X52I16TZt8uEjbtdkgLC0SUX/xnAksjjrQI4Xfn4iBRoI5j55dmlOhDv1Y7BoR3cU7e3WWhC6A==}
 
@@ -2235,22 +2226,6 @@ packages:
   '@ungap/structured-clone@1.3.0':
     resolution: {integrity: sha512-WmoN8qaIAo7WTYWbAZuG8PYEhn5fkz7dZrqTBZ7dtt//lL2Gwms1IcnQ5yHqjDfX8Ft5j4YzDM23f87zBfDe9g==}
 
-  '@uniswap/lib@4.0.1-alpha':
-    resolution: {integrity: sha512-f6UIliwBbRsgVLxIaBANF6w09tYqc6Y/qXdsrbEmXHyFA7ILiKrIwRFXe1yOg8M3cksgVsO9N7yuL2DdCGQKBA==}
-    engines: {node: '>=10'}
-
-  '@uniswap/v2-core@1.0.1':
-    resolution: {integrity: sha512-MtybtkUPSyysqLY2U210NBDeCHX+ltHt3oADGdjqoThZaFRDKwM6k1Nb3F0A3hk5hwuQvytFWhrWHOEq6nVJ8Q==}
-    engines: {node: '>=10'}
-
-  '@uniswap/v3-core@1.0.1':
-    resolution: {integrity: sha512-7pVk4hEm00j9tc71Y9+ssYpO6ytkeI0y7WE9P6UcmNzhxPePwyAxImuhVsTqWK9YFvzgtvzJHi64pBl4jUzKMQ==}
-    engines: {node: '>=10'}
-
-  '@uniswap/v3-periphery@1.4.4':
-    resolution: {integrity: sha512-S4+m+wh8HbWSO3DKk4LwUCPZJTpCugIsHrWR86m/OrUyvSqGDTXKFfc2sMuGXCZrD1ZqO3rhQsKgdWg3Hbb2Kw==}
-    engines: {node: '>=10'}
-
   '@vercel/oidc@3.0.5':
     resolution: {integrity: sha512-fnYhv671l+eTTp48gB4zEsTW/YtRgRPnkI2nT7x6qw5rkI1Lq2hTmQIpHPgyThI0znLK+vX2n9XxKdXZ7BUbbw==}
     engines: {node: '>= 20'}
@@ -2492,9 +2467,6 @@ packages:
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
-
-  base64-sol@1.0.1:
-    resolution: {integrity: sha512-ld3cCNMeXt4uJXmLZBHFGMvVpK9KsLVEhPpFRXnvSVAqABKbuNZg/+dsq3NuM+wxFLb/UrVkz7m1ciWmkMfTbg==}
 
   baseline-browser-mapping@2.9.11:
     resolution: {integrity: sha512-Sg0xJUNDU1sJNGdfGWhVHX0kkZ+HWcvmVymJbj6NSgZZmW/8S9Y2HQ5euytnIgakgxN6papOAWiwDo1ctFDcoQ==}
@@ -6144,11 +6116,6 @@ packages:
 
 snapshots:
 
-  '@account-abstraction/contracts@0.8.0':
-    dependencies:
-      '@openzeppelin/contracts': 5.4.0
-      '@uniswap/v3-periphery': 1.4.4
-
   '@actions/core@1.11.1':
     dependencies:
       '@actions/exec': 1.1.1
@@ -8794,8 +8761,6 @@ snapshots:
 
   '@opentelemetry/api@1.9.0': {}
 
-  '@openzeppelin/contracts@3.4.2-solc-0.7': {}
-
   '@openzeppelin/contracts@5.4.0': {}
 
   '@pnpm/config.env-replace@1.1.0': {}
@@ -9277,20 +9242,6 @@ snapshots:
 
   '@ungap/structured-clone@1.3.0': {}
 
-  '@uniswap/lib@4.0.1-alpha': {}
-
-  '@uniswap/v2-core@1.0.1': {}
-
-  '@uniswap/v3-core@1.0.1': {}
-
-  '@uniswap/v3-periphery@1.4.4':
-    dependencies:
-      '@openzeppelin/contracts': 3.4.2-solc-0.7
-      '@uniswap/lib': 4.0.1-alpha
-      '@uniswap/v2-core': 1.0.1
-      '@uniswap/v3-core': 1.0.1
-      base64-sol: 1.0.1
-
   '@vercel/oidc@3.0.5': {}
 
   '@webassemblyjs/ast@1.14.1':
@@ -9555,8 +9506,6 @@ snapshots:
   bail@2.0.2: {}
 
   balanced-match@1.0.2: {}
-
-  base64-sol@1.0.1: {}
 
   baseline-browser-mapping@2.9.11: {}
 
