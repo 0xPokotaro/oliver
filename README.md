@@ -3,6 +3,6 @@
 ## Quick start
 
 ```bash
-pnpm evm:node
-pnpm evm:deploy:erc20
+yarn evm:node
+yarn evm:deploy:erc20
 ```
