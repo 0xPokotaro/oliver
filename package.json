@@ -4,10 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "evm:node": "pnpm -F evm node",
+    "evm:deploy:erc20": "pnpm -F evm deploy:erc20"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "packageManager": "pnpm@10.14.0"
 }
