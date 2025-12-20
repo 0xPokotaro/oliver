@@ -4,8 +4,11 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
     "node": "hardhat node",
-    "deploy:erc20": "hardhat ignition deploy ignition/modules/MockERC20.ts"
+    "deploy:erc20": "hardhat ignition deploy ignition/modules/MockERC20.ts --network local",
+    "clean": "hardhat clean"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-ignition": "^3.0.6",
