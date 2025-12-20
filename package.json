@@ -3,12 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "description": "",
-  "main": "index.js",
-  "workspaces": [
-    "packages/*",
-    "docs"
-  ],
   "scripts": {
+    "web:dev": "pnpm --filter web dev",
     "docs:start": "pnpm --filter docs start",
     "evm:node": "pnpm --filter evm node",
     "evm:deploy:erc20": "pnpm --filter evm deploy:erc20"
