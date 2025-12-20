@@ -306,7 +306,8 @@ export const RadixSidebarDemo = ({
                 // サブ項目がアクティブかどうかをチェック
                 const hasActiveSubItem =
                   item.items?.some(
-                    (subItem) => subItem.url !== "#" && pathname === subItem.url
+                    (subItem) =>
+                      subItem.url !== "#" && pathname === subItem.url,
                   ) ?? false;
 
                 return (
@@ -334,7 +335,10 @@ export const RadixSidebarDemo = ({
                               subItem.url !== "#" && pathname === subItem.url;
                             return (
                               <SidebarMenuSubItem key={subItem.title}>
-                                <SidebarMenuSubButton asChild isActive={isSubItemActive}>
+                                <SidebarMenuSubButton
+                                  asChild
+                                  isActive={isSubItemActive}
+                                >
                                   {subItem.url !== "#" ? (
                                     <Link href={subItem.url}>
                                       <span>{subItem.title}</span>
@@ -520,11 +524,8 @@ export const RadixSidebarDemo = ({
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          {children}
-        </div>
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );
 };
-

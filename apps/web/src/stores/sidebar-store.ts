@@ -9,4 +9,3 @@ export const useSidebarStore = create<SidebarStore>((set) => ({
   activeMenuTitle: null,
   setActiveMenu: (title) => set({ activeMenuTitle: title }),
 }));
-
