@@ -4,6 +4,9 @@
   "private": true,
   "description": "",
   "scripts": {
+    "db:start": "supabase start",
+    "db:stop": "supabase stop",
+    "db:gen": "pnpm --filter web prisma:gen",
     "web:dev": "pnpm --filter web dev",
     "docs:start": "pnpm --filter docs start",
     "evm:node": "pnpm --filter evm node",
