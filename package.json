@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "node": "pnpm --filter evm run node",
+    "deploy:contracts": "pnpm --filter evm run deploy",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
