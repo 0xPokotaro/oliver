@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "../apps/merchant-api",
+    "../apps/facilitator-api",
+]
+

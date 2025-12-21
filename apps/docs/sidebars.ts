@@ -76,6 +76,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: '4. Developer Guide',
       items: [
+        'developer-guide/monorepo-structure',
         {
           type: 'category',
           label: 'For Merchants',
@@ -91,6 +92,13 @@ const sidebars: SidebarsConfig = {
           items: [
             'developer-guide/agent-builders/building-layer2-module',
             'developer-guide/agent-builders/wallet-integration',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'API Reference',
+          items: [
+            'developer-guide/api-reference/api-specification',
           ],
         },
       ],
