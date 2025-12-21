@@ -86,7 +86,12 @@ async function createEIP2612PermitSignature(
   };
 
   // 署名を実行
+  const account = walletClient.account;
+  if (!account) {
+    throw new Error("No account found in wallet client");
+  }
   const signature = await signTypedData(walletClient, {
+    account,
     domain,
     types,
     primaryType: "Permit",
@@ -149,7 +154,12 @@ async function createEIP712PaymentIntentSignature(
   };
 
   // 署名を実行
+  const account = walletClient.account;
+  if (!account) {
+    throw new Error("No account found in wallet client");
+  }
   const signature = await signTypedData(walletClient, {
+    account,
     domain,
     types,
     primaryType: "PaymentIntent",
