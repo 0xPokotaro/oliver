@@ -1,7 +1,7 @@
 ---
 id: about
 title: About Oliver
-sidebar_label: Introduction
+sidebar_label: About Oliver
 ---
 
 # About Oliver
