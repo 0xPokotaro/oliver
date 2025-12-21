@@ -80,12 +80,83 @@ cargo test test_health_check
 cargo test -- --nocapture
 ```
 
+### コードカバレッジの確認
+
+コードカバレッジを確認するには、`cargo-tarpaulin`を使用します。
+
+**インストール:**
+
+```bash
+cargo install cargo-tarpaulin
+```
+
+**カバレッジの実行:**
+
+```bash
+# カバレッジを測定（HTMLレポート付き）
+cargo tarpaulin --out Html --output-dir ./coverage
+
+# カバレッジを測定（ターミナルに出力）
+cargo tarpaulin
+
+# カバレッジを測定（XMLレポート出力、CI/CD用）
+cargo tarpaulin --out Xml
+
+# 特定のパッケージのみ測定
+cargo tarpaulin --package merchant-api
+
+# テストをスキップしてカバレッジのみ確認
+cargo tarpaulin --skip-clean
+
+# 閾値を設定（80%未満で失敗）
+cargo tarpaulin --fail-under 80
+```
+
+**HTMLレポートの確認:**
+
+```bash
+# カバレッジレポートを開く（macOS）
+open coverage/tarpaulin-report.html
+
+# カバレッジレポートを開く（Linux）
+xdg-open coverage/tarpaulin-report.html
+```
+
+**注意事項:**
+
+- `cargo-tarpaulin`はLinux/macOS/WSLで動作します
+- WindowsではWSLまたはDockerコンテナ内での実行を推奨
+- カバレッジ測定には追加のビルド時間がかかります
+
 ### 型定義の自動生成
 
-TypeScript型定義を自動生成する場合：
+Rustの型定義からTypeScript型定義を自動生成するには、`typeshare`を使用します。
+
+**インストール:**
 
 ```bash
 cargo install typeshare-cli
+```
+
+**型生成の実行:**
+
+ルートディレクトリから実行：
+
+```bash
+pnpm types:sync
+```
+
+または、`apps/merchant-api`ディレクトリから直接実行：
+
+```bash
+cd apps/merchant-api
 typeshare . --lang=typescript --output-file=../../packages/types/src/generated/merchant-api.ts
 ```
+
+**生成されるファイル:**
+- `packages/types/src/generated/merchant-api.ts`
+
+**注意事項:**
+- `#[typeshare]`属性が付与された型のみが生成されます
+- `src/models/mod.rs`の`Product`と`StockStatus`が生成対象です
 

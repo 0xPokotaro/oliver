@@ -1,23 +1,26 @@
 mod config;
+mod error;
 mod handlers;
+mod models;
+mod repository;
+mod state;
 mod types;
+mod utils;
+
+pub use state::AppState;
 
 use anyhow::Context;
 use axum::{routing::get, Router};
 use config::{get_db_pool, get_port, get_x402_config};
-use sqlx::PgPool;
 use std::sync::Arc;
 
 /// アプリケーションのルーターを構築
-fn create_app(
-    x402_config: Arc<types::X402Config>,
-    db_pool: PgPool,
-) -> Router {
+fn create_app(state: AppState) -> Router {
     Router::new()
         .route("/api/v1/health", get(handlers::health::get_health))
         .route("/api/v1/products", get(handlers::products::get_products))
         .route("/api/x402/resource", get(handlers::resource::get_resource))
-        .with_state((x402_config, db_pool))
+        .with_state(state)
 }
 
 #[tokio::main]
@@ -28,7 +31,12 @@ async fn main() -> anyhow::Result<()> {
     let db_pool = get_db_pool().await.context("Failed to create database pool")?;
     let port = get_port();
 
-    let app = create_app(x402_config, db_pool);
+    let state = AppState {
+        x402_config,
+        db_pool,
+    };
+
+    let app = create_app(state);
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", port))
         .await
         .context("Failed to bind to address")?;

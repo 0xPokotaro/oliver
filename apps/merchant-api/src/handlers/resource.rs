@@ -1,15 +1,14 @@
-use crate::types::X402Config;
 use axum::{
     extract::State,
     http::HeaderMap,
     response::Response,
 };
-use std::sync::Arc;
+use crate::state::AppState;
 
 /// GET /api/x402/resource ハンドラー
 pub async fn get_resource(
     _headers: HeaderMap,
-    State((_config, _db_pool)): State<(Arc<X402Config>, sqlx::PgPool)>,
+    State(_state): State<AppState>,
 ) -> Response {
     // TODO: X-PAYMENTヘッダーを取得
     // TODO: x402ミドルウェアで決済を検証
