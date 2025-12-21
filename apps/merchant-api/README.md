@@ -13,6 +13,9 @@ Rust/Axumベースのx402リソースサーバーです。
 `.env`ファイルを作成し、以下の環境変数を設定してください：
 
 ```env
+# Database Configuration
+DATABASE_URL=postgresql://user:password@localhost:5432/oliver
+
 # X402 Configuration
 X402_PAY_TO=0x1234567890123456789012345678901234567890
 X402_ASSET=0xabcdefabcdefabcdefabcdefabcdefabcdefabcd
@@ -58,6 +61,7 @@ x402決済プロトコルで保護されたリソースを取得します。
 
 - **Axum**: Webフレームワーク
 - **Tokio**: 非同期ランタイム
+- **sqlx**: PostgreSQLデータベース接続（非同期）
 - **Reqwest**: Facilitator APIとの通信
 - **Serde**: JSONシリアライゼーション
 

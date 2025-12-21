@@ -39,17 +39,21 @@ model Merchant {
 }
 
 model Product {
-  id        String   @id @default(uuid())
-  name      String
+  id          String   @id @default(uuid())
+  sku         String   @unique  // 商品SKU
+  name        String
   description String
-  price     Int
-  category  String?  // カテゴリ（例: "cat_food", "dog_food"など）
-  attributes Json?   // カテゴリごとの属性（キー・バリューのマップ）
-  merchantId String
-  merchant   Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
-  payments  PaymentHistory[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  price       BigInt   // wei単位の価格（6桁小数点想定）
+  currency    String   @default("0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913")  // トークンコントラクトアドレス
+  stockStatus String   @default("in_stock")  // 在庫ステータス（"in_stock" | "low_stock" | "out_of_stock"）
+  imageUrl    String?  // 商品画像URL
+  category    String?  // カテゴリ（例: "cat_food", "dog_food"など）
+  attributes  Json?    // カテゴリごとの属性（キー・バリューのマップ）
+  merchantId  String
+  merchant    Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  payments    PaymentHistory[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@map("products")
 }

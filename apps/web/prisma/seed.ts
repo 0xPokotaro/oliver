@@ -63,13 +63,19 @@ async function main() {
 
   // 商品データを作成
   console.log("🛍️ Creating products...");
+  const defaultCurrency = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"; // USDC on Base
+  
   const products = await prisma.product.createMany({
     data: [
       {
+        sku: "nutro-natural-choice-adult-chicken-2kg",
         name: "Nutro ナチュラルチョイス 成猫用 チキン",
         description:
           "高品質なチキンを主原料とした、成猫向けの栄養バランスの取れたドライフード。天然の抗酸化物質を含み、健康的な被毛と皮膚をサポートします。",
-        price: 2980,
+        price: BigInt(2980000000), // 2980 USD (6桁小数点想定: 2980 * 1000000)
+        currency: defaultCurrency,
+        stockStatus: "in_stock",
+        imageUrl: "https://assets.oliver.dev/products/nutro-natural-choice-chicken.png",
         category: "cat_food",
         merchantId: merchant1.id,
         attributes: {
@@ -87,10 +93,14 @@ async function main() {
         },
       },
       {
+        sku: "nutro-ultra-adult-salmon-2kg",
         name: "Nutro ウルトラ 成猫用 サーモン",
         description:
           "サーモンを主原料としたプレミアムドライフード。オメガ3脂肪酸が豊富で、関節の健康と免疫システムをサポートします。",
-        price: 3480,
+        price: BigInt(3480000000), // 3480 USD
+        currency: defaultCurrency,
+        stockStatus: "in_stock",
+        imageUrl: "https://assets.oliver.dev/products/nutro-ultra-salmon.png",
         category: "cat_food",
         merchantId: merchant1.id,
         attributes: {
@@ -106,10 +116,14 @@ async function main() {
         },
       },
       {
+        sku: "nutro-natural-choice-kitten-chicken-rice-1.5kg",
         name: "Nutro ナチュラルチョイス 子猫用 チキン&ライス",
         description:
           "成長期の子猫に必要な栄養素をバランス良く配合。DHAが豊富で、脳と目の発達をサポートします。",
-        price: 3280,
+        price: BigInt(3280000000), // 3280 USD
+        currency: defaultCurrency,
+        stockStatus: "in_stock",
+        imageUrl: "https://assets.oliver.dev/products/nutro-kitten-chicken-rice.png",
         category: "cat_food",
         merchantId: merchant1.id,
         attributes: {
@@ -125,10 +139,14 @@ async function main() {
         },
       },
       {
+        sku: "royal-canin-indoor-cat-2kg",
         name: "ロイヤルカナン インドアキャット 2kg",
         description:
           "室内飼いの猫用に特別に開発されたドライフード。消化率が高く、糞便の臭いを軽減します。",
-        price: 3200,
+        price: BigInt(3200000000), // 3200 USD
+        currency: defaultCurrency,
+        stockStatus: "in_stock",
+        imageUrl: "https://assets.oliver.dev/products/rc-2kg.png",
         category: "cat_food",
         merchantId: merchant2.id,
         attributes: {
@@ -144,10 +162,14 @@ async function main() {
         },
       },
       {
+        sku: "hills-science-diet-adult-chicken-2kg",
         name: "ヒルズ サイエンス・ダイエット 成猫用 チキン",
         description:
           "獣医師が推奨するプレミアムドライフード。健康的な体重維持と消化器の健康をサポートします。",
-        price: 3500,
+        price: BigInt(3500000000), // 3500 USD
+        currency: defaultCurrency,
+        stockStatus: "low_stock",
+        imageUrl: "https://assets.oliver.dev/products/hills-science-diet-chicken.png",
         category: "cat_food",
         merchantId: merchant2.id,
         attributes: {
@@ -163,10 +185,14 @@ async function main() {
         },
       },
       {
+        sku: "water-2l-box",
         name: "ミネラルウォーター 2L × 6本",
         description:
           "天然のミネラルを豊富に含む、おいしいミネラルウォーター。6本セットです。",
-        price: 800,
+        price: BigInt(800000000), // 800 USD
+        currency: defaultCurrency,
+        stockStatus: "in_stock",
+        imageUrl: "https://assets.oliver.dev/products/water-2l-box.png",
         category: "beverage",
         merchantId: merchant3.id,
         attributes: {
@@ -180,10 +206,14 @@ async function main() {
         },
       },
       {
+        sku: "toilet-paper-12roll",
         name: "トイレットペーパー 12ロール",
         description:
           "やわらかくて丈夫なトイレットペーパー。12ロール入りです。",
-        price: 1200,
+        price: BigInt(1200000000), // 1200 USD
+        currency: defaultCurrency,
+        stockStatus: "in_stock",
+        imageUrl: "https://assets.oliver.dev/products/toilet-paper-12roll.png",
         category: "daily_goods",
         merchantId: merchant3.id,
         attributes: {

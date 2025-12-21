@@ -9,7 +9,7 @@ use std::sync::Arc;
 /// GET /api/x402/resource ハンドラー
 pub async fn get_resource(
     _headers: HeaderMap,
-    State(_config): State<Arc<X402Config>>,
+    State((_config, _db_pool)): State<(Arc<X402Config>, sqlx::PgPool)>,
 ) -> Response {
     // TODO: X-PAYMENTヘッダーを取得
     // TODO: x402ミドルウェアで決済を検証
