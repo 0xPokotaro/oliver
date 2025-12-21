@@ -43,7 +43,7 @@ async function example1_ManualPaymentHeader() {
   });
 
   // 決済ヘッダーを使用してリクエストを送信
-  const response = await fetch("/api/protected/resource", {
+  const response = await fetch("/api/x402/resource", {
     headers: {
       "X-PAYMENT": paymentHeader,
     },
@@ -77,7 +77,7 @@ async function example2_AutomaticPayment() {
   // 自動決済付きフェッチ
   // 402レスポンスが返ってきた場合、自動的に決済ヘッダーを生成して再リクエスト
   const response = await fetchWithX402(
-    "/api/protected/resource",
+    "/api/x402/resource",
     { method: "GET" },
     {
       tokenAddress: "0x...", // トークンコントラクトアドレス
@@ -121,7 +121,7 @@ function ProtectedResourceComponent() {
     setLoading(true);
     try {
       const response = await fetchWithX402(
-        "/api/protected/resource",
+        "/api/x402/resource",
         { method: "GET" },
         {
           tokenAddress: process.env.NEXT_PUBLIC_TOKEN_ADDRESS!,
@@ -164,7 +164,7 @@ function ProtectedResourceComponent() {
 async function example4_ErrorHandling() {
   try {
     const response = await fetchWithX402(
-      "/api/protected/resource",
+      "/api/x402/resource",
       { method: "GET" },
       {
         tokenAddress: "0x...",

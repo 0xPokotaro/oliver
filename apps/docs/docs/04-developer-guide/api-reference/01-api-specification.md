@@ -96,7 +96,7 @@ x402決済プロトコルを使用したリクエストの作成手順：
 
 ```bash
 # 初回リクエスト（決済ヘッダーなし）
-GET /api/protected/resource HTTP/1.1
+GET /api/x402/resource HTTP/1.1
 Host: localhost:3000
 Content-Type: application/json
 
@@ -105,7 +105,7 @@ Content-Type: application/json
 
 ```bash
 # 決済ヘッダー付きの再リクエスト
-GET /api/protected/resource HTTP/1.1
+GET /api/x402/resource HTTP/1.1
 Host: localhost:3000
 Content-Type: application/json
 X-PAYMENT: <base64-encoded-payment-payload>
@@ -117,7 +117,7 @@ X-PAYMENT: <base64-encoded-payment-payload>
 import { fetchWithX402 } from '@/lib/x402/client';
 
 const response = await fetchWithX402(
-  '/api/protected/resource',
+  '/api/x402/resource',
   { method: 'GET' },
   {
     tokenAddress: '0x...',
@@ -142,7 +142,7 @@ const response = await fetchWithX402(
       "scheme": "evm-permit",
       "network": "localhost",
       "maxAmountRequired": "100000000000000000000",
-      "resource": "/api/protected/resource",
+      "resource": "/api/x402/resource",
       "description": "Access to protected resource",
       "payTo": "0x1234567890123456789012345678901234567890",
       "asset": "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
@@ -206,7 +206,7 @@ const response = await fetchWithX402(
 
 | API名 | メソッド | エンドポイント | 説明 | 認証 |
 |-------|---------|---------------|------|------|
-| x402 Payment Gateway API | GET | `/api/protected/resource` | x402決済プロトコルで保護されたリソースを取得 | x402決済必須 |
+| x402 Payment Gateway API | GET | `/api/x402/resource` | x402決済プロトコルで保護されたリソースを取得 | x402決済必須 |
 
 ---
 
@@ -219,7 +219,7 @@ x402決済プロトコルを使用して保護されたリソースを取得し�
 
 #### リクエスト
 
-**パス:** `GET` `/api/protected/resource`
+**パス:** `GET` `/api/x402/resource`
 
 **リクエストヘッダー:**
 
@@ -263,7 +263,7 @@ X-PAYMENT-RESPONSE: {"paymentId":"0x...","payer":"0x...","amount":"1000000000000
       "scheme": "evm-permit",
       "network": "localhost",
       "maxAmountRequired": "100000000000000000000",
-      "resource": "/api/protected/resource",
+      "resource": "/api/x402/resource",
       "description": "Access to protected resource",
       "payTo": "0x...",
       "asset": "0x...",
@@ -278,13 +278,13 @@ X-PAYMENT-RESPONSE: {"paymentId":"0x...","payer":"0x...","amount":"1000000000000
 
 **決済ヘッダーなしの場合:**
 ```bash
-curl -X GET http://localhost:3000/api/protected/resource
+curl -X GET http://localhost:3000/api/x402/resource
 # 402 Payment Required が返される
 ```
 
 **決済ヘッダー付きの場合:**
 ```bash
-curl -X GET http://localhost:3000/api/protected/resource \
+curl -X GET http://localhost:3000/api/x402/resource \
   -H "X-PAYMENT: <base64-encoded-payment-payload>"
 ```
 
@@ -292,7 +292,7 @@ curl -X GET http://localhost:3000/api/protected/resource \
 import { fetchWithX402 } from '@/lib/x402/client';
 
 const response = await fetchWithX402(
-  '/api/protected/resource',
+  '/api/x402/resource',
   { method: 'GET' },
   {
     tokenAddress: '0x...',

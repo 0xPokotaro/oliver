@@ -7,7 +7,7 @@ vi.mock("@/lib/x402/middleware", () => ({
   x402Middleware: vi.fn(),
 }));
 
-describe("GET /api/protected/resource", () => {
+describe("GET /api/x402/resource", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // 環境変数を設定
@@ -19,7 +19,7 @@ describe("GET /api/protected/resource", () => {
 
   it("決済ヘッダーがない場合、402 Payment Requiredを返す", async () => {
     const mockHeaders = new Headers();
-    const mockRequest = new Request("http://localhost:3000/api/protected/resource", {
+    const mockRequest = new Request("http://localhost:3000/api/x402/resource", {
       headers: mockHeaders,
     });
 
@@ -32,7 +32,7 @@ describe("GET /api/protected/resource", () => {
             scheme: "evm-permit",
             network: "localhost",
             maxAmountRequired: "100000000000000000000",
-            resource: "/api/protected/resource",
+            resource: "/api/x402/resource",
             description: "Access to protected resource",
             payTo: "0x1234567890123456789012345678901234567890",
             asset: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
@@ -57,7 +57,7 @@ describe("GET /api/protected/resource", () => {
     const mockHeaders = new Headers();
     mockHeaders.set("X-PAYMENT", "dummy-base64-payload");
 
-    const mockRequest = new Request("http://localhost:3000/api/protected/resource", {
+    const mockRequest = new Request("http://localhost:3000/api/x402/resource", {
       headers: mockHeaders,
     });
 
@@ -94,7 +94,7 @@ describe("GET /api/protected/resource", () => {
     const mockHeaders = new Headers();
     mockHeaders.set("X-PAYMENT", "invalid-payload");
 
-    const mockRequest = new Request("http://localhost:3000/api/protected/resource", {
+    const mockRequest = new Request("http://localhost:3000/api/x402/resource", {
       headers: mockHeaders,
     });
 
@@ -107,7 +107,7 @@ describe("GET /api/protected/resource", () => {
             scheme: "evm-permit",
             network: "localhost",
             maxAmountRequired: "100000000000000000000",
-            resource: "/api/protected/resource",
+            resource: "/api/x402/resource",
             description: "Access to protected resource",
             payTo: "0x1234567890123456789012345678901234567890",
             asset: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
@@ -129,7 +129,7 @@ describe("GET /api/protected/resource", () => {
     const mockHeaders = new Headers();
     mockHeaders.set("X-PAYMENT", "insufficient-amount-payload");
 
-    const mockRequest = new Request("http://localhost:3000/api/protected/resource", {
+    const mockRequest = new Request("http://localhost:3000/api/x402/resource", {
       headers: mockHeaders,
     });
 
@@ -142,7 +142,7 @@ describe("GET /api/protected/resource", () => {
             scheme: "evm-permit",
             network: "localhost",
             maxAmountRequired: "100000000000000000000",
-            resource: "/api/protected/resource",
+            resource: "/api/x402/resource",
             description: "Access to protected resource",
             payTo: "0x1234567890123456789012345678901234567890",
             asset: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",

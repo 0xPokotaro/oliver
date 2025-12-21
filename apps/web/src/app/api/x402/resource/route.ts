@@ -2,12 +2,12 @@ import { NextResponse } from "next/server";
 import { x402Middleware } from "@/lib/x402/middleware";
 
 /**
- * GET /api/protected/resource
+ * GET /api/x402/resource
  * X402決済プロトコルを使用した保護されたリソースエンドポイント
  */
 export async function GET(request: Request) {
   const headers = request.headers;
-  const resourcePath = "/api/protected/resource";
+  const resourcePath = "/api/x402/resource";
 
   // X402ミドルウェアで決済を検証
   const result = await x402Middleware(headers, resourcePath);
