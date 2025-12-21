@@ -55,8 +55,7 @@
 │   └── Cargo.toml                          # apps/merchant-api, apps/facilitator-api を指定
 │
 ├── pnpm-workspace.yaml                     # pnpmワークスペース定義
-├── package.json                            # ルート (Turbo設定含む)
-├── turbo.json                              # ビルドパイプライン定義
+├── package.json                            # ルートスクリプト定義
 └── rust-toolchain.toml                     # Rustバージョン固定
 ```
 
@@ -87,19 +86,23 @@ PCやスマホからアクセスする管理画面です。
 
 ### 4. `cargo-workspace`
 pnpmワークスペースの中に、Rustのワークスペースが同居する形です。
-ルートの `package.json` のスクリプトで、両方を一度に扱えるようにします。
+Rustプロジェクトは `cargo` コマンドで直接管理し、TypeScriptプロジェクトは `pnpm` で管理します。
 
 ```json
 // root package.json example
 {
   "scripts": {
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "build:rust": "cargo build --release",
+    "web:dev": "pnpm --filter web dev",
+    "docs:start": "pnpm --filter docs start",
+    "build:web": "pnpm --filter web build",
+    "build:rust": "cargo build --workspace --release",
+    "dev:rust": "cargo watch --workspace -x run",
     "types:sync": "typeshare . --lang=typescript --output-file=packages/types/src/generated/index.ts"
   }
 }
 ```
+
+**注意:** Rustプロジェクト（`merchant-api`、`facilitator-api`）は `cargo` コマンドで直接実行するか、別ターミナルで起動します。`pnpm` スクリプトに統合する場合は、各Rustプロジェクトに `package.json` を追加してラッパースクリプトを定義する方法もあります。
 
 ---
 
@@ -107,12 +110,14 @@ pnpmワークスペースの中に、Rustのワークスペースが同居する
 
 1.  **RustでAPI仕様を変更する**
     *   `apps/merchant-api/src/types.rs` を修正。
-2.  **型を同期する**
+2.  **型を同期する（型生成パイプライン導入時）**
     *   `pnpm types:sync` を実行 → `packages/types` が更新される。
 3.  **フロントエンドを修正する**
-    *   `apps/device-ui` で新しい型を使って実装。
+    *   `apps/web` や `apps/device-ui` で新しい型を使って実装。
 4.  **動作確認**
-    *   `pnpm dev` で全アプリ（Rust API + Next.js UI）を一括起動。
+    *   **TypeScriptアプリ:** `pnpm web:dev` や `pnpm docs:start` で起動
+    *   **Rust API:** 別ターミナルで `cargo run --bin merchant-api` や `cargo run --bin facilitator-api` を実行
+    *   **一括起動（オプション）:** 複数ターミナルを使用するか、プロセス管理ツール（`concurrently`など）を利用
 
 この構成であれば、**「ラズパイのUI体験」と「Rustバックエンドの堅牢性」**を、一つのリポジトリで効率よく管理・開発できます。
 

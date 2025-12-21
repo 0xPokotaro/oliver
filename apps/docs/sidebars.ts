@@ -4,23 +4,30 @@ const sidebars: SidebarsConfig = {
   docsSidebar: [
     {
       type: 'category',
-      label: '1. Introduction',
+      label: 'Introduction',
       items: [
-        'introduction/welcome',
-        {
-          type: 'category',
-          label: 'Core Philosophy',
-          items: [
-            'introduction/payment-redefined',
-            'introduction/ai-redefined',
-          ],
-        },
+        'introduction/about',
         'introduction/glossary',
       ],
     },
     {
       type: 'category',
-      label: '2. Architecture',
+      label: 'Core Features',
+      link: {
+        type: 'doc',
+        id: 'core-features/index',
+      },
+      items: [
+        'core-features/ai-agent',
+        'core-features/x402-protocol',
+        'core-features/gasless-payment',
+        'core-features/headless-commerce',
+        'core-features/security',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Architecture',
       items: [
         'architecture/system-overview',
         {
@@ -44,7 +51,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: '3. Protocol Specification',
+      label: 'Protocol Specification',
       items: [
         {
           type: 'category',
@@ -74,7 +81,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: '4. Developer Guide',
+      label: 'Developer Guide',
       items: [
         'developer-guide/monorepo-structure',
         {
@@ -84,6 +91,7 @@ const sidebars: SidebarsConfig = {
             'developer-guide/merchants/getting-started',
             'developer-guide/merchants/middleware-sdk',
             'developer-guide/merchants/mock-server-tutorial',
+            'developer-guide/merchants/implementation-workflow',
           ],
         },
         {
@@ -105,7 +113,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: '5. Use Cases',
+      label: 'Use Cases',
       items: [
         'use-cases/physical-replenishment',
         'use-cases/on-demand-workforce',
@@ -114,7 +122,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: '6. Roadmap',
+      label: 'Roadmap',
       items: [
         'roadmap/phase1-poc',
         'roadmap/phase2-smart-accounts',
@@ -123,7 +131,7 @@ const sidebars: SidebarsConfig = {
     },
     {
       type: 'category',
-      label: '7. Note',
+      label: 'Note',
       items: [
         'note/note',
         'note/architecture',

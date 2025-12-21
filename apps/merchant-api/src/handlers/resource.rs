@@ -8,7 +8,7 @@ use std::sync::Arc;
 
 /// GET /api/x402/resource ハンドラー
 pub async fn get_resource(
-    headers: HeaderMap,
+    _headers: HeaderMap,
     State(_config): State<Arc<X402Config>>,
 ) -> Response {
     // TODO: X-PAYMENTヘッダーを取得
