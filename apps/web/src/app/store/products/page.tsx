@@ -41,6 +41,15 @@ export type Product = {
   name: string;
   description: string;
   price: number;
+  category: string | null;
+  attributes: Record<string, any> | null;
+  merchantId: string;
+  merchant: {
+    id: string;
+    name: string;
+    createdAt: Date;
+    updatedAt: Date;
+  };
   createdAt: Date;
   updatedAt: Date;
 };
@@ -96,6 +105,42 @@ export const columns: ColumnDef<Product>[] = [
       }).format(price);
 
       return <div className="text-right font-medium">{formatted}</div>;
+    },
+  },
+  {
+    accessorKey: "merchant",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          加盟店
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const merchant = row.original.merchant;
+      return <div>{merchant.name}</div>;
+    },
+  },
+  {
+    accessorKey: "category",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          カテゴリ
+          <ArrowUpDown />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const category = row.getValue("category") as string | null;
+      return <div>{category || "-"}</div>;
     },
   },
   {
