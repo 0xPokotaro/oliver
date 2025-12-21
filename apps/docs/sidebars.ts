@@ -93,6 +93,13 @@ const sidebars: SidebarsConfig = {
             'developer-guide/agent-builders/wallet-integration',
           ],
         },
+        {
+          type: 'category',
+          label: 'API Reference',
+          items: [
+            'developer-guide/api-reference/api-specification',
+          ],
+        },
       ],
     },
     {
