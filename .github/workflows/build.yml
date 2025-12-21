@@ -30,7 +30,15 @@ jobs:
 
       - name: Generate Prisma Client
         run: pnpm --filter web prisma:gen
+        env:
+          DATABASE_URL: postgresql://user:password@localhost:5432/db
 
       - name: Build web app
         run: pnpm --filter web build
+        env:
+          DATABASE_URL: postgresql://user:password@localhost:5432/db
+          X402_PAY_TO: 0x0000000000000000000000000000000000000000
+          X402_ASSET: 0x0000000000000000000000000000000000000000
+          X402_MAX_AMOUNT_REQUIRED: 1000000000000000000
+          FACILITATOR_URL: http://localhost:8403
 
