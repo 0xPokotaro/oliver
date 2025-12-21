@@ -1,5 +1,6 @@
 /// X402ミドルウェアの設定
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct X402Config {
     pub pay_to: String,              // 受取人アドレス
     pub asset: String,               // トークンコントラクトアドレス

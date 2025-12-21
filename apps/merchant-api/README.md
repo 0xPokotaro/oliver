@@ -63,6 +63,19 @@ x402決済プロトコルで保護されたリソースを取得します。
 
 ## 開発
 
+### テストの実行
+
+```bash
+# すべてのテストを実行
+cargo test
+
+# 特定のテストを実行
+cargo test test_health_check
+
+# テストを実行（出力を表示）
+cargo test -- --nocapture
+```
+
 ### 型定義の自動生成
 
 TypeScript型定義を自動生成する場合：
