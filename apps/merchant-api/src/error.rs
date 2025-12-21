@@ -11,8 +11,7 @@ pub enum ApiError {
     /// データベースエラー
     DatabaseError(String),
     /// リソースが見つからない
-    #[allow(dead_code)] // 将来のAPI拡張で使用予定
-    NotFound { resource: String },
+    NotFound { resource: String, code: Option<String> },
     /// 内部サーバーエラー
     #[allow(dead_code)] // 将来のAPI拡張で使用予定
     InternalError(String),
@@ -29,11 +28,14 @@ impl IntoResponse for ApiError {
                 "DATABASE_ERROR",
                 format!("Database error: {}", msg),
             ),
-            ApiError::NotFound { resource } => (
-                StatusCode::NOT_FOUND,
-                "NOT_FOUND",
-                format!("{} not found", resource),
-            ),
+            ApiError::NotFound { resource, code } => {
+                let code = code.as_deref().unwrap_or("NOT_FOUND");
+                (
+                    StatusCode::NOT_FOUND,
+                    code,
+                    format!("{} not found", resource),
+                )
+            }
             ApiError::InternalError(msg) => (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 "INTERNAL_ERROR",

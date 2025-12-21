@@ -1,7 +1,7 @@
 /// データベース型からAPI型への変換
 
 use crate::models::db::DbProduct;
-use crate::models::Product;
+use crate::models::{Product, ProductDetail};
 use crate::utils::parse_stock_status;
 
 /// DbProductからProductへ変換
@@ -13,5 +13,18 @@ pub fn db_product_to_api_product(db_product: DbProduct) -> Product {
         currency: db_product.currency,
         stock_status: parse_stock_status(&db_product.stock_status),
         image_url: db_product.image_url.unwrap_or_default(),
+    }
+}
+
+/// DbProductからProductDetailへ変換
+pub fn db_product_to_product_detail(db_product: DbProduct) -> ProductDetail {
+    ProductDetail {
+        sku: db_product.sku,
+        name: db_product.name,
+        description: db_product.description,
+        price: db_product.price.to_string(),
+        currency: db_product.currency.clone(),
+        attributes: db_product.attributes.unwrap_or_else(|| serde_json::json!({})),
+        allowed_tokens: vec![db_product.currency], // 現在はcurrencyのみ、将来の拡張に対応
     }
 }

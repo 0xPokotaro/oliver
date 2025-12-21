@@ -17,5 +17,6 @@ pub struct DbProduct {
     #[sqlx(rename = "imageUrl")]
     pub image_url: Option<String>,
     pub category: Option<String>,
+    pub attributes: Option<serde_json::Value>, // JSON型（NULL許可）
 }
 

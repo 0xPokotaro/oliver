@@ -36,6 +36,20 @@ pub struct GetProductsQuery {
     pub category: Option<String>,
 }
 
+/// 商品詳細情報（APIレスポンス用）
+#[typeshare]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProductDetail {
+    pub sku: String,
+    pub name: String,
+    pub description: String,
+    pub price: String, // wei単位の文字列
+    pub currency: String, // トークンコントラクトアドレス
+    pub attributes: serde_json::Value, // JSONオブジェクト
+    #[serde(rename = "allowedTokens")]
+    pub allowed_tokens: Vec<String>, // 支払い可能なトークン一覧
+}
+
 pub mod db;
 pub mod mapper;
 

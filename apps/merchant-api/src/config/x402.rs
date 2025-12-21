@@ -1,5 +1,6 @@
+/// X402ミドルウェアの設定
+
 use anyhow::Result;
-use sqlx::PgPool;
 use std::env;
 
 /// X402ミドルウェアの設定
@@ -13,9 +14,6 @@ pub struct X402Config {
     pub facilitator_url: String,     // Facilitator URL
     pub description: String,          // リソースの説明
 }
-
-/// デフォルトのサーバーポート
-const DEFAULT_PORT: u16 = 3001;
 
 /// 環境変数からX402設定を取得
 pub fn get_x402_config() -> Result<X402Config> {
@@ -36,23 +34,5 @@ pub fn get_x402_config() -> Result<X402Config> {
         description: env::var("X402_DESCRIPTION")
             .unwrap_or_else(|_| "Access to protected resource".to_string()),
     })
-}
-
-/// サーバーポートを取得
-pub fn get_port() -> u16 {
-    env::var("PORT")
-        .ok()
-        .and_then(|p| p.parse().ok())
-        .unwrap_or(DEFAULT_PORT)
-}
-
-/// データベース接続プールを取得
-pub async fn get_db_pool() -> Result<PgPool> {
-    let database_url = env::var("DATABASE_URL")
-        .map_err(|_| anyhow::anyhow!("DATABASE_URL environment variable is not set"))?;
-    
-    PgPool::connect(&database_url)
-        .await
-        .map_err(|e| anyhow::anyhow!("Failed to connect to database: {}", e))
 }
 
