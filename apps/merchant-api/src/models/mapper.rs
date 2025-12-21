@@ -1,7 +1,7 @@
 /// データベース型からAPI型への変換
 
 use crate::models::db::DbProduct;
-use crate::models::{Product, StockStatus};
+use crate::models::Product;
 use crate::utils::parse_stock_status;
 
 /// DbProductからProductへ変換

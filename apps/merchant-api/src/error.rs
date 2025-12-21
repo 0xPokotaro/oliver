@@ -11,10 +11,13 @@ pub enum ApiError {
     /// データベースエラー
     DatabaseError(String),
     /// リソースが見つからない
+    #[allow(dead_code)] // 将来のAPI拡張で使用予定
     NotFound { resource: String },
     /// 内部サーバーエラー
+    #[allow(dead_code)] // 将来のAPI拡張で使用予定
     InternalError(String),
     /// バリデーションエラー
+    #[allow(dead_code)] // 将来のAPI拡張で使用予定
     ValidationError { message: String },
 }
 

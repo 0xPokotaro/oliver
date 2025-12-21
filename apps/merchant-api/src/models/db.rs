@@ -12,9 +12,9 @@ pub struct DbProduct {
     pub description: String,
     pub price: i64, // BigIntはi64として扱う
     pub currency: String,
-    #[sqlx(rename = "stock_status")]
+    #[sqlx(rename = "stockStatus")]
     pub stock_status: String,
-    #[sqlx(rename = "image_url")]
+    #[sqlx(rename = "imageUrl")]
     pub image_url: Option<String>,
     pub category: Option<String>,
 }

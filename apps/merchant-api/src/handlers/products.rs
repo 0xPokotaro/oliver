@@ -72,8 +72,8 @@ mod tests {
         // テスト用のmerchantを作成
         sqlx::query(
             r#"
-            INSERT INTO merchants (id, name, wallet_address, created_at, updated_at)
-            VALUES ('test-merchant-1', 'Test Merchant', '0x1111111111111111111111111111111111111111', NOW(), NOW())
+            INSERT INTO merchants (id, name, "createdAt", "updatedAt")
+            VALUES ('test-merchant-1', 'Test Merchant', NOW(), NOW())
             ON CONFLICT (id) DO NOTHING
             "#,
         )
@@ -83,7 +83,7 @@ mod tests {
         // テスト用の商品を挿入
         sqlx::query(
             r#"
-            INSERT INTO products (id, sku, name, description, price, currency, stock_status, image_url, category, merchant_id, created_at, updated_at)
+            INSERT INTO products (id, sku, name, description, price, currency, "stockStatus", "imageUrl", category, "merchantId", "createdAt", "updatedAt")
             VALUES 
                 ('product-1', 'test-product-1', 'Test Product 1', 'Description 1', 1000000, '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', 'in_stock', 'https://example.com/image1.png', 'cat_food', 'test-merchant-1', NOW(), NOW()),
                 ('product-2', 'test-product-2', 'Test Product 2', 'Description 2', 2000000, '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', 'low_stock', 'https://example.com/image2.png', 'dog_food', 'test-merchant-1', NOW(), NOW()),
@@ -94,10 +94,10 @@ mod tests {
                 description = EXCLUDED.description,
                 price = EXCLUDED.price,
                 currency = EXCLUDED.currency,
-                stock_status = EXCLUDED.stock_status,
-                image_url = EXCLUDED.image_url,
+                "stockStatus" = EXCLUDED."stockStatus",
+                "imageUrl" = EXCLUDED."imageUrl",
                 category = EXCLUDED.category,
-                updated_at = NOW()
+                "updatedAt" = NOW()
             "#,
         )
         .execute(pool)
