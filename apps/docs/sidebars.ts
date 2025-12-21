@@ -91,6 +91,7 @@ const sidebars: SidebarsConfig = {
             'developer-guide/merchants/getting-started',
             'developer-guide/merchants/middleware-sdk',
             'developer-guide/merchants/mock-server-tutorial',
+            'developer-guide/merchants/implementation-workflow',
           ],
         },
         {
