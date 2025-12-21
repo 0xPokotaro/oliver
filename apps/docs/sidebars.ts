@@ -7,14 +7,6 @@ const sidebars: SidebarsConfig = {
       label: 'Introduction',
       items: [
         'introduction/about',
-        {
-          type: 'category',
-          label: 'Core Philosophy',
-          items: [
-            'introduction/payment-redefined',
-            'introduction/ai-redefined',
-          ],
-        },
         'introduction/glossary',
       ],
     },
