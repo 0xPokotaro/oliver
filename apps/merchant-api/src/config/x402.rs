@@ -13,6 +13,8 @@ pub struct X402Config {
     pub max_timeout_seconds: u64,     // タイムアウト（秒）
     pub facilitator_url: String,     // Facilitator URL
     pub description: String,          // リソースの説明
+    pub chain_id: i64,               // チェーンID
+    pub shipping_fee: i64,           // 送料（wei単位、固定値）
 }
 
 /// 環境変数からX402設定を取得
@@ -33,6 +35,14 @@ pub fn get_x402_config() -> Result<X402Config> {
             .unwrap_or_else(|_| "http://localhost:8403".to_string()),
         description: env::var("X402_DESCRIPTION")
             .unwrap_or_else(|_| "Access to protected resource".to_string()),
+        chain_id: env::var("X402_CHAIN_ID")
+            .unwrap_or_else(|_| "31337".to_string())
+            .parse()
+            .map_err(|e| anyhow::anyhow!("Failed to parse X402_CHAIN_ID: {}", e))?,
+        shipping_fee: env::var("SHIPPING_FEE")
+            .unwrap_or_else(|_| "500".to_string())
+            .parse()
+            .map_err(|e| anyhow::anyhow!("Failed to parse SHIPPING_FEE: {}", e))?,
     })
 }
 

@@ -1,6 +1,6 @@
 /// ルーティング定義
 
-use axum::{routing::get, Router};
+use axum::{routing::{get, post}, Router};
 use crate::handlers;
 use crate::state::AppState;
 
@@ -11,8 +11,8 @@ pub fn create_router(state: AppState) -> Router {
         .route("/api/v1/health", get(handlers::health::get_health))
         .route("/api/v1/products", get(handlers::products::get_products))
         .route("/api/v1/products/:sku", get(handlers::products::get_product_by_sku))
-        // x402 routes
-        .route("/api/x402/resource", get(handlers::resource::get_resource))
+        .route("/api/v1/products/:sku/buy", post(handlers::products::buy_product))
+        .route("/api/v1/orders/:orderId", get(handlers::orders::get_order_by_id))
         .with_state(state)
 }
 

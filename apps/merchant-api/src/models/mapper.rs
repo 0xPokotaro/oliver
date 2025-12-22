@@ -1,15 +1,20 @@
 /// データベース型からAPI型への変換
 
-use crate::models::db::DbProduct;
-use crate::models::{Product, ProductDetail};
-use crate::utils::parse_stock_status;
+use crate::error::ApiError;
+use crate::models::{
+    amount::price_to_string,
+    db::{DbPaymentHistory, DbProduct},
+    stock::parse_stock_status,
+    Order, OrderStatus, Product, ProductDetail,
+};
+use serde_json::json;
 
 /// DbProductからProductへ変換
 pub fn db_product_to_api_product(db_product: DbProduct) -> Product {
     Product {
         sku: db_product.sku,
         name: db_product.name,
-        price: db_product.price.to_string(),
+        price: price_to_string(db_product.price),
         currency: db_product.currency,
         stock_status: parse_stock_status(&db_product.stock_status),
         image_url: db_product.image_url.unwrap_or_default(),
@@ -22,9 +27,39 @@ pub fn db_product_to_product_detail(db_product: DbProduct) -> ProductDetail {
         sku: db_product.sku,
         name: db_product.name,
         description: db_product.description,
-        price: db_product.price.to_string(),
+        price: price_to_string(db_product.price),
         currency: db_product.currency.clone(),
-        attributes: db_product.attributes.unwrap_or_else(|| serde_json::json!({})),
-        allowed_tokens: vec![db_product.currency], // 現在はcurrencyのみ、将来の拡張に対応
+        attributes: db_product.attributes.unwrap_or_else(|| json!({})),
+        allowed_tokens: vec![db_product.currency],
     }
+}
+
+/// PaymentHistoryのstatus文字列をOrderStatusに変換
+/// payment_history.statusは "pending", "settled", "failed" だが、
+/// Order.statusは "processing", "shipped", "delivered", "cancelled", "failed" にマッピング
+fn parse_order_status(payment_status: &str) -> OrderStatus {
+    match payment_status {
+        "settled" => OrderStatus::Processing, // 決済完了 = 発送準備中
+        "pending" => OrderStatus::Processing, // 決済待ちも発送準備中として扱う
+        "failed" => OrderStatus::Failed,
+        _ => OrderStatus::Processing, // デフォルトはprocessing
+    }
+}
+
+/// DbPaymentHistoryからOrderに変換
+pub fn db_payment_to_order(db_payment: DbPaymentHistory) -> Result<Order, ApiError> {
+    let order_id = db_payment.order_id.ok_or_else(|| {
+        ApiError::InternalError("Order ID is missing in payment history".to_string())
+    })?;
+    
+    Ok(Order {
+        order_id,
+        sku: db_payment.product_sku,
+        quantity: 1,
+        amount: db_payment.amount,
+        currency: db_payment.currency,
+        status: parse_order_status(&db_payment.status),
+        tracking_number: None, // 現時点では追跡番号は未実装
+        created_at: db_payment.created_at.to_rfc3339(),
+    })
 }

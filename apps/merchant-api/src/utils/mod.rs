@@ -1,14 +1,9 @@
 /// ユーティリティ関数
 
-use crate::models::StockStatus;
+pub mod order;
+pub mod facilitator;
+pub mod x402;
 
-/// 文字列からStockStatusに変換
-pub fn parse_stock_status(s: &str) -> StockStatus {
-    match s {
-        "in_stock" => StockStatus::InStock,
-        "low_stock" => StockStatus::LowStock,
-        "out_of_stock" => StockStatus::OutOfStock,
-        _ => StockStatus::OutOfStock, // デフォルト値
-    }
-}
-
+// FacilitatorClientトレイトをエクスポート（テストで使用予定）
+#[allow(unused_imports)] // テストで使用予定
+pub use facilitator::{DefaultFacilitatorClient, FacilitatorClient};

@@ -4,9 +4,8 @@ mod handlers;
 mod models;
 mod repository;
 mod routes;
+mod services;
 mod state;
-#[cfg(test)]
-mod test_helpers;
 mod utils;
 
 pub use state::AppState;
