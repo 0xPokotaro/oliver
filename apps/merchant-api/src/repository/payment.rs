@@ -109,7 +109,7 @@ pub async fn find_by_order_id(
             ph."txHash",
             ph."createdAt"::timestamptz as "createdAt",
             ph."settledAt"::timestamptz as "settledAt",
-            p.sku as "productSku",
+            p.id as "productId",
             p.name as "productName"
         FROM payment_history ph
         LEFT JOIN products p ON ph."productId" = p.id

@@ -12,7 +12,7 @@ use serde_json::json;
 /// DbProductからProductへ変換
 pub fn db_product_to_api_product(db_product: DbProduct) -> Product {
     Product {
-        sku: db_product.sku,
+        id: db_product.id,
         name: db_product.name,
         price: price_to_string(db_product.price),
         currency: db_product.currency,
@@ -24,7 +24,7 @@ pub fn db_product_to_api_product(db_product: DbProduct) -> Product {
 /// DbProductからProductDetailへ変換
 pub fn db_product_to_product_detail(db_product: DbProduct) -> ProductDetail {
     ProductDetail {
-        sku: db_product.sku,
+        id: db_product.id,
         name: db_product.name,
         description: db_product.description,
         price: price_to_string(db_product.price),
@@ -54,7 +54,7 @@ pub fn db_payment_to_order(db_payment: DbPaymentHistory) -> Result<Order, ApiErr
     
     Ok(Order {
         order_id,
-        sku: db_payment.product_sku,
+        id: db_payment.product_id,
         quantity: 1,
         amount: db_payment.amount,
         currency: db_payment.currency,

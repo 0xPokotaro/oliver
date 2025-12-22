@@ -21,7 +21,7 @@ export type OrderStatus =
  * 商品情報（APIレスポンス用）
  */
 export interface Product {
-  sku: string;
+  id: string;
   name: string;
   price: string; // wei単位の文字列
   currency: string; // トークンコントラクトアドレス
@@ -33,7 +33,7 @@ export interface Product {
  * 商品詳細情報（APIレスポンス用）
  */
 export interface ProductDetail {
-  sku: string;
+  id: string;
   name: string;
   description: string;
   price: string; // wei単位の文字列
@@ -47,7 +47,7 @@ export interface ProductDetail {
  */
 export interface Order {
   orderId: string;
-  sku: string | null;
+  id: string | null;
   quantity: number;
   amount: string; // wei単位の文字列
   currency: string; // トークンコントラクトアドレス

@@ -68,7 +68,6 @@ async function main() {
   const products = await prisma.product.createMany({
     data: [
       {
-        sku: "nutro-natural-choice-adult-chicken-2kg",
         name: "Nutro ナチュラルチョイス 成猫用 チキン",
         description:
           "高品質なチキンを主原料とした、成猫向けの栄養バランスの取れたドライフード。天然の抗酸化物質を含み、健康的な被毛と皮膚をサポートします。",
@@ -93,7 +92,6 @@ async function main() {
         },
       },
       {
-        sku: "nutro-ultra-adult-salmon-2kg",
         name: "Nutro ウルトラ 成猫用 サーモン",
         description:
           "サーモンを主原料としたプレミアムドライフード。オメガ3脂肪酸が豊富で、関節の健康と免疫システムをサポートします。",
@@ -116,7 +114,6 @@ async function main() {
         },
       },
       {
-        sku: "nutro-natural-choice-kitten-chicken-rice-1.5kg",
         name: "Nutro ナチュラルチョイス 子猫用 チキン&ライス",
         description:
           "成長期の子猫に必要な栄養素をバランス良く配合。DHAが豊富で、脳と目の発達をサポートします。",
@@ -139,7 +136,6 @@ async function main() {
         },
       },
       {
-        sku: "royal-canin-indoor-cat-2kg",
         name: "ロイヤルカナン インドアキャット 2kg",
         description:
           "室内飼いの猫用に特別に開発されたドライフード。消化率が高く、糞便の臭いを軽減します。",
@@ -162,7 +158,6 @@ async function main() {
         },
       },
       {
-        sku: "hills-science-diet-adult-chicken-2kg",
         name: "ヒルズ サイエンス・ダイエット 成猫用 チキン",
         description:
           "獣医師が推奨するプレミアムドライフード。健康的な体重維持と消化器の健康をサポートします。",
@@ -185,7 +180,6 @@ async function main() {
         },
       },
       {
-        sku: "water-2l-box",
         name: "ミネラルウォーター 2L × 6本",
         description:
           "天然のミネラルを豊富に含む、おいしいミネラルウォーター。6本セットです。",
@@ -206,7 +200,6 @@ async function main() {
         },
       },
       {
-        sku: "toilet-paper-12roll",
         name: "トイレットペーパー 12ロール",
         description:
           "やわらかくて丈夫なトイレットペーパー。12ロール入りです。",

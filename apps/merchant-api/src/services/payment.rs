@@ -13,7 +13,7 @@ use crate::models::{
     BuyRequest, BuyResponse, PaymentInfo,
 };
 use crate::repository::payment::{create_payment, find_by_payment_id};
-use crate::repository::product::find_by_sku;
+use crate::repository::product::find_by_id;
 use crate::state::AppState;
 use crate::utils::{
     facilitator::{settle_payment, verify_payment},
@@ -27,11 +27,11 @@ use crate::utils::{
 /// 見積もり要求（402 Payment Required）を処理
 pub async fn estimate_payment(
     state: &AppState,
-    sku: &str,
+    id: &str,
     request: &BuyRequest,
 ) -> Result<Response, ApiError> {
     // 商品情報を取得
-    let db_product = find_by_sku(&state.db_pool, sku)
+    let db_product = find_by_id(&state.db_pool, id)
         .await?
         .ok_or_else(|| ApiError::NotFound {
             resource: "Product".to_string(),
@@ -44,7 +44,7 @@ pub async fn estimate_payment(
 
     let nonce = crate::utils::x402::generate_nonce();
     let deadline = Utc::now().timestamp() + (state.x402_config.max_timeout_seconds as i64);
-    let resource_path = format!("/api/v1/products/{}/buy", sku);
+    let resource_path = format!("/api/v1/products/{}/buy", id);
 
     let response = create_payment_required_response(
         &state.x402_config,
@@ -71,7 +71,7 @@ pub async fn estimate_payment(
 /// 決済実行を処理
 pub async fn process_payment(
     state: &AppState,
-    _sku: &str,
+    _id: &str,
     db_product: &DbProduct,
     request: &BuyRequest,
     payment_header_value: &str,

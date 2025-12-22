@@ -44,12 +44,12 @@ function weiToNumber(wei: string): number {
 
 const columns: ColumnDef<Product>[] = [
   {
-    accessorKey: "sku",
-    header: "商品SKU",
+    accessorKey: "id",
+    header: "商品ID",
     cell: ({ row }) => {
-      const sku = row.getValue("sku") as string;
+      const id = row.getValue("id") as string;
       const truncated =
-        sku.length > 12 ? `${sku.slice(0, 8)}...${sku.slice(-4)}` : sku;
+        id.length > 12 ? `${id.slice(0, 8)}...${id.slice(-4)}` : id;
       return <div className="font-mono text-sm">{truncated}</div>;
     },
   },
@@ -148,9 +148,9 @@ const columns: ColumnDef<Product>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>アクション</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(product.sku)}
+              onClick={() => navigator.clipboard.writeText(product.id)}
             >
-              商品SKUをコピー
+              商品IDをコピー
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>商品を編集</DropdownMenuItem>

@@ -80,15 +80,15 @@ pub async fn setup_test_data(pool: &PgPool) -> anyhow::Result<()> {
         return Err(anyhow::anyhow!("Failed to create test merchant"));
     }
 
-    // テスト用の商品を挿入（SKUまたはIDでのコンフリクトを処理）
+    // テスト用の商品を挿入（IDでのコンフリクトを処理）
     sqlx::query(
         r#"
-        INSERT INTO products (id, sku, name, description, price, currency, "stockStatus", "imageUrl", category, attributes, "merchantId", "createdAt", "updatedAt")
+        INSERT INTO products (id, name, description, price, currency, "stockStatus", "imageUrl", category, attributes, "merchantId", "createdAt", "updatedAt")
         VALUES 
-            ('product-1', 'test-product-1', 'Test Product 1', 'Description 1', 1000000, '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', 'in_stock', 'https://example.com/image1.png', 'cat_food', '{"weight": "2kg", "brand": "Test Brand"}'::jsonb, 'test-merchant-1', NOW(), NOW()),
-            ('product-2', 'test-product-2', 'Test Product 2', 'Description 2', 2000000, '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', 'low_stock', 'https://example.com/image2.png', 'dog_food', NULL, 'test-merchant-1', NOW(), NOW()),
-            ('product-3', 'test-product-3', 'Test Product 3', 'Description 3', 3000000, '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', 'out_of_stock', NULL, 'cat_food', '{"weight": "1kg"}'::jsonb, 'test-merchant-1', NOW(), NOW())
-        ON CONFLICT (sku) DO UPDATE SET
+            ('product-1', 'Test Product 1', 'Description 1', 1000000, '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', 'in_stock', 'https://example.com/image1.png', 'cat_food', '{"weight": "2kg", "brand": "Test Brand"}'::jsonb, 'test-merchant-1', NOW(), NOW()),
+            ('product-2', 'Test Product 2', 'Description 2', 2000000, '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', 'low_stock', 'https://example.com/image2.png', 'dog_food', NULL, 'test-merchant-1', NOW(), NOW()),
+            ('product-3', 'Test Product 3', 'Description 3', 3000000, '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', 'out_of_stock', NULL, 'cat_food', '{"weight": "1kg"}'::jsonb, 'test-merchant-1', NOW(), NOW())
+        ON CONFLICT (id) DO UPDATE SET
             name = EXCLUDED.name,
             description = EXCLUDED.description,
             price = EXCLUDED.price,

@@ -40,7 +40,6 @@ model Merchant {
 
 model Product {
   id          String   @id @default(uuid())
-  sku         String   @unique  // 商品SKU
   name        String
   description String
   price       BigInt   // wei単位の価格（6桁小数点想定）

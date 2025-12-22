@@ -8,7 +8,6 @@ use chrono::{DateTime, Utc};
 #[allow(dead_code)] // id, description, category は将来使用する可能性があるため
 pub struct DbProduct {
     pub id: String,
-    pub sku: String,
     pub name: String,
     pub description: String,
     pub price: i64, // BigIntはi64として扱う
@@ -37,8 +36,8 @@ pub struct DbPaymentHistory {
     pub created_at: DateTime<Utc>,
     #[sqlx(rename = "settledAt")]
     pub settled_at: Option<DateTime<Utc>>,
-    #[sqlx(rename = "productSku")]
-    pub product_sku: Option<String>,
+    #[sqlx(rename = "productId")]
+    pub product_id: Option<String>,
     #[sqlx(rename = "productName")]
     pub product_name: Option<String>,
 }

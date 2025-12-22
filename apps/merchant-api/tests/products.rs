@@ -6,7 +6,7 @@ use axum::{
     routing::{get, post},
     Router,
 };
-use merchant_api::handlers::products::{buy_product, get_product_by_sku, get_products};
+use merchant_api::handlers::products::{buy_product, get_product_by_id, get_products};
 use merchant_api::models::{Product, ProductDetail};
 use merchant_api::state::AppState;
 use serde_json::{json, Value};
@@ -21,7 +21,7 @@ const MAX_BODY_SIZE: usize = 4096;
 fn create_test_app(state: AppState) -> Router {
     Router::new()
         .route("/api/v1/products", get(get_products))
-        .route("/api/v1/products/:sku", get(get_product_by_sku))
+        .route("/api/v1/products/:id", get(get_product_by_id))
         .with_state(state)
 }
 
@@ -60,7 +60,7 @@ async fn test_get_products_success() {
 
     // 最初の商品を確認
     let first_product = &products[0];
-    assert!(first_product["sku"].is_string());
+    assert!(first_product["id"].is_string());
     assert!(first_product["name"].is_string());
     assert!(first_product["price"].is_string());
     assert!(first_product["currency"].is_string());
@@ -101,7 +101,7 @@ async fn test_get_products_with_category_filter() {
 
     // cat_foodカテゴリの商品のみが返されることを確認
     for product in &products {
-        assert!(!product.sku.is_empty());
+        assert!(!product.id.is_empty());
         assert!(!product.name.is_empty());
     }
 
@@ -142,7 +142,7 @@ async fn test_get_products_response_structure() {
 
     // 商品の構造を確認
     let product = &products[0];
-    assert!(!product.sku.is_empty());
+    assert!(!product.id.is_empty());
     assert!(!product.name.is_empty());
     assert!(!product.price.is_empty());
     assert!(!product.currency.is_empty());
@@ -194,7 +194,7 @@ async fn test_get_products_empty_category() {
 }
 
 #[tokio::test]
-async fn test_get_product_by_sku_success() {
+async fn test_get_product_by_id_success() {
     let pool = match get_test_db_pool().await {
         Ok(pool) => pool,
         Err(_) => {
@@ -210,7 +210,7 @@ async fn test_get_product_by_sku_success() {
     let response = app
         .oneshot(
             Request::builder()
-                .uri("/api/v1/products/test-product-1")
+                .uri("/api/v1/products/product-1")
                 .body(Body::empty())
                 .unwrap(),
         )
@@ -222,7 +222,7 @@ async fn test_get_product_by_sku_success() {
     let body = to_bytes(response.into_body(), MAX_BODY_SIZE).await.unwrap();
     let product_detail: ProductDetail = serde_json::from_slice(&body).unwrap();
 
-    assert_eq!(product_detail.sku, "test-product-1");
+    assert_eq!(product_detail.id, "product-1");
     assert_eq!(product_detail.name, "Test Product 1");
     assert_eq!(product_detail.description, "Description 1");
     assert_eq!(product_detail.price, "1000000");
@@ -251,7 +251,7 @@ async fn test_get_product_by_sku_not_found() {
     let response = app
         .oneshot(
             Request::builder()
-                .uri("/api/v1/products/nonexistent-sku")
+                .uri("/api/v1/products/nonexistent-id")
                 .body(Body::empty())
                 .unwrap(),
         )
@@ -282,14 +282,14 @@ async fn test_get_product_by_sku_with_null_attributes() {
 
     // データが正しく挿入されたか確認（並列実行時の競合を検出）
     let product_exists: bool = sqlx::query_scalar::<_, bool>(
-        "SELECT EXISTS(SELECT 1 FROM products WHERE sku = 'test-product-2')"
+        "SELECT EXISTS(SELECT 1 FROM products WHERE id = 'product-2')"
     )
     .fetch_one(&pool)
     .await
     .unwrap_or(false);
     
     if !product_exists {
-        panic!("Test product 'test-product-2' was not found in database after setup_test_data. This may be due to parallel test execution conflicts.");
+        panic!("Test product 'product-2' was not found in database after setup_test_data. This may be due to parallel test execution conflicts.");
     }
 
     let state = create_test_state(pool.clone());
@@ -299,7 +299,7 @@ async fn test_get_product_by_sku_with_null_attributes() {
     let response = app
         .oneshot(
             Request::builder()
-                .uri("/api/v1/products/test-product-2")
+                .uri("/api/v1/products/product-2")
                 .body(Body::empty())
                 .unwrap(),
         )
@@ -318,7 +318,7 @@ async fn test_get_product_by_sku_with_null_attributes() {
     let body = to_bytes(response.into_body(), MAX_BODY_SIZE).await.unwrap();
     let product_detail: ProductDetail = serde_json::from_slice(&body).unwrap();
 
-    assert_eq!(product_detail.sku, "test-product-2");
+    assert_eq!(product_detail.id, "product-2");
     // attributesがNULLの場合は空のJSONオブジェクト{}が返される
     assert!(product_detail.attributes.is_object());
     assert_eq!(product_detail.attributes, serde_json::json!({}));
@@ -339,7 +339,7 @@ async fn test_buy_product_estimate_request() {
 
     let state = create_test_state(pool.clone());
     let app = Router::new()
-        .route("/api/v1/products/:sku/buy", post(buy_product))
+        .route("/api/v1/products/:id/buy", post(buy_product))
         .with_state(state);
 
     let request_body = json!({
@@ -350,7 +350,7 @@ async fn test_buy_product_estimate_request() {
         .oneshot(
             Request::builder()
                 .method("POST")
-                .uri("/api/v1/products/test-product-1/buy")
+                .uri("/api/v1/products/product-1/buy")
                 .header("Content-Type", "application/json")
                 .body(Body::from(serde_json::to_string(&request_body).unwrap()))
                 .unwrap(),
@@ -394,7 +394,7 @@ async fn test_buy_product_not_found() {
 
     let state = create_test_state(pool.clone());
     let app = Router::new()
-        .route("/api/v1/products/:sku/buy", post(buy_product))
+        .route("/api/v1/products/:id/buy", post(buy_product))
         .with_state(state);
 
     let request_body = json!({
