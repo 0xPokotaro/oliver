@@ -3,12 +3,13 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { paymentId: string } },
+  { params }: { params: Promise<{ paymentId: string }> },
 ) {
   try {
+    const { paymentId } = await params;
     const payment = await prisma.paymentHistory.findUnique({
       where: {
-        paymentId: params.paymentId,
+        paymentId,
       },
       include: {
         user: true,
