@@ -12,30 +12,28 @@ import type {
 } from "../types/merchant-types";
 
 /**
- * Merchant APIのベースURL
+ * Next.js APIルートのベースURL
  */
-function getMerchantApiUrl(): string {
-  const url = process.env.NEXT_PUBLIC_MERCHANT_API_URL;
-  if (!url) {
-    throw new Error("NEXT_PUBLIC_MERCHANT_API_URL environment variable is not set");
-  }
-  return url;
+function getApiBaseUrl(): string {
+  // サーバーサイドでは相対パスを使用
+  // クライアントサイドでは絶対パスが必要な場合があるが、通常は相対パスで問題ない
+  return '/api';
 }
 
 /**
  * ヘルスチェック
  */
 export async function getHealth(): Promise<HealthResponse> {
-  const baseUrl = getMerchantApiUrl();
-  const url = `${baseUrl}/api/v1/health`;
+  const baseUrl = getApiBaseUrl();
+  const url = `${baseUrl}/merchant/health`;
 
   try {
     const response = await fetch(url);
 
     if (!response.ok) {
-      const errorText = await response.text();
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
       throw new Error(
-        `Merchant API health check failed: ${response.status} ${errorText}`,
+        `Merchant API health check failed: ${response.status} ${errorData.error || 'Unknown error'}`,
       );
     }
 
@@ -54,8 +52,8 @@ export async function getHealth(): Promise<HealthResponse> {
  * @returns 商品一覧
  */
 export async function getProducts(category?: string): Promise<Product[]> {
-  const baseUrl = getMerchantApiUrl();
-  const url = new URL(`${baseUrl}/api/v1/products`);
+  const baseUrl = getApiBaseUrl();
+  const url = new URL(`${baseUrl}/merchant/products`);
   if (category) {
     url.searchParams.set("category", category);
   }
@@ -64,9 +62,9 @@ export async function getProducts(category?: string): Promise<Product[]> {
     const response = await fetch(url.toString());
 
     if (!response.ok) {
-      const errorText = await response.text();
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
       throw new Error(
-        `Merchant API getProducts failed: ${response.status} ${errorText}`,
+        `Merchant API getProducts failed: ${response.status} ${errorData.error || 'Unknown error'}`,
       );
     }
 
@@ -85,16 +83,16 @@ export async function getProducts(category?: string): Promise<Product[]> {
  * @returns 商品詳細情報
  */
 export async function getProductBySku(sku: string): Promise<ProductDetail> {
-  const baseUrl = getMerchantApiUrl();
-  const url = `${baseUrl}/api/v1/products/${encodeURIComponent(sku)}`;
+  const baseUrl = getApiBaseUrl();
+  const url = `${baseUrl}/merchant/products/${encodeURIComponent(sku)}`;
 
   try {
     const response = await fetch(url);
 
     if (!response.ok) {
-      const errorText = await response.text();
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
       throw new Error(
-        `Merchant API getProductBySku failed: ${response.status} ${errorText}`,
+        `Merchant API getProductBySku failed: ${response.status} ${errorData.error || 'Unknown error'}`,
       );
     }
 
@@ -119,8 +117,8 @@ export async function buyProduct(
   quantity: number,
   paymentHeader?: string,
 ): Promise<BuyResponse | PaymentRequiredResponse> {
-  const baseUrl = getMerchantApiUrl();
-  const url = `${baseUrl}/api/v1/products/${encodeURIComponent(sku)}/buy`;
+  const baseUrl = getApiBaseUrl();
+  const url = `${baseUrl}/merchant/products/${encodeURIComponent(sku)}/buy`;
 
   const headers: HeadersInit = {
     "Content-Type": "application/json",
@@ -142,9 +140,9 @@ export async function buyProduct(
     }
 
     if (!response.ok) {
-      const errorText = await response.text();
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
       throw new Error(
-        `Merchant API buyProduct failed: ${response.status} ${errorText}`,
+        `Merchant API buyProduct failed: ${response.status} ${errorData.error || 'Unknown error'}`,
       );
     }
 
@@ -163,16 +161,16 @@ export async function buyProduct(
  * @returns 注文情報
  */
 export async function getOrderById(orderId: string): Promise<Order> {
-  const baseUrl = getMerchantApiUrl();
-  const url = `${baseUrl}/api/v1/orders/${encodeURIComponent(orderId)}`;
+  const baseUrl = getApiBaseUrl();
+  const url = `${baseUrl}/merchant/orders/${encodeURIComponent(orderId)}`;
 
   try {
     const response = await fetch(url);
 
     if (!response.ok) {
-      const errorText = await response.text();
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
       throw new Error(
-        `Merchant API getOrderById failed: ${response.status} ${errorText}`,
+        `Merchant API getOrderById failed: ${response.status} ${errorData.error || 'Unknown error'}`,
       );
     }
 

@@ -90,6 +90,9 @@ importers:
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
+      hono:
+        specifier: ^4.11.1
+        version: 4.11.1
       lucide-react:
         specifier: ^0.562.0
         version: 0.562.0(react@19.2.3)
@@ -5508,6 +5511,10 @@ packages:
 
   hono@4.10.6:
     resolution: {integrity: sha512-BIdolzGpDO9MQ4nu3AUuDwHZZ+KViNm+EZ75Ae55eMXMqLVhDFqEMXxtUe9Qh8hjL+pIna/frs2j6Y2yD5Ua/g==}
+    engines: {node: '>=16.9.0'}
+
+  hono@4.11.1:
+    resolution: {integrity: sha512-KsFcH0xxHes0J4zaQgWbYwmz3UPOOskdqZmItstUG93+Wk1ePBLkLGwbP9zlmh1BFUiL8Qp+Xfu9P7feJWpGNg==}
     engines: {node: '>=16.9.0'}
 
   hpack.js@2.1.6:
@@ -14998,6 +15005,8 @@ snapshots:
       react-is: 16.13.1
 
   hono@4.10.6: {}
+
+  hono@4.11.1: {}
 
   hpack.js@2.1.6:
     dependencies:
