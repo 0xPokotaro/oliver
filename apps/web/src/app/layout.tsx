@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { RadixSidebarDemo } from "@/components/layout/sidebar-layout";
-import Providers from "./providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,9 +29,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        <Providers>
-          <RadixSidebarDemo>{children}</RadixSidebarDemo>
-        </Providers>
+        <RadixSidebarDemo>{children}</RadixSidebarDemo>
       </body>
     </html>
   );

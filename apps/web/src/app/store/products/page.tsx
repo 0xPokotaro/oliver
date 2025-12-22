@@ -1,30 +1,27 @@
 import { Container } from "@/components/layout/container";
 import { getProducts } from "@/lib/merchant/client";
+import type { Product } from "@/lib/types/merchant-types";
 import { ProductsTable } from "./_components/products-table";
 
 const Products = async () => {
+  let products: Product[] = [];
+  let error: Error | null = null;
+
   try {
-    const products = await getProducts();
-    return (
-      <Container maxWidth="7xl" className="w-full">
-        <ProductsTable
-          products={products}
-          isLoading={false}
-          error={null}
-        />
-      </Container>
-    );
-  } catch (error) {
-    return (
-      <Container maxWidth="7xl" className="w-full">
-        <ProductsTable
-          products={[]}
-          isLoading={false}
-          error={error instanceof Error ? error : new Error("Unknown error")}
-        />
-      </Container>
-    );
+    products = await getProducts();
+  } catch (err) {
+    error = err instanceof Error ? err : new Error("Unknown error");
   }
+
+  return (
+    <Container maxWidth="7xl" className="w-full">
+      <ProductsTable
+        products={products}
+        isLoading={false}
+        error={error}
+      />
+    </Container>
+  );
 };
 
 export default Products;
