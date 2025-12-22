@@ -1,6 +1,6 @@
 import { Container } from "@/components/layout/container";
-import { getProducts } from "@/lib/merchant/client";
 import type { Product } from "@/lib/types/merchant-types";
+import { client } from "@/lib/hono/client";
 import { ProductsTable } from "./_components/products-table";
 
 const Products = async () => {
@@ -8,9 +8,19 @@ const Products = async () => {
   let error: Error | null = null;
 
   try {
-    products = await getProducts();
+    const response = await client.api.products.$get({
+      query: {
+        category: "cat_food",
+      },
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch products: ${response.status}`);
+    }
+    
+    products = await response.json();
   } catch (err) {
-    error = err instanceof Error ? err : new Error("Unknown error");
+    error = err instanceof Error ? err : new Error('Unknown error');
   }
 
   return (
