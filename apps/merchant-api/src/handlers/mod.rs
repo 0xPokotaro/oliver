@@ -1,3 +1,4 @@
 pub mod health;
-pub mod resource;
+pub mod orders;
+pub mod products;
 

@@ -1,0 +1,48 @@
+/// X402ミドルウェアの設定
+
+use anyhow::Result;
+use std::env;
+
+/// X402ミドルウェアの設定
+#[derive(Debug, Clone)]
+pub struct X402Config {
+    pub pay_to: String,              // 受取人アドレス
+    pub asset: String,               // トークンコントラクトアドレス
+    pub max_amount_required: String,  // 最大必要額（wei）
+    pub network: String,              // ネットワーク名
+    pub max_timeout_seconds: u64,     // タイムアウト（秒）
+    pub facilitator_url: String,     // Facilitator URL
+    pub description: String,          // リソースの説明
+    pub chain_id: i64,               // チェーンID
+    pub shipping_fee: i64,           // 送料（wei単位、固定値）
+}
+
+/// 環境変数からX402設定を取得
+pub fn get_x402_config() -> Result<X402Config> {
+    Ok(X402Config {
+        pay_to: env::var("X402_PAY_TO")
+            .unwrap_or_else(|_| "0x0000000000000000000000000000000000000000".to_string()),
+        asset: env::var("X402_ASSET")
+            .unwrap_or_else(|_| "0x0000000000000000000000000000000000000000".to_string()),
+        max_amount_required: env::var("X402_MAX_AMOUNT_REQUIRED")
+            .unwrap_or_else(|_| "0".to_string()),
+        network: env::var("X402_NETWORK").unwrap_or_else(|_| "localhost".to_string()),
+        max_timeout_seconds: env::var("X402_MAX_TIMEOUT_SECONDS")
+            .unwrap_or_else(|_| "3600".to_string())
+            .parse()
+            .map_err(|e| anyhow::anyhow!("Failed to parse X402_MAX_TIMEOUT_SECONDS: {}", e))?,
+        facilitator_url: env::var("FACILITATOR_URL")
+            .unwrap_or_else(|_| "http://localhost:8403".to_string()),
+        description: env::var("X402_DESCRIPTION")
+            .unwrap_or_else(|_| "Access to protected resource".to_string()),
+        chain_id: env::var("X402_CHAIN_ID")
+            .unwrap_or_else(|_| "31337".to_string())
+            .parse()
+            .map_err(|e| anyhow::anyhow!("Failed to parse X402_CHAIN_ID: {}", e))?,
+        shipping_fee: env::var("SHIPPING_FEE")
+            .unwrap_or_else(|_| "500".to_string())
+            .parse()
+            .map_err(|e| anyhow::anyhow!("Failed to parse SHIPPING_FEE: {}", e))?,
+    })
+}
+

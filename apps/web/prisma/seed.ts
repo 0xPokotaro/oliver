@@ -3,46 +3,234 @@ import { prisma } from "../src/lib/prisma";
 async function main() {
   console.log("🌱 Seeding database...");
 
-  // 既存のデータをクリア
+  // 既存のデータをクリア（外部キー制約のため順序に注意）
+  await prisma.paymentHistory.deleteMany();
   await prisma.product.deleteMany();
+  await prisma.merchant.deleteMany();
+  await prisma.user.deleteMany();
 
-  // Nutroのキャットフード商品データを作成
+  // 加盟店データを作成
+  console.log("📦 Creating merchants...");
+  const merchant1 = await prisma.merchant.create({
+    data: {
+      name: "ペットフード専門店 にゃんこ堂",
+    },
+  });
+
+  const merchant2 = await prisma.merchant.create({
+    data: {
+      name: "プレミアムペット用品 わんわんストア",
+    },
+  });
+
+  const merchant3 = await prisma.merchant.create({
+    data: {
+      name: "日用品マート くらしの便利屋",
+    },
+  });
+
+  console.log(`✅ Created 3 merchants`);
+
+  // ユーザーデータを作成
+  console.log("👤 Creating users...");
+  const user1 = await prisma.user.create({
+    data: {
+      walletAddress: "0x1234567890123456789012345678901234567890",
+      name: "山田太郎",
+      email: "yamada@example.com",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=yamada",
+    },
+  });
+
+  const user2 = await prisma.user.create({
+    data: {
+      walletAddress: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+      name: "佐藤花子",
+      email: "sato@example.com",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=sato",
+    },
+  });
+
+  const user3 = await prisma.user.create({
+    data: {
+      walletAddress: "0x9876543210987654321098765432109876543210",
+      name: "田中一郎",
+      email: "tanaka@example.com",
+    },
+  });
+
+  console.log(`✅ Created 3 users`);
+
+  // 商品データを作成
+  console.log("🛍️ Creating products...");
+  const defaultCurrency = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"; // USDC on Base
+  
   const products = await prisma.product.createMany({
     data: [
       {
+        sku: "nutro-natural-choice-adult-chicken-2kg",
         name: "Nutro ナチュラルチョイス 成猫用 チキン",
         description:
           "高品質なチキンを主原料とした、成猫向けの栄養バランスの取れたドライフード。天然の抗酸化物質を含み、健康的な被毛と皮膚をサポートします。",
-        price: 2980,
+        price: BigInt(2980000000), // 2980 USD (6桁小数点想定: 2980 * 1000000)
+        currency: defaultCurrency,
+        stockStatus: "in_stock",
+        imageUrl: "https://assets.oliver.dev/products/nutro-natural-choice-chicken.png",
+        category: "cat_food",
+        merchantId: merchant1.id,
+        attributes: {
+          ブランド: "ニュートロ",
+          風味: "チキン",
+          対象年齢: "アダルト",
+          商品の形状: "ドライフード",
+          商品用途・使用方法: "キャットフード",
+          特別な原料:
+            "チキン(肉)、チキンミール、エンドウタンパク、エンドウマメ、鶏脂*、タピオカ、ビートパルプ、ポテトタンパク、フィッシュミール、サーモンミール、アルファルファミール、タンパク加水分解物、亜麻仁、ユッカ抽出物、ビタミン類(A、B1、B2、B6、B12、C、D3、E、コリン、ナイアシン、パントテン酸、ビオチン、葉酸)、ミネラル類(カリウム、クロライド、セレン、ナトリウム、マンガン、ヨウ素、亜鉛、鉄、銅)、アミノ酸類(タウリン、メチオニン)、酸化防止剤(ミックストコフェロール、ローズマリー抽出物、クエン酸)",
+          ユニット数: "2000.0 グラム",
+          商品の個数: "1",
+          パッケージ情報: "バッグ",
+          商品の重量: "2 キログラム",
+        },
       },
       {
+        sku: "nutro-ultra-adult-salmon-2kg",
         name: "Nutro ウルトラ 成猫用 サーモン",
         description:
           "サーモンを主原料としたプレミアムドライフード。オメガ3脂肪酸が豊富で、関節の健康と免疫システムをサポートします。",
-        price: 3480,
+        price: BigInt(3480000000), // 3480 USD
+        currency: defaultCurrency,
+        stockStatus: "in_stock",
+        imageUrl: "https://assets.oliver.dev/products/nutro-ultra-salmon.png",
+        category: "cat_food",
+        merchantId: merchant1.id,
+        attributes: {
+          ブランド: "ニュートロ",
+          風味: "サーモン",
+          対象年齢: "アダルト",
+          商品の形状: "ドライフード",
+          商品用途・使用方法: "キャットフード",
+          ユニット数: "2000.0 グラム",
+          商品の個数: "1",
+          パッケージ情報: "バッグ",
+          商品の重量: "2 キログラム",
+        },
       },
       {
+        sku: "nutro-natural-choice-kitten-chicken-rice-1.5kg",
         name: "Nutro ナチュラルチョイス 子猫用 チキン&ライス",
         description:
           "成長期の子猫に必要な栄養素をバランス良く配合。DHAが豊富で、脳と目の発達をサポートします。",
-        price: 3280,
+        price: BigInt(3280000000), // 3280 USD
+        currency: defaultCurrency,
+        stockStatus: "in_stock",
+        imageUrl: "https://assets.oliver.dev/products/nutro-kitten-chicken-rice.png",
+        category: "cat_food",
+        merchantId: merchant1.id,
+        attributes: {
+          ブランド: "ニュートロ",
+          風味: "チキン&ライス",
+          対象年齢: "キトン",
+          商品の形状: "ドライフード",
+          商品用途・使用方法: "キャットフード",
+          ユニット数: "1500.0 グラム",
+          商品の個数: "1",
+          パッケージ情報: "バッグ",
+          商品の重量: "1.5 キログラム",
+        },
       },
       {
-        name: "Nutro ウルトラ 成猫用 チキン&玄米",
+        sku: "royal-canin-indoor-cat-2kg",
+        name: "ロイヤルカナン インドアキャット 2kg",
         description:
-          "チキンと玄米を主原料とした、消化しやすいドライフード。食物繊維が豊富で、健康的な消化をサポートします。",
-        price: 3180,
+          "室内飼いの猫用に特別に開発されたドライフード。消化率が高く、糞便の臭いを軽減します。",
+        price: BigInt(3200000000), // 3200 USD
+        currency: defaultCurrency,
+        stockStatus: "in_stock",
+        imageUrl: "https://assets.oliver.dev/products/rc-2kg.png",
+        category: "cat_food",
+        merchantId: merchant2.id,
+        attributes: {
+          ブランド: "ロイヤルカナン",
+          風味: "チキン",
+          対象年齢: "アダルト",
+          商品の形状: "ドライフード",
+          商品用途・使用方法: "キャットフード",
+          ユニット数: "2000.0 グラム",
+          商品の個数: "1",
+          パッケージ情報: "バッグ",
+          商品の重量: "2 キログラム",
+        },
       },
       {
-        name: "Nutro ナチュラルチョイス 成猫用 ツナ&サーモン",
+        sku: "hills-science-diet-adult-chicken-2kg",
+        name: "ヒルズ サイエンス・ダイエット 成猫用 チキン",
         description:
-          "ツナとサーモンを主原料とした、高タンパク質のドライフード。天然のオメガ3脂肪酸が豊富で、健康的な被毛を維持します。",
-        price: 3380,
+          "獣医師が推奨するプレミアムドライフード。健康的な体重維持と消化器の健康をサポートします。",
+        price: BigInt(3500000000), // 3500 USD
+        currency: defaultCurrency,
+        stockStatus: "low_stock",
+        imageUrl: "https://assets.oliver.dev/products/hills-science-diet-chicken.png",
+        category: "cat_food",
+        merchantId: merchant2.id,
+        attributes: {
+          ブランド: "ヒルズ",
+          風味: "チキン",
+          対象年齢: "アダルト",
+          商品の形状: "ドライフード",
+          商品用途・使用方法: "キャットフード",
+          ユニット数: "2000.0 グラム",
+          商品の個数: "1",
+          パッケージ情報: "バッグ",
+          商品の重量: "2 キログラム",
+        },
+      },
+      {
+        sku: "water-2l-box",
+        name: "ミネラルウォーター 2L × 6本",
+        description:
+          "天然のミネラルを豊富に含む、おいしいミネラルウォーター。6本セットです。",
+        price: BigInt(800000000), // 800 USD
+        currency: defaultCurrency,
+        stockStatus: "in_stock",
+        imageUrl: "https://assets.oliver.dev/products/water-2l-box.png",
+        category: "beverage",
+        merchantId: merchant3.id,
+        attributes: {
+          ブランド: "天然水",
+          商品の形状: "ペットボトル",
+          商品用途・使用方法: "飲料",
+          ユニット数: "12000.0 ミリリットル",
+          商品の個数: "6",
+          パッケージ情報: "段ボール",
+          商品の重量: "12 キログラム",
+        },
+      },
+      {
+        sku: "toilet-paper-12roll",
+        name: "トイレットペーパー 12ロール",
+        description:
+          "やわらかくて丈夫なトイレットペーパー。12ロール入りです。",
+        price: BigInt(1200000000), // 1200 USD
+        currency: defaultCurrency,
+        stockStatus: "in_stock",
+        imageUrl: "https://assets.oliver.dev/products/toilet-paper-12roll.png",
+        category: "daily_goods",
+        merchantId: merchant3.id,
+        attributes: {
+          ブランド: "エコ",
+          商品の形状: "ロール",
+          商品用途・使用方法: "トイレットペーパー",
+          ユニット数: "12 ロール",
+          商品の個数: "1",
+          パッケージ情報: "プラスチック包装",
+          商品の重量: "1.2 キログラム",
+        },
       },
     ],
   });
 
   console.log(`✅ Created ${products.count} products`);
+  console.log("🎉 Seeding completed!");
 }
 
 main()

@@ -25,3 +25,8 @@ Thumbs.db
 # Debug files
 *.dSYM/
 
+# Coverage reports
+coverage/
+tarpaulin-report.html
+cobertura.xml
+
