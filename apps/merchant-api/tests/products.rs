@@ -194,6 +194,99 @@ async fn test_get_products_empty_category() {
 }
 
 #[tokio::test]
+async fn test_get_products_with_partial_category_match() {
+    let pool = match get_test_db_pool().await {
+        Ok(pool) => pool,
+        Err(_) => {
+            eprintln!("Skipping test: database not available");
+            return;
+        }
+    };
+    setup_test_data(&pool).await.unwrap();
+
+    let state = create_test_state(pool.clone());
+    let app = create_test_app(state);
+
+    // "cat"で検索して"cat_food"カテゴリの商品が検索できることを確認
+    let response = app
+        .oneshot(
+            Request::builder()
+                .uri("/api/v1/products?category=cat")
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+
+    assert_eq!(response.status(), StatusCode::OK);
+
+    let body = to_bytes(response.into_body(), MAX_BODY_SIZE).await.unwrap();
+    let products: Vec<Product> = serde_json::from_slice(&body).unwrap();
+
+    // cat_foodカテゴリの商品が検索されることを確認（product-1とproduct-3）
+    assert!(products.len() >= 2);
+    let product_ids: Vec<&str> = products.iter().map(|p| p.id.as_str()).collect();
+    assert!(product_ids.contains(&"product-1"));
+    assert!(product_ids.contains(&"product-3"));
+
+    cleanup_test_data(&pool).await.unwrap();
+}
+
+#[tokio::test]
+async fn test_get_products_excludes_null_category() {
+    let pool = match get_test_db_pool().await {
+        Ok(pool) => pool,
+        Err(_) => {
+            eprintln!("Skipping test: database not available");
+            return;
+        }
+    };
+    setup_test_data(&pool).await.unwrap();
+
+    // NULLカテゴリの商品を追加
+    sqlx::query(
+        r#"
+        INSERT INTO products (id, name, description, price, currency, "stockStatus", "imageUrl", category, attributes, "merchantId", "createdAt", "updatedAt")
+        VALUES ('product-null-category', 'Test Product Null Category', 'Description', 4000000, '0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913', 'in_stock', NULL, NULL, NULL, 'test-merchant-1', NOW(), NOW())
+        ON CONFLICT (id) DO UPDATE SET
+            category = NULL,
+            "updatedAt" = NOW()
+        "#,
+    )
+    .execute(&pool)
+    .await
+    .unwrap();
+
+    let state = create_test_state(pool.clone());
+    let app = create_test_app(state);
+
+    // 任意のカテゴリで検索（NULLカテゴリの商品は除外される）
+    let response = app
+        .oneshot(
+            Request::builder()
+                .uri("/api/v1/products?category=cat_food")
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+
+    assert_eq!(response.status(), StatusCode::OK);
+
+    let body = to_bytes(response.into_body(), MAX_BODY_SIZE).await.unwrap();
+    let products: Vec<Product> = serde_json::from_slice(&body).unwrap();
+
+    // NULLカテゴリの商品が検索結果に含まれないことを確認
+    let product_ids: Vec<&str> = products.iter().map(|p| p.id.as_str()).collect();
+    assert!(!product_ids.contains(&"product-null-category"));
+
+    // cat_foodカテゴリの商品は含まれることを確認
+    assert!(product_ids.contains(&"product-1") || product_ids.contains(&"product-3"));
+
+    cleanup_test_data(&pool).await.unwrap();
+}
+
+#[tokio::test]
 async fn test_get_product_by_id_success() {
     let pool = match get_test_db_pool().await {
         Ok(pool) => pool,

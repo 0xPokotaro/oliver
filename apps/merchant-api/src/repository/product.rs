@@ -76,11 +76,11 @@ pub async fn find_by_category(
         r#"
         SELECT id, name, description, price, currency, "stockStatus", "imageUrl", category, attributes
         FROM products
-        WHERE category = $1
+        WHERE category IS NOT NULL AND category LIKE $1
         ORDER BY "createdAt" DESC
         "#,
     )
-    .bind(category)
+    .bind(format!("%{}%", category))
     .fetch_all(pool)
     .await
     .map_err(ApiError::from)
