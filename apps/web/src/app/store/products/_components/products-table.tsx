@@ -35,6 +35,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { Product } from "@/lib/types/merchant-types";
+import { useProducts } from "@/hooks/use-products";
 
 // wei単位の文字列を数値に変換するユーティリティ関数
 function weiToNumber(wei: string): number {
@@ -161,17 +162,8 @@ const columns: ColumnDef<Product>[] = [
   },
 ];
 
-interface ProductsTableProps {
-  products: Product[];
-  isLoading: boolean;
-  error: Error | null;
-}
-
-export function ProductsTable({
-  products,
-  isLoading,
-  error,
-}: ProductsTableProps) {
+export function ProductsTable() {
+  const { products, isLoading, error } = useProducts({ category: "cat_food" });
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
