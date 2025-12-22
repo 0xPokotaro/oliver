@@ -27,6 +27,7 @@ export interface Product {
   currency: string; // トークンコントラクトアドレス
   stockStatus: StockStatus;
   imageUrl: string;
+  category?: string | null; // カテゴリ（例: "cat_food", "dog_food"など）
 }
 
 /**

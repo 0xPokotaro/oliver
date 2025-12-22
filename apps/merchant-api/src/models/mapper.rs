@@ -18,6 +18,7 @@ pub fn db_product_to_api_product(db_product: DbProduct) -> Product {
         currency: db_product.currency,
         stock_status: parse_stock_status(&db_product.stock_status),
         image_url: db_product.image_url.unwrap_or_default(),
+        category: db_product.category,
     }
 }
 

@@ -31,6 +31,7 @@ pub struct Product {
     pub stock_status: StockStatus,
     #[serde(rename = "imageUrl")]
     pub image_url: String,
+    pub category: Option<String>, // カテゴリ（例: "cat_food", "dog_food"など）
 }
 
 /// 商品一覧取得のクエリパラメータ

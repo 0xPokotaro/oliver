@@ -16,6 +16,7 @@ import {
 import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -37,9 +38,9 @@ import {
 import type { Product } from "@/lib/types/merchant-types";
 import { useProducts } from "@/hooks/use-products";
 
-// wei単位の文字列を数値に変換するユーティリティ関数
+// 価格文字列を数値に変換するユーティリティ関数（6桁小数点想定）
 function weiToNumber(wei: string): number {
-  return Number(wei) / 1e18;
+  return Number(wei) / 1e6;
 }
 
 const columns: ColumnDef<Product>[] = [
@@ -51,6 +52,17 @@ const columns: ColumnDef<Product>[] = [
       const truncated =
         id.length > 12 ? `${id.slice(0, 8)}...${id.slice(-4)}` : id;
       return <div className="font-mono text-sm">{truncated}</div>;
+    },
+  },
+  {
+    accessorKey: "category",
+    header: "カテゴリ",
+    cell: ({ row }) => {
+      const category = row.getValue("category") as string | null | undefined;
+      if (!category) {
+        return <div className="text-muted-foreground">-</div>;
+      }
+      return <Badge variant="secondary" className="bg-blue-500 text-white dark:bg-blue-600">{category}</Badge>;
     },
   },
   {
