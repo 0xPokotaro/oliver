@@ -9,9 +9,14 @@
     "db:stop": "supabase stop",
     "db:gen": "pnpm --filter web prisma:gen",
     "web:dev": "pnpm --filter web dev",
+    "merchant-api:dev": "cd apps/merchant-api && DATABASE_URL=postgresql://postgres:postgres@localhost:54322/postgres cargo run",
+    "all:dev": "concurrently \"pnpm web:dev\" \"pnpm merchant-api:dev\"",
     "docs:start": "pnpm --filter docs start",
     "evm:node": "pnpm --filter evm node",
     "evm:deploy:erc20": "pnpm --filter evm deploy:erc20",
     "types:sync": "cd apps/merchant-api && typeshare . --lang=typescript --output-file=../../packages/types/src/generated/merchant-api.ts"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }
