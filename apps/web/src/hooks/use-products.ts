@@ -2,14 +2,15 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/hono/client";
-import type { Product } from "@/lib/types/merchant-types";
+import type { Product } from "@/lib/types";
+import { DEFAULT_PRODUCT_CATEGORY } from "@/lib/constants";
 
 interface UseProductsOptions {
   category?: string;
 }
 
 export function useProducts(options?: UseProductsOptions) {
-  const { category = "cat_food" } = options ?? {};
+  const { category = DEFAULT_PRODUCT_CATEGORY } = options ?? {};
 
   const { data, isLoading, error } = useQuery<Product[]>({
     queryKey: ["products", category],

@@ -8,7 +8,7 @@ import type {
   CreateX402PaymentHeaderOptions,
   CreateX402PaymentHeaderResult,
 } from "./client-types";
-import type { PaymentPayload, Signature } from "../types/x402-types";
+import type { PaymentPayload, Signature } from "@/lib/types";
 
 /**
  * ERC20Permitの標準ABI（EIP-2612）

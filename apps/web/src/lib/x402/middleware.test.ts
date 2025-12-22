@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { x402Middleware, getX402Config } from "./middleware";
 import * as facilitatorClient from "../facilitator/client";
-import type { X402Config } from "../types/x402-types";
+import type { X402Config } from "@/lib/types";
 
 vi.mock("../facilitator/client", () => ({
   verifyPayment: vi.fn(),

@@ -2,7 +2,7 @@
  * Merchant APIクライアント
  */
 
-import type { Product } from "../types/merchant-types";
+import type { Product } from "@/lib/types";
 
 /**
  * Merchant APIのベースURL

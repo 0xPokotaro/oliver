@@ -35,13 +35,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { Product } from "@/lib/types/merchant-types";
+import type { Product } from "@/lib/types";
 import { useProducts } from "@/hooks/use-products";
-
-// 価格文字列を数値に変換するユーティリティ関数（6桁小数点想定）
-function weiToNumber(wei: string): number {
-  return Number(wei) / 1e6;
-}
+import {
+  weiToNumber,
+  formatCurrency,
+  truncateString,
+} from "@/lib/formatting";
+import { DEFAULT_PRODUCT_CATEGORY, STOCK_STATUS_LABELS } from "@/lib/constants";
 
 const columns: ColumnDef<Product>[] = [
   {
@@ -49,8 +50,7 @@ const columns: ColumnDef<Product>[] = [
     header: "商品ID",
     cell: ({ row }) => {
       const id = row.getValue("id") as string;
-      const truncated =
-        id.length > 12 ? `${id.slice(0, 8)}...${id.slice(-4)}` : id;
+      const truncated = truncateString(id, 12);
       return <div className="font-mono text-sm">{truncated}</div>;
     },
   },
@@ -98,12 +98,7 @@ const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const priceWei = row.getValue("price") as string;
       const price = weiToNumber(priceWei);
-
-      // Format the price as JPY
-      const formatted = new Intl.NumberFormat("ja-JP", {
-        style: "currency",
-        currency: "JPY",
-      }).format(price);
+      const formatted = formatCurrency(price);
 
       return <div className="text-right font-medium">{formatted}</div>;
     },
@@ -123,12 +118,7 @@ const columns: ColumnDef<Product>[] = [
     },
     cell: ({ row }) => {
       const status = row.getValue("stockStatus") as string;
-      const statusLabels: Record<string, string> = {
-        in_stock: "在庫あり",
-        low_stock: "在庫少",
-        out_of_stock: "在庫切れ",
-      };
-      return <div>{statusLabels[status] || status}</div>;
+      return <div>{STOCK_STATUS_LABELS[status] || status}</div>;
     },
   },
   {
@@ -136,10 +126,7 @@ const columns: ColumnDef<Product>[] = [
     header: "通貨",
     cell: ({ row }) => {
       const currency = row.getValue("currency") as string;
-      const truncated =
-        currency.length > 12
-          ? `${currency.slice(0, 8)}...${currency.slice(-4)}`
-          : currency;
+      const truncated = truncateString(currency, 12);
       return <div className="font-mono text-sm">{truncated}</div>;
     },
   },
@@ -175,7 +162,9 @@ const columns: ColumnDef<Product>[] = [
 ];
 
 export function ProductsTable() {
-  const { products, isLoading, error } = useProducts({ category: "cat_food" });
+  const { products, isLoading, error } = useProducts({
+    category: DEFAULT_PRODUCT_CATEGORY,
+  });
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
