@@ -18,7 +18,7 @@ build-lambda:
 		echo "cargo-lambda is not installed. Installing..."; \
 		cargo install cargo-lambda; \
 	fi
-	cargo lambda build --release --binary bootstrap
+	cargo lambda build --release --bin bootstrap
 	@mkdir -p target/lambda
 	@if [ -d "target/lambda/bootstrap" ]; then \
 		cd target/lambda/bootstrap && zip -r ../bootstrap.zip bootstrap; \
