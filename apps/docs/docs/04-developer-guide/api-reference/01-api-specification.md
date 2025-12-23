@@ -27,9 +27,9 @@ https://api.merchant.oliver.dev/v1
 ### API Resources and Support Channels
 
 * 📌 [プロジェクトドキュメント](../../../)
-* 💡 [x402ミドルウェア実装](../../../../apps/web/src/lib/x402/middleware.ts)
-* 💡 [x402クライアントSDK](../../../../apps/web/src/lib/x402/client.ts)
-* 💡 [x402型定義](../../../../apps/web/src/lib/types/x402-types.ts)
+* 💡 [x402ミドルウェア実装](https://github.com/0xPokotaro/oliver/blob/main/apps/web/src/lib/x402/middleware.ts)
+* 💡 [x402クライアントSDK](https://github.com/0xPokotaro/oliver/blob/main/apps/web/src/lib/x402/client.ts)
+* 💡 [x402型定義](https://github.com/0xPokotaro/oliver/blob/main/apps/web/src/lib/types/x402-types.ts)
 
 ### Authentication
 
@@ -1050,7 +1050,7 @@ x402ミドルウェアは以下の環境変数を使用します：
 
 ## 参考資料
 
-- [x402ミドルウェア実装](../../../../apps/web/src/lib/x402/middleware.ts)
-- [x402クライアントSDK](../../../../apps/web/src/lib/x402/client.ts)
-- [x402型定義](../../../../apps/web/src/lib/types/x402-types.ts)
+- [x402ミドルウェア実装](https://github.com/0xPokotaro/oliver/blob/main/apps/web/src/lib/x402/middleware.ts)
+- [x402クライアントSDK](https://github.com/0xPokotaro/oliver/blob/main/apps/web/src/lib/x402/client.ts)
+- [x402型定義](https://github.com/0xPokotaro/oliver/blob/main/apps/web/src/lib/types/x402-types.ts)
 

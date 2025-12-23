@@ -341,8 +341,8 @@ export async function GET(request: Request) {
 
 ## 参考資料
 
-- [API仕様書](./api-reference/api-specification.md)
-- [モノレポ構造](./monorepo-structure.md)
+- [API仕様書](/docs/developer-guide/api-reference/api-specification)
+- [モノレポ構造](/docs/developer-guide/monorepo-structure)
 - [Prisma公式ドキュメント](https://www.prisma.io/docs)
 - [typeshare公式ドキュメント](https://github.com/1Password/typeshare)
 
