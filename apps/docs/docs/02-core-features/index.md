@@ -12,9 +12,9 @@ Oliverは、単なるAIアシスタントではありません。
 
 ## 主要機能
 
-- [AI Agent](./02-ai-agent)
-- [x402プロトコル](./03-x402-protocol)
-- [ガスレス決済](./04-gasless-payment)
-- [ヘッドレスコマース](./05-headless-commerce)
-- [セキュリティ](./06-security)
+- [AI Agent](/docs/core-features/ai-agent)
+- [x402プロトコル](/docs/core-features/x402-protocol)
+- [ガスレス決済](/docs/core-features/gasless-payment)
+- [ヘッドレスコマース](/docs/core-features/headless-commerce)
+- [セキュリティ](/docs/core-features/security)
 
