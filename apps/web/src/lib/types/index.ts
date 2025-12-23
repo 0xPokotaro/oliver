@@ -8,6 +8,7 @@ export type {
   Product,
   ProductDetail,
   Order,
+  BuyRequest,
   BuyResponse,
   PaymentMetadata,
   HealthResponse,

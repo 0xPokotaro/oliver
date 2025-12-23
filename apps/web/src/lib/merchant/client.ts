@@ -2,7 +2,7 @@
  * Merchant APIクライアント
  */
 
-import type { Product } from "@/lib/types";
+import type { Product, BuyRequest } from "@/lib/types";
 
 /**
  * Merchant APIのベースURL
@@ -53,5 +53,29 @@ export async function getProducts(
     }
     throw new Error("Failed to get products: Unknown error");
   }
+}
+
+/**
+ * 商品を購入する（1回目リクエスト: X-PAYMENTヘッダーなし）
+ * @param productId 商品ID
+ * @param request 購入リクエスト（数量）
+ * @returns レスポンス（402 Payment Requiredまたは200 OK）
+ */
+export async function buyProduct(
+  productId: string,
+  request: BuyRequest,
+): Promise<Response> {
+  const merchantApiUrl = getMerchantApiUrl();
+  const url = `${merchantApiUrl}/api/v1/products/${productId}/buy`;
+
+  const response = await fetch(url.toString(), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(request),
+  });
+
+  return response;
 }
 

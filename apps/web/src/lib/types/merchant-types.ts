@@ -58,6 +58,13 @@ export interface Order {
 }
 
 /**
+ * 購入リクエストボディ
+ */
+export interface BuyRequest {
+  quantity: number;
+}
+
+/**
  * 購入レスポンス（200 OK）
  */
 export interface BuyResponse {
