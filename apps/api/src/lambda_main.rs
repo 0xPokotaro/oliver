@@ -1,5 +1,6 @@
 /// Lambda関数用のエントリーポイント
 
+#[allow(unused_imports)] // get_portはmain.rsで使用されているが、lambda_main.rsでは未使用
 mod config;
 mod error;
 mod handlers;
@@ -16,7 +17,6 @@ use config::{get_db_pool, get_x402_config};
 use routes::create_router;
 use state::AppState;
 use tower::ServiceExt;
-use tower_http::ServiceBuilderExt;
 
 async fn handler_func(
     request: Request,
@@ -24,8 +24,13 @@ async fn handler_func(
 ) -> Result<Response<axum::body::Body>, Error> {
     // lambda_http::Requestをaxum::http::Requestに変換
     let (parts, body) = request.into_parts();
-    let body_bytes = axum::body::to_bytes(body, usize::MAX).await
-        .map_err(|e| Error::from(format!("Body read error: {}", e)))?;
+    
+    // lambda_http::Bodyをbytesに変換
+    let body_bytes = match body {
+        lambda_http::Body::Empty => bytes::Bytes::new(),
+        lambda_http::Body::Text(text) => text.into(),
+        lambda_http::Body::Binary(binary) => binary.into(),
+    };
     
     let mut axum_request = axum::http::Request::builder()
         .method(parts.method)
@@ -42,6 +47,8 @@ async fn handler_func(
 
     // AxumのRouterを呼び出す
     let response = app
+        .as_ref()
+        .clone()
         .oneshot(axum_request)
         .await
         .map_err(|e| Error::from(format!("Request handling error: {}", e)))?;

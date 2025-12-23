@@ -8,6 +8,7 @@ use std::env;
 pub struct X402Config {
     pub pay_to: String,              // 受取人アドレス
     pub asset: String,               // トークンコントラクトアドレス
+    #[allow(dead_code)] // 設定として保存されているが、現在は未使用（将来の拡張用）
     pub max_amount_required: String,  // 最大必要額（wei）
     pub network: String,              // ネットワーク名
     pub max_timeout_seconds: u64,     // タイムアウト（秒）
