@@ -12,7 +12,7 @@ importers:
         specifier: ^9.2.1
         version: 9.2.1
 
-  apps/docs:
+  apps/doc:
     dependencies:
       '@docusaurus/core':
         specifier: 3.9.2

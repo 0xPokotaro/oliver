@@ -29,6 +29,11 @@ terraform validate
 
 ## デプロイ
 
+### State 管理（S3 Backend）
+- Terraform state は S3 バケット + DynamoDB ロックで管理します。
+- バケット・テーブルの作成手順は `backend-setup.md` を参照してください。
+- 既存 state を移行する場合は `terraform init -migrate-state` を実行してください。
+
 ### デプロイ前の確認
 
 ```bash
