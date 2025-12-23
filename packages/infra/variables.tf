@@ -13,6 +13,7 @@ variable "env" {
 variable "lambda_function_name" {
   description = "Lambda function name"
   type        = string
+  default     = "api-dev"
 }
 
 variable "lambda_source_path" {
@@ -42,6 +43,7 @@ variable "lambda_environment" {
 variable "api_name" {
   description = "API Gateway name"
   type        = string
+  default     = "dev"
 }
 
 variable "cors_enabled" {
@@ -49,4 +51,3 @@ variable "cors_enabled" {
   type        = bool
   default     = true
 }
-

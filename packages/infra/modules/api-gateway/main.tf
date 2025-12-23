@@ -40,8 +40,3 @@ resource "aws_apigatewayv2_stage" "stage" {
   auto_deploy = true
 }
 
-resource "aws_apigatewayv2_deployment" "deployment" {
-  api_id = aws_apigatewayv2_api.api.id
-  depends_on = [aws_apigatewayv2_stage.stage]
-}
-

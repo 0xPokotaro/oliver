@@ -1,0 +1,101 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.14.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+
+      - name: Cache cargo registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            apps/api/target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('apps/api/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Install cargo-lambda
+        run: cargo install cargo-lambda
+
+      - name: Build Lambda function
+        run: |
+          cd apps/api
+          make build-lambda
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.0
+
+      - name: Create terraform.tfvars from secrets
+        working-directory: packages/infra
+        run: |
+          cat > terraform.tfvars <<EOF
+          aws_region = "ap-northeast-1"
+          env        = "dev"
+          
+          lambda_function_name = "api-dev"
+          lambda_source_path   = "../../apps/api"
+          lambda_handler       = "bootstrap"
+          lambda_runtime       = "provided.al2023"
+          
+          lambda_environment = ${{ secrets.LAMBDA_ENVIRONMENT }}
+          
+          api_name     = "api-dev"
+          cors_enabled = true
+          EOF
+        env:
+          LAMBDA_ENVIRONMENT: ${{ secrets.LAMBDA_ENVIRONMENT }}
+
+      - name: Terraform Init
+        working-directory: packages/infra
+        run: terraform init
+
+      - name: Terraform Plan
+        working-directory: packages/infra
+        run: terraform plan -out=tfplan
+
+      - name: Terraform Apply
+        working-directory: packages/infra
+        run: terraform apply -auto-approve tfplan
+
