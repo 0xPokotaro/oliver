@@ -31,3 +31,23 @@ export type {
   X402Config,
   X402MiddlewareResult,
 } from "./x402-types";
+
+// Product attributes types
+export type {
+  ProductCategory,
+  ProductAttributes,
+  CatFoodAttributes,
+  BeverageAttributes,
+  DailyGoodsAttributes,
+  TypedProductCreateManyInput,
+} from "./product-attributes";
+
+export {
+  defineAttributes,
+  createProductDataForPrisma,
+  ProductCategories,
+  ProductCategorySchema,
+  CatFoodAttributesSchema,
+  BeverageAttributesSchema,
+  DailyGoodsAttributesSchema,
+} from "./product-attributes";
