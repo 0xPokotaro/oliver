@@ -105,9 +105,26 @@ jobs:
 
       - name: Terraform Plan
         working-directory: packages/infra
-        run: terraform plan -out=tfplan
+        run: terraform plan -out=tfplan -no-color | tee plan.txt
+
+      - name: Upload plan output
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-plan
+          path: packages/infra/plan.txt
+
+      - name: Check for changes
+        id: plan
+        working-directory: packages/infra
+        run: |
+          if grep -q "No changes" plan.txt; then
+            echo "has_changes=false" >> $GITHUB_OUTPUT
+          else
+            echo "has_changes=true" >> $GITHUB_OUTPUT
+          fi
 
       - name: Terraform Apply
+        if: steps.plan.outputs.has_changes == 'true'
         working-directory: packages/infra
         run: terraform apply -auto-approve tfplan
 

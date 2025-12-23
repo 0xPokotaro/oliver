@@ -18,6 +18,12 @@ build-lambda:
 		echo "cargo-lambda is not installed. Installing..."; \
 		cargo install cargo-lambda; \
 	fi
+	@if ! command -v zig >/dev/null 2>&1; then \
+		echo "Zig is not installed. Please install Zig:"; \
+		echo "  brew install zig"; \
+		echo "  or download from https://ziglang.org/download/"; \
+		exit 1; \
+	fi
 	cargo lambda build --release --bin bootstrap
 	@mkdir -p target/lambda
 	@if [ -f "target/lambda/bootstrap/bootstrap" ]; then \
