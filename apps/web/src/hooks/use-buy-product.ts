@@ -20,8 +20,9 @@ export function useBuyProduct() {
   const { mutate, mutateAsync, data, error, isPending, isSuccess, isError } =
     useMutation<BuyProductResponse, Error, BuyProductVariables>({
       mutationFn: async ({ productId, request }) => {
-        const response = await (client.api.products.buy[":id"].$post as any)({
+        const response = await client.api.products.buy[":id"].$post({
           param: { id: productId },
+          // @ts-expect-error - Hono client type inference issue with json property
           json: request,
         });
 
