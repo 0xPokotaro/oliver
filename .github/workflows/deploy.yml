@@ -46,7 +46,7 @@ jobs:
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
             apps/api/target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('apps/api/Cargo.lock') }}
+          key: ${{ runner.os }}-cargo-${{ hashFiles('Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
 
