@@ -34,7 +34,9 @@ jobs:
           DATABASE_URL: postgresql://user:password@localhost:5432/db
 
       - name: Build web app
-        run: pnpm --filter web build
+        run: |
+          pnpm --filter web prisma:gen
+          pnpm --filter web build
         env:
           DATABASE_URL: postgresql://user:password@localhost:5432/db
           X402_PAY_TO: 0x0000000000000000000000000000000000000000
