@@ -132,6 +132,17 @@ const DATA = {
       ],
     },
     {
+      title: "Playground",
+      url: "#",
+      icon: Bot,
+      items: [
+        {
+          title: "Buy",
+          url: "/playground",
+        },
+      ],
+    },
+    {
       title: "Documentation",
       url: "#",
       icon: BookOpen,

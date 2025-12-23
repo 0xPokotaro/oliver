@@ -9,7 +9,7 @@ import type {
   PaymentInfo,
   X402Config,
   X402MiddlewareResult,
-} from "../types/x402-types";
+} from "@/lib/types";
 
 /**
  * 環境変数からX402設定を取得

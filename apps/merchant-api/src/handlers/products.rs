@@ -1,7 +1,7 @@
 use axum::{extract::{Path, Query, State}, http::HeaderMap, response::Response, Json};
 use crate::error::ApiError;
 use crate::models::{GetProductsQuery, Product, ProductDetail, BuyRequest, mapper::{db_product_to_api_product, db_product_to_product_detail}};
-use crate::repository::product::{find_all, find_by_category, find_by_sku};
+use crate::repository::product::{find_all, find_by_category, find_by_id};
 use crate::services::payment::{estimate_payment, process_payment};
 use crate::state::AppState;
 
@@ -26,13 +26,13 @@ pub async fn get_products(
     Ok(Json(products))
 }
 
-/// GET /api/v1/products/:sku ハンドラー
-pub async fn get_product_by_sku(
+/// GET /api/v1/products/:id ハンドラー
+pub async fn get_product_by_id(
     State(state): State<AppState>,
-    Path(sku): Path<String>,
+    Path(id): Path<String>,
 ) -> Result<Json<ProductDetail>, ApiError> {
     // データベースから商品を取得
-    let db_product = find_by_sku(&state.db_pool, &sku)
+    let db_product = find_by_id(&state.db_pool, &id)
         .await?
         .ok_or_else(|| ApiError::NotFound {
             resource: "Product".to_string(),
@@ -45,15 +45,15 @@ pub async fn get_product_by_sku(
     Ok(Json(product_detail))
 }
 
-/// POST /api/v1/products/:sku/buy ハンドラー
+/// POST /api/v1/products/:id/buy ハンドラー
 pub async fn buy_product(
     State(state): State<AppState>,
-    Path(sku): Path<String>,
+    Path(id): Path<String>,
     headers: HeaderMap,
     Json(request): Json<BuyRequest>,
 ) -> Result<Response, ApiError> {
     // 商品情報を取得
-    let db_product = find_by_sku(&state.db_pool, &sku)
+    let db_product = find_by_id(&state.db_pool, &id)
         .await?
         .ok_or_else(|| ApiError::NotFound {
             resource: "Product".to_string(),
@@ -65,7 +65,7 @@ pub async fn buy_product(
 
     if payment_header.is_none() {
         // シナリオA: 見積もり要求（402 Payment Required）
-        return estimate_payment(&state, &sku, &request).await;
+        return estimate_payment(&state, &id, &request).await;
     }
 
     // シナリオB: 決済実行
@@ -78,6 +78,6 @@ pub async fn buy_product(
             message: "Invalid X-PAYMENT header encoding".to_string(),
         })?;
 
-    process_payment(&state, &sku, &db_product, &request, payment_header_value).await
+    process_payment(&state, &id, &db_product, &request, payment_header_value).await
 }
 

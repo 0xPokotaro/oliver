@@ -10,8 +10,8 @@ pub fn create_router(state: AppState) -> Router {
         // API v1 routes
         .route("/api/v1/health", get(handlers::health::get_health))
         .route("/api/v1/products", get(handlers::products::get_products))
-        .route("/api/v1/products/:sku", get(handlers::products::get_product_by_sku))
-        .route("/api/v1/products/:sku/buy", post(handlers::products::buy_product))
+        .route("/api/v1/products/:id", get(handlers::products::get_product_by_id))
+        .route("/api/v1/products/:id/buy", post(handlers::products::buy_product))
         .route("/api/v1/orders/:orderId", get(handlers::orders::get_order_by_id))
         .with_state(state)
 }

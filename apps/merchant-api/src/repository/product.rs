@@ -18,11 +18,11 @@ pub trait ProductRepository: Send + Sync {
         category: &str,
     ) -> Result<Vec<DbProduct>, ApiError>;
     
-    /// SKUで商品を取得
-    async fn find_by_sku(
+    /// IDで商品を取得
+    async fn find_by_id(
         &self,
         pool: &PgPool,
-        sku: &str,
+        id: &str,
     ) -> Result<Option<DbProduct>, ApiError>;
 }
 
@@ -44,12 +44,12 @@ impl ProductRepository for DefaultProductRepository {
         find_by_category(pool, category).await
     }
     
-    async fn find_by_sku(
+    async fn find_by_id(
         &self,
         pool: &PgPool,
-        sku: &str,
+        id: &str,
     ) -> Result<Option<DbProduct>, ApiError> {
-        find_by_sku(pool, sku).await
+        find_by_id(pool, id).await
     }
 }
 
@@ -57,7 +57,7 @@ impl ProductRepository for DefaultProductRepository {
 pub async fn find_all(pool: &PgPool) -> Result<Vec<DbProduct>, ApiError> {
     sqlx::query_as::<_, DbProduct>(
         r#"
-        SELECT id, sku, name, description, price, currency, "stockStatus", "imageUrl", category, attributes
+        SELECT id, name, description, price, currency, "stockStatus", "imageUrl", category, attributes
         FROM products
         ORDER BY "createdAt" DESC
         "#,
@@ -74,31 +74,31 @@ pub async fn find_by_category(
 ) -> Result<Vec<DbProduct>, ApiError> {
     sqlx::query_as::<_, DbProduct>(
         r#"
-        SELECT id, sku, name, description, price, currency, "stockStatus", "imageUrl", category, attributes
+        SELECT id, name, description, price, currency, "stockStatus", "imageUrl", category, attributes
         FROM products
-        WHERE category = $1
+        WHERE category IS NOT NULL AND category LIKE $1
         ORDER BY "createdAt" DESC
         "#,
     )
-    .bind(category)
+    .bind(format!("%{}%", category))
     .fetch_all(pool)
     .await
     .map_err(ApiError::from)
 }
 
-/// SKUで商品を取得
-pub async fn find_by_sku(
+/// IDで商品を取得
+pub async fn find_by_id(
     pool: &PgPool,
-    sku: &str,
+    id: &str,
 ) -> Result<Option<DbProduct>, ApiError> {
     sqlx::query_as::<_, DbProduct>(
         r#"
-        SELECT id, sku, name, description, price, currency, "stockStatus", "imageUrl", category, attributes
+        SELECT id, name, description, price, currency, "stockStatus", "imageUrl", category, attributes
         FROM products
-        WHERE sku = $1
+        WHERE id = $1
         "#,
     )
-    .bind(sku)
+    .bind(id)
     .fetch_optional(pool)
     .await
     .map_err(ApiError::from)

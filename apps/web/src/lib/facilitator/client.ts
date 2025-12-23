@@ -2,7 +2,7 @@
  * Facilitator APIクライアント
  */
 
-import type { VerifyResponse, SettleResponse } from "../types/x402-types";
+import type { VerifyResponse, SettleResponse } from "@/lib/types";
 
 /**
  * Facilitator APIのベースURL

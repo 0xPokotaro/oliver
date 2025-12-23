@@ -20,7 +20,7 @@ import {
   type UseFloatingReturn,
 } from "@floating-ui/react";
 
-import { getStrictContext } from "@/lib/get-strict-context";
+import { getStrictContext } from "@/utils/get-strict-context";
 import {
   Slot,
   type WithAsChild,

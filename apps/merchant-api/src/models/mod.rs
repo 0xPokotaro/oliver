@@ -23,7 +23,7 @@ pub enum StockStatus {
 #[typeshare]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Product {
-    pub sku: String,
+    pub id: String,
     pub name: String,
     pub price: String, // wei単位の文字列
     pub currency: String, // トークンコントラクトアドレス
@@ -31,6 +31,7 @@ pub struct Product {
     pub stock_status: StockStatus,
     #[serde(rename = "imageUrl")]
     pub image_url: String,
+    pub category: Option<String>, // カテゴリ（例: "cat_food", "dog_food"など）
 }
 
 /// 商品一覧取得のクエリパラメータ
@@ -43,7 +44,7 @@ pub struct GetProductsQuery {
 #[typeshare]
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ProductDetail {
-    pub sku: String,
+    pub id: String,
     pub name: String,
     pub description: String,
     pub price: String, // wei単位の文字列
@@ -76,7 +77,7 @@ pub enum OrderStatus {
 pub struct Order {
     #[serde(rename = "orderId")]
     pub order_id: String,
-    pub sku: Option<String>, // 商品SKU
+    pub id: Option<String>, // 商品ID
     pub quantity: i32, // 数量
     pub amount: String, // wei単位の文字列
     pub currency: String, // トークンコントラクトアドレス
