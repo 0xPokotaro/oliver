@@ -6,9 +6,9 @@ use axum::{
     routing::get,
     Router,
 };
-use merchant_api::handlers::orders::get_order_by_id;
-use merchant_api::models::Order;
-use merchant_api::state::AppState;
+use api::handlers::orders::get_order_by_id;
+use api::models::Order;
+use api::state::AppState;
 use serde_json::Value;
 use tower::ServiceExt;
 
@@ -93,7 +93,7 @@ async fn test_get_order_by_id_success() {
     let order: Order = serde_json::from_slice(&body).unwrap();
 
     assert_eq!(order.order_id, order_id);
-    assert_eq!(order.status, merchant_api::models::OrderStatus::Processing);
+    assert_eq!(order.status, api::models::OrderStatus::Processing);
     assert_eq!(order.amount, "1000000");
     assert!(order.id.is_some());
     assert_eq!(order.quantity, 1);
@@ -193,7 +193,7 @@ async fn test_get_order_by_id_pending_status() {
     let order: Order = serde_json::from_slice(&body).unwrap();
 
     assert_eq!(order.order_id, order_id);
-    assert_eq!(order.status, merchant_api::models::OrderStatus::Processing);
+    assert_eq!(order.status, api::models::OrderStatus::Processing);
     assert_eq!(order.amount, "2000000");
     assert_eq!(order.quantity, 1);
 

@@ -72,7 +72,7 @@ terraform destroy
 - `aws_region`: AWSリージョン（デフォルト: `ap-northeast-1`）
 - `env`: 環境名（デフォルト: `dev`）
 - `lambda_function_name`: Lambda関数名
-- `lambda_source_path`: Lambdaソースコードのパス（デフォルト: `../../apps/merchant-api`）
+- `lambda_source_path`: Lambdaソースコードのパス（デフォルト: `../../apps/api`）
 - `lambda_handler`: Lambdaハンドラー（デフォルト: `bootstrap`）
 - `lambda_runtime`: Lambdaランタイム（デフォルト: `provided.al2023`）
 - `lambda_environment`: Lambda環境変数（以下のキーを含む）

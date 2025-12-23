@@ -9,6 +9,6 @@
     "terraform:destroy": "terraform destroy",
     "terraform:fmt": "terraform fmt",
     "terraform:validate": "terraform validate",
-    "build:lambda": "cd ../../apps/merchant-api && make build-lambda"
+    "build:lambda": "cd ../../apps/api && make build-lambda"
   }
 }

@@ -18,7 +18,7 @@ variable "lambda_function_name" {
 variable "lambda_source_path" {
   description = "Path to Lambda source code"
   type        = string
-  default     = "../../apps/merchant-api"
+  default     = "../../apps/api"
 }
 
 variable "lambda_handler" {

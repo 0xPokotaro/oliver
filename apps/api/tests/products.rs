@@ -6,9 +6,9 @@ use axum::{
     routing::{get, post},
     Router,
 };
-use merchant_api::handlers::products::{buy_product, get_product_by_id, get_products};
-use merchant_api::models::{Product, ProductDetail};
-use merchant_api::state::AppState;
+use api::handlers::products::{buy_product, get_product_by_id, get_products};
+use api::models::{Product, ProductDetail};
+use api::state::AppState;
 use serde_json::{json, Value};
 use tower::ServiceExt;
 
@@ -148,9 +148,9 @@ async fn test_get_products_response_structure() {
     assert!(!product.currency.is_empty());
     // stockStatusはStockStatus enumであることを確認
     match product.stock_status {
-        merchant_api::models::StockStatus::InStock
-        | merchant_api::models::StockStatus::LowStock
-        | merchant_api::models::StockStatus::OutOfStock => {}
+        api::models::StockStatus::InStock
+        | api::models::StockStatus::LowStock
+        | api::models::StockStatus::OutOfStock => {}
     }
     assert!(!product.image_url.is_empty());
 

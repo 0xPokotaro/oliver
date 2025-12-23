@@ -1,8 +1,8 @@
 aws_region = "ap-northeast-1"
 env        = "dev"
 
-lambda_function_name = "merchant-api-dev"
-lambda_source_path   = "../../apps/merchant-api"
+lambda_function_name = "api-dev"
+lambda_source_path   = "../../apps/api"
 lambda_handler       = "bootstrap"
 lambda_runtime       = "provided.al2023"
 
@@ -17,6 +17,6 @@ lambda_environment = {
   FACILITATOR_URL          = ""
 }
 
-api_name     = "merchant-api-dev"
+api_name     = "api-dev"
 cors_enabled = true
 

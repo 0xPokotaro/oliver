@@ -1,6 +1,6 @@
 [workspace]
 members = [
-    "../apps/merchant-api",
+    "../apps/api",
     "../apps/facilitator-api",
 ]
 
