@@ -5,8 +5,8 @@
   "packageManager": "pnpm@10.14.0",
   "description": "",
   "scripts": {
-    "db:start": "supabase start --config packages/supabase/config.toml",
-    "db:stop": "supabase stop --config packages/supabase/config.toml",
+    "db:start": "supabase start --config packages/database/config.toml",
+    "db:stop": "supabase stop --config packages/database/config.toml",
     "db:gen": "pnpm --filter web prisma:gen",
     "web:dev": "pnpm --filter web dev",
     "merchant-api:dev": "cd apps/merchant-api && DATABASE_URL=postgresql://postgres:postgres@localhost:54322/postgres cargo run",
