@@ -30,3 +30,5 @@ coverage/
 tarpaulin-report.html
 cobertura.xml
 
+# Others
+.zig-cache/

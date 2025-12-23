@@ -24,20 +24,41 @@ build-lambda:
 		echo "  or download from https://ziglang.org/download/"; \
 		exit 1; \
 	fi
-	cargo lambda build --release --bin bootstrap
-	@mkdir -p target/lambda
+	@echo "Building Lambda function with cargo-lambda..."
+	@which clang > /dev/null 2>&1 || (echo "clang is required but not found" && exit 1)
+	@mkdir -p .zig-cache && \
+	CC_WRAPPER=$$(mktemp /tmp/cc-wrapper.XXXXXX) && \
+		echo '#!/bin/sh' > $$CC_WRAPPER && \
+		echo 'exec clang -m64 -O2 -fPIC "$$@"' >> $$CC_WRAPPER && \
+		chmod +x $$CC_WRAPPER && \
+		ZIG_GLOBAL_CACHE_DIR=$$(pwd)/.zig-cache \
+		CC_x86_64_apple_darwin=$$CC_WRAPPER \
+		CFLAGS_x86_64_apple_darwin="" \
+		env -u MACOSX_DEPLOYMENT_TARGET \
+		CRATE_CC_NO_DEFAULTS=1 \
+		cargo lambda build --release --bin bootstrap; \
+		EXIT_CODE=$$?; \
+		rm -f $$CC_WRAPPER; \
+		exit $$EXIT_CODE
+	@mkdir -p target/lambda/bootstrap
 	@if [ -f "target/lambda/bootstrap/bootstrap" ]; then \
-		cd target/lambda/bootstrap && zip -r ../bootstrap.zip bootstrap; \
-	elif [ -d "target/lambda/bootstrap" ] && [ -f "target/lambda/bootstrap/bootstrap" ]; then \
-		cd target/lambda/bootstrap && zip -r ../bootstrap.zip bootstrap; \
+		cd target/lambda/bootstrap && zip -r ../bootstrap.zip bootstrap && echo "Lambda binary built at target/lambda/bootstrap.zip"; \
+	elif [ -f "target/lambda/bootstrap.zip" ]; then \
+		echo "Lambda binary already exists at target/lambda/bootstrap.zip"; \
 	else \
-		echo "Error: Lambda binary not found."; \
+		echo "Warning: cargo-lambda may have created the binary in a different location."; \
 		echo "Checking target/lambda directory:"; \
-		ls -la target/lambda/ || echo "target/lambda directory does not exist"; \
-		find target -name "bootstrap" -type f 2>/dev/null | head -5 || echo "No bootstrap binary found"; \
-		exit 1; \
+		find target/lambda -type f 2>/dev/null | head -10 || echo "No files found in target/lambda"; \
+		echo "Creating zip from target/release/bootstrap if available..."; \
+		if [ -f "target/release/bootstrap" ]; then \
+			cp target/release/bootstrap target/lambda/bootstrap/bootstrap && \
+			cd target/lambda/bootstrap && zip -r ../bootstrap.zip bootstrap && \
+			echo "Lambda binary built at target/lambda/bootstrap.zip"; \
+		else \
+			echo "Error: Lambda binary not found."; \
+			exit 1; \
+		fi; \
 	fi
-	@echo "Lambda binary built at target/lambda/bootstrap.zip"
 
 # Lambda用のビルド（手動、cargo-lambdaが使えない場合）
 build-lambda-manual:
