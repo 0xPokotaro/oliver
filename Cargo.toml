@@ -1,7 +1,6 @@
 [workspace]
 members = [
     "apps/api",
-    "apps/facilitator-api",
 ]
 resolver = "2"
 

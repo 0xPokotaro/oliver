@@ -24,11 +24,6 @@
 │   │   ├── src/handlers/                   # 402レスポンス、署名検証ロジック
 │   │   └── Cargo.toml                      # (name: api)
 │   │
-│   ├── facilitator-api/                    # [Rust/Axum] ★署名検証・実行ノード
-│   │   ├── src/chain/                      # Alloyを使ったオンチェーン実行
-│   │   ├── src/verifier/                   # EIP-712/2612 検証ロジック
-│   │   └── Cargo.toml                      # (name: facilitator-api)
-│   │
 │   └── docs/                               # [Docusaurus] ドキュメント
 │
 ├── packages/                               # 共有ライブラリ層 (Shared Logic)
@@ -51,9 +46,7 @@
 │   │
 │   └── config/                             # [Config] TSConfig, ESLint
 │
-├── cargo-workspace/                        # Rustワークスペース定義
-│   └── Cargo.toml                          # apps/api, apps/facilitator-api を指定
-│
+├── Cargo.toml                              # Rustワークスペース定義（apps/api を指定）
 ├── pnpm-workspace.yaml                     # pnpmワークスペース定義
 ├── package.json                            # ルートスクリプト定義
 └── rust-toolchain.toml                     # Rustバージョン固定
@@ -84,9 +77,12 @@ PCやスマホからアクセスする管理画面です。
 *   **解決:** Rustコード（`apps/api/src/types.rs`）に `#[typeshare]` 属性を付け、自動生成ツール（typeshare）を使って、この `packages/types` ディレクトリにTypeScriptの型定義ファイルを書き出します。
 *   **結果:** フロントエンドは常にバックエンドと同期した正しい型を使えます。
 
-### 4. `cargo-workspace`
+### 4. Rust ワークスペース
 pnpmワークスペースの中に、Rustのワークスペースが同居する形です。
+ルートの `Cargo.toml` でワークスペースを定義し、`apps/api` をメンバーとして指定しています。
 Rustプロジェクトは `cargo` コマンドで直接管理し、TypeScriptプロジェクトは `pnpm` で管理します。
+
+**注意:** `facilitator-api` は外部サービスとして扱われ、`FACILITATOR_URL` 環境変数で参照されます。
 
 ```json
 // root package.json example
@@ -102,7 +98,7 @@ Rustプロジェクトは `cargo` コマンドで直接管理し、TypeScriptプ
 }
 ```
 
-**注意:** Rustプロジェクト（`merchant-api`、`facilitator-api`）は `cargo` コマンドで直接実行するか、別ターミナルで起動します。`pnpm` スクリプトに統合する場合は、各Rustプロジェクトに `package.json` を追加してラッパースクリプトを定義する方法もあります。
+**注意:** Rustプロジェクト（`api`）は `cargo` コマンドで直接実行するか、別ターミナルで起動します。`pnpm` スクリプトに統合する場合は、Rustプロジェクトに `package.json` を追加してラッパースクリプトを定義する方法もあります。`facilitator-api` は外部サービスとして扱われ、このモノレポには含まれません。
 
 ---
 
@@ -116,7 +112,7 @@ Rustプロジェクトは `cargo` コマンドで直接管理し、TypeScriptプ
     *   `apps/web` や `apps/device-ui` で新しい型を使って実装。
 4.  **動作確認**
     *   **TypeScriptアプリ:** `pnpm web:dev` や `pnpm docs:start` で起動
-    *   **Rust API:** 別ターミナルで `cargo run --bin api` や `cargo run --bin facilitator-api` を実行
+    *   **Rust API:** 別ターミナルで `cargo run --bin api` を実行
     *   **一括起動（オプション）:** 複数ターミナルを使用するか、プロセス管理ツール（`concurrently`など）を利用
 
 この構成であれば、**「ラズパイのUI体験」と「Rustバックエンドの堅牢性」**を、一つのリポジトリで効率よく管理・開発できます。
