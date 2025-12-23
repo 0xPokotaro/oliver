@@ -20,12 +20,15 @@ build-lambda:
 	fi
 	cargo lambda build --release --bin bootstrap
 	@mkdir -p target/lambda
-	@if [ -d "target/lambda/bootstrap" ]; then \
+	@if [ -f "target/lambda/bootstrap/bootstrap" ]; then \
 		cd target/lambda/bootstrap && zip -r ../bootstrap.zip bootstrap; \
-	elif [ -f "target/lambda/bootstrap/bootstrap" ]; then \
+	elif [ -d "target/lambda/bootstrap" ] && [ -f "target/lambda/bootstrap/bootstrap" ]; then \
 		cd target/lambda/bootstrap && zip -r ../bootstrap.zip bootstrap; \
 	else \
-		echo "Error: Lambda binary not found. Expected at target/lambda/bootstrap/bootstrap"; \
+		echo "Error: Lambda binary not found."; \
+		echo "Checking target/lambda directory:"; \
+		ls -la target/lambda/ || echo "target/lambda directory does not exist"; \
+		find target -name "bootstrap" -type f 2>/dev/null | head -5 || echo "No bootstrap binary found"; \
 		exit 1; \
 	fi
 	@echo "Lambda binary built at target/lambda/bootstrap.zip"
