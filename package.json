@@ -5,16 +5,16 @@
   "packageManager": "pnpm@10.14.0",
   "description": "",
   "scripts": {
-    "db:start": "supabase start",
-    "db:stop": "supabase stop",
+    "db:start": "supabase start --config packages/database/config.toml",
+    "db:stop": "supabase stop --config packages/database/config.toml",
     "db:gen": "pnpm --filter web prisma:gen",
     "web:dev": "pnpm --filter web dev",
-    "merchant-api:dev": "cd apps/merchant-api && DATABASE_URL=postgresql://postgres:postgres@localhost:54322/postgres cargo run",
-    "all:dev": "concurrently \"pnpm web:dev\" \"pnpm merchant-api:dev\"",
+    "api:dev": "cd apps/api && DATABASE_URL=postgresql://postgres:postgres@localhost:54322/postgres cargo run",
+    "all:dev": "concurrently \"pnpm web:dev\" \"pnpm api:dev\"",
     "docs:start": "pnpm --filter docs start",
     "evm:node": "pnpm --filter evm node",
     "evm:deploy:erc20": "pnpm --filter evm deploy:erc20",
-    "types:sync": "cd apps/merchant-api && typeshare . --lang=typescript --output-file=../../packages/types/src/generated/merchant-api.ts"
+    "types:sync": "cd apps/api && typeshare . --lang=typescript --output-file=../../packages/types/src/generated/api.ts"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"

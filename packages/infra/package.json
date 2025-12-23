@@ -1,0 +1,14 @@
+{
+  "name": "@oliver/infra",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "terraform:init": "terraform init",
+    "terraform:plan": "npm run build:lambda && terraform plan",
+    "terraform:apply": "npm run build:lambda && terraform apply",
+    "terraform:destroy": "terraform destroy",
+    "terraform:fmt": "terraform fmt",
+    "terraform:validate": "terraform validate",
+    "build:lambda": "cd ../../apps/api && make build-lambda"
+  }
+}

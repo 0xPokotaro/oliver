@@ -1,10 +1,10 @@
-# merchant-api実装ワークフロー
+# api実装ワークフロー
 
-このドキュメントでは、merchant-apiに新しいAPIエンドポイントを実装する際の、PrismaスキーマとRust実装、フロントエンドを同期させる手順を説明します。
+このドキュメントでは、apiに新しいAPIエンドポイントを実装する際の、PrismaスキーマとRust実装、フロントエンドを同期させる手順を説明します。
 
 ## 概要
 
-merchant-apiは、Rust（Axum）で実装されたバックエンドAPIと、TypeScript（Next.js）で実装されたフロントエンドが、Prismaスキーマを共有する構成になっています。
+apiは、Rust（Axum）で実装されたバックエンドAPIと、TypeScript（Next.js）で実装されたフロントエンドが、Prismaスキーマを共有する構成になっています。
 
 型定義の同期を保つため、以下の順序で実装を進めます：
 
@@ -96,7 +96,7 @@ pnpm prisma:gen
 
 ### Step 4: Rust側でAPI型定義
 
-`apps/merchant-api/src/types.rs`に、APIレスポンス用の型定義を追加します。
+`apps/api/src/types.rs`に、APIレスポンス用の型定義を追加します。
 
 **typeshare属性を付与：**
 
@@ -154,7 +154,7 @@ typeshare = "1.0"
 
 ```bash
 # ルートディレクトリで
-typeshare . --lang=typescript --output-file=packages/types/src/generated/merchant-api.ts
+typeshare . --lang=typescript --output-file=packages/types/src/generated/api.ts
 ```
 
 または、`package.json`にスクリプトを追加している場合：
@@ -164,7 +164,7 @@ pnpm types:sync
 ```
 
 **生成されるファイル：**
-- `packages/types/src/generated/merchant-api.ts`（または指定したパス）
+- `packages/types/src/generated/api.ts`（または指定したパス）
 
 ---
 
@@ -174,7 +174,7 @@ Rust側でAPIエンドポイントを実装します。
 
 **ハンドラーの作成：**
 
-`apps/merchant-api/src/handlers/products.rs`（新規作成）：
+`apps/api/src/handlers/products.rs`（新規作成）：
 
 ```rust
 use crate::types::{Product, StockStatus};
@@ -210,7 +210,7 @@ pub async fn get_products(
 
 **ルーティングの追加：**
 
-`apps/merchant-api/src/main.rs`：
+`apps/api/src/main.rs`：
 
 ```rust
 let app = Router::new()
@@ -242,7 +242,7 @@ sqlx = { version = "0.7", features = ["runtime-tokio-native-tls", "postgres"] }
 // 生成された型定義を使用
 import { Product, StockStatus } from '@/lib/types/generated/merchant-api';
 // または
-import { Product, StockStatus } from '@oliver/types/generated/merchant-api';
+import { Product, StockStatus } from '@oliver/types/generated/api';
 ```
 
 **Prisma型からAPI型への変換：**

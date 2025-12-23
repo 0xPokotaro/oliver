@@ -1,0 +1,22 @@
+aws_region = "ap-northeast-1"
+env        = "dev"
+
+lambda_function_name = "api-dev"
+lambda_source_path   = "../../apps/api"
+lambda_handler       = "bootstrap"
+lambda_runtime       = "provided.al2023"
+
+lambda_environment = {
+  DATABASE_URL              = ""
+  X402_PAY_TO              = ""
+  X402_ASSET               = ""
+  X402_MAX_AMOUNT_REQUIRED = ""
+  X402_NETWORK             = ""
+  X402_MAX_TIMEOUT_SECONDS = ""
+  X402_DESCRIPTION         = ""
+  FACILITATOR_URL          = ""
+}
+
+api_name     = "api-dev"
+cors_enabled = true
+

@@ -62,13 +62,13 @@ jobs:
             ~/.cargo/registry/index/
             ~/.cargo/registry/cache/
             ~/.cargo/git/db/
-            apps/merchant-api/target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('apps/merchant-api/Cargo.lock') }}
+            apps/api/target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('apps/api/Cargo.lock') }}
           restore-keys: |
             ${{ runner.os }}-cargo-
 
-      - name: Build merchant-api
-        run: cd apps/merchant-api && cargo build --release
+      - name: Build api
+        run: cd apps/api && cargo build --release
         env:
           DATABASE_URL: postgresql://user:password@localhost:5432/db
           X402_PAY_TO: 0x0000000000000000000000000000000000000000
@@ -81,4 +81,21 @@ jobs:
           FACILITATOR_URL: http://localhost:8403
           PORT: 3001
           SHIPPING_FEE: 500
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.6.0
+
+      - name: Terraform Format Check
+        working-directory: packages/infra
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Init
+        working-directory: packages/infra
+        run: terraform init
+
+      - name: Terraform Validate
+        working-directory: packages/infra
+        run: terraform validate
 

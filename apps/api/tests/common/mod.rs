@@ -1,7 +1,7 @@
 /// テスト用ヘルパー関数
 
-use merchant_api::config::X402Config;
-use merchant_api::state::AppState;
+use api::config::X402Config;
+use api::state::AppState;
 use sqlx::PgPool;
 use std::sync::Arc;
 

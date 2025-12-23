@@ -146,15 +146,15 @@ cargo install typeshare-cli
 pnpm types:sync
 ```
 
-または、`apps/merchant-api`ディレクトリから直接実行：
+または、`apps/api`ディレクトリから直接実行：
 
 ```bash
-cd apps/merchant-api
-typeshare . --lang=typescript --output-file=../../packages/types/src/generated/merchant-api.ts
+cd apps/api
+typeshare . --lang=typescript --output-file=../../packages/types/src/generated/api.ts
 ```
 
 **生成されるファイル:**
-- `packages/types/src/generated/merchant-api.ts`
+- `packages/types/src/generated/api.ts`
 
 **注意事項:**
 - `#[typeshare]`属性が付与された型のみが生成されます

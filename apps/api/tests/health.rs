@@ -6,7 +6,7 @@ use axum::{
     routing::get,
     Router,
 };
-use merchant_api::handlers::health::{get_health, HealthResponse, API_VERSION};
+use api::handlers::health::{get_health, HealthResponse, API_VERSION};
 use serde_json::Value;
 use tower::ServiceExt;
 

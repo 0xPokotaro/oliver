@@ -19,10 +19,10 @@
 │   │   ├── src/app/history/                # 決済履歴閲覧
 │   │   └── package.json                    # @syntropy/dashboard
 │   │
-│   ├── merchant-api/                       # [Rust/Axum] ★x402リソースサーバー
+│   ├── api/                                 # [Rust/Axum] ★x402リソースサーバー
 │   │   ├── src/main.rs                     # APIエントリーポイント
 │   │   ├── src/handlers/                   # 402レスポンス、署名検証ロジック
-│   │   └── Cargo.toml                      # (name: merchant-api)
+│   │   └── Cargo.toml                      # (name: api)
 │   │
 │   ├── facilitator-api/                    # [Rust/Axum] ★署名検証・実行ノード
 │   │   ├── src/chain/                      # Alloyを使ったオンチェーン実行
@@ -52,7 +52,7 @@
 │   └── config/                             # [Config] TSConfig, ESLint
 │
 ├── cargo-workspace/                        # Rustワークスペース定義
-│   └── Cargo.toml                          # apps/merchant-api, apps/facilitator-api を指定
+│   └── Cargo.toml                          # apps/api, apps/facilitator-api を指定
 │
 ├── pnpm-workspace.yaml                     # pnpmワークスペース定義
 ├── package.json                            # ルートスクリプト定義
@@ -68,7 +68,7 @@
 *   **役割:** ユーザーとの対話（音声・画面）と、L1/L2エージェントとしての思考（APIコール）を担当します。
 *   **特徴:**
     *   キオスクモードで全画面表示されます。
-    *   `packages/x402-sdk` を使用して、`apps/merchant-api` と通信します。
+    *   `packages/x402-sdk` を使用して、`apps/api` と通信します。
     *   `packages/ui` の `Orb` コンポーネント（光る球体）を表示します。
 
 ### 2. `apps/dashboard` (Web Admin)
@@ -81,7 +81,7 @@ PCやスマホからアクセスする管理画面です。
 ### 3. `packages/types` (Rust ↔ TS の架け橋)
 ここが開発効率の肝です。
 *   **課題:** Rustのバックエンドと、TSのフロントエンドで型定義（`PaymentPayload`など）がズレるとバグになります。
-*   **解決:** Rustコード（`apps/merchant-api/src/types.rs`）に `#[typeshare]` 属性を付け、自動生成ツール（typeshare）を使って、この `packages/types` ディレクトリにTypeScriptの型定義ファイルを書き出します。
+*   **解決:** Rustコード（`apps/api/src/types.rs`）に `#[typeshare]` 属性を付け、自動生成ツール（typeshare）を使って、この `packages/types` ディレクトリにTypeScriptの型定義ファイルを書き出します。
 *   **結果:** フロントエンドは常にバックエンドと同期した正しい型を使えます。
 
 ### 4. `cargo-workspace`
@@ -109,14 +109,14 @@ Rustプロジェクトは `cargo` コマンドで直接管理し、TypeScriptプ
 ## 🛠 開発時のワークフロー
 
 1.  **RustでAPI仕様を変更する**
-    *   `apps/merchant-api/src/types.rs` を修正。
+    *   `apps/api/src/types.rs` を修正。
 2.  **型を同期する（型生成パイプライン導入時）**
     *   `pnpm types:sync` を実行 → `packages/types` が更新される。
 3.  **フロントエンドを修正する**
     *   `apps/web` や `apps/device-ui` で新しい型を使って実装。
 4.  **動作確認**
     *   **TypeScriptアプリ:** `pnpm web:dev` や `pnpm docs:start` で起動
-    *   **Rust API:** 別ターミナルで `cargo run --bin merchant-api` や `cargo run --bin facilitator-api` を実行
+    *   **Rust API:** 別ターミナルで `cargo run --bin api` や `cargo run --bin facilitator-api` を実行
     *   **一括起動（オプション）:** 複数ターミナルを使用するか、プロセス管理ツール（`concurrently`など）を利用
 
 この構成であれば、**「ラズパイのUI体験」と「Rustバックエンドの堅牢性」**を、一つのリポジトリで効率よく管理・開発できます。
