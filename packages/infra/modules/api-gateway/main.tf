@@ -14,9 +14,9 @@ resource "aws_apigatewayv2_api" "api" {
 }
 
 resource "aws_apigatewayv2_integration" "lambda_integration" {
-  api_id             = aws_apigatewayv2_api.api.id
-  integration_type   = "AWS_PROXY"
-  integration_uri    = var.lambda_function_invoke_arn
+  api_id                 = aws_apigatewayv2_api.api.id
+  integration_type       = "AWS_PROXY"
+  integration_uri        = var.lambda_function_invoke_arn
   payload_format_version = "2.0"
 }
 
@@ -28,10 +28,10 @@ resource "aws_apigatewayv2_route" "route" {
 
 resource "aws_lambda_permission" "lambda_permission" {
   statement_id  = "AllowExecutionFromAPIGateway"
-  action       = "lambda:InvokeFunction"
+  action        = "lambda:InvokeFunction"
   function_name = var.lambda_function_name
-  principal    = "apigateway.amazonaws.com"
-  source_arn   = "${aws_apigatewayv2_api.api.execution_arn}/*/*"
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_apigatewayv2_api.api.execution_arn}/*/*"
 }
 
 resource "aws_apigatewayv2_stage" "stage" {

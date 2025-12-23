@@ -26,10 +26,10 @@ module "lambda_function" {
 module "api_gateway" {
   source = "./modules/api-gateway"
 
-  api_name                 = var.api_name
-  lambda_function_name     = module.lambda_function.function_name
+  api_name                   = var.api_name
+  lambda_function_name       = module.lambda_function.function_name
   lambda_function_invoke_arn = module.lambda_function.function_invoke_arn
-  stage_name              = var.env
-  cors_enabled            = var.cors_enabled
+  stage_name                 = var.env
+  cors_enabled               = var.cors_enabled
 }
 
