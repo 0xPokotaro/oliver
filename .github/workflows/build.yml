@@ -67,7 +67,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-cargo-
 
-      - name: Build merchant-api
+      - name: Build api
         run: cd apps/api && cargo build --release
         env:
           DATABASE_URL: postgresql://user:password@localhost:5432/db
