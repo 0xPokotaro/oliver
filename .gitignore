@@ -8,6 +8,18 @@
 **/dist
 **/build
 
+# Rust
+**/target/
+apps/api/Cargo.lock
+
+# TypeScript/Next.js
+**/.next/
+**/tsconfig.tsbuildinfo
+
+# Docusaurus
+**/.docusaurus/
+**/.cache-loader/
+
 # Environment variables
 .env
 .env.local
