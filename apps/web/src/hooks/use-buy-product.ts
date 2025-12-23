@@ -17,16 +17,16 @@ interface BuyProductVariables {
 }
 
 export function useBuyProduct() {
-  const { mutate, mutateAsync, data, error, isLoading, isSuccess, isError } =
+  const { mutate, mutateAsync, data, error, isPending, isSuccess, isError } =
     useMutation<BuyProductResponse, Error, BuyProductVariables>({
       mutationFn: async ({ productId, request }) => {
-        const response = await client.api.products.buy[":id"].$post({
+        const response = await (client.api.products.buy[":id"].$post as any)({
           param: { id: productId },
           json: request,
         });
 
         const status = response.status;
-        let paymentRequiredResponse: PaymentRequiredResponseType | null = null;
+        let paymentRequiredResponse: PaymentRequiredResponse | null = null;
         let error: string | null = null;
 
         if (status === 402) {
@@ -56,7 +56,7 @@ export function useBuyProduct() {
     mutateAsync,
     data,
     error: error instanceof Error ? error : error ? new Error("Unknown error") : null,
-    isLoading,
+    isLoading: isPending,
     isSuccess,
     isError,
   };
