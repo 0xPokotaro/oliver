@@ -40,4 +40,3 @@ module "api_gateway" {
   stage_name                 = var.env
   cors_enabled               = var.cors_enabled
 }
-
