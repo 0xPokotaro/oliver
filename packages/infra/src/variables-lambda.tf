@@ -3,7 +3,7 @@
 variable "lambda_function_name" {
   description = "Lambda function name"
   type        = string
-  default     = "api-dev"
+  default     = "oliver-api-dev"
 }
 
 variable "lambda_source_path" {

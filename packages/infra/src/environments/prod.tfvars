@@ -11,13 +11,15 @@ lambda_handler       = "bootstrap"
 lambda_runtime       = "provided.al2023"
 
 lambda_environment = {
-  X402_PAY_TO              = ""
-  X402_ASSET               = ""
-  X402_MAX_AMOUNT_REQUIRED = ""
-  X402_NETWORK             = ""
-  X402_MAX_TIMEOUT_SECONDS = ""
-  X402_DESCRIPTION         = ""
-  FACILITATOR_URL          = ""
+  X402_PAY_TO              = "0x0000000000000000000000000000000000000000"
+  X402_ASSET               = "0x036CbD53842c5426634e7929541eC2318f3dCF7e"
+  X402_MAX_AMOUNT_REQUIRED = "0"
+  X402_NETWORK             = "base"
+  X402_MAX_TIMEOUT_SECONDS = "3600"
+  X402_DESCRIPTION         = "Access to protected resource"
+  X402_CHAIN_ID            = "8453"
+  FACILITATOR_URL          = "https://facilitator.example.com"
+  SHIPPING_FEE             = "500"
 }
 
 # API Gateway

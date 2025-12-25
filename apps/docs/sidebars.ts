@@ -85,16 +85,7 @@ const sidebars: SidebarsConfig = {
       items: [
         'developer-guide/monorepo-structure',
         'developer-guide/gadget-configuration',
-        {
-          type: 'category',
-          label: 'For Merchants',
-          items: [
-            'developer-guide/merchants/getting-started',
-            'developer-guide/merchants/middleware-sdk',
-            'developer-guide/merchants/mock-server-tutorial',
-            'developer-guide/merchants/implementation-workflow',
-          ],
-        },
+        'developer-guide/gadget-operation',
         {
           type: 'category',
           label: 'For Agent Builders',
@@ -108,6 +99,16 @@ const sidebars: SidebarsConfig = {
           label: 'API Reference',
           items: [
             'developer-guide/api-reference/api-specification',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'For Merchants',
+          items: [
+            'developer-guide/merchants/getting-started',
+            'developer-guide/merchants/middleware-sdk',
+            'developer-guide/merchants/mock-server-tutorial',
+            'developer-guide/merchants/implementation-workflow',
           ],
         },
       ],
@@ -130,17 +131,6 @@ const sidebars: SidebarsConfig = {
         'roadmap/phase3-global-infrastructure',
       ],
     },
-    {
-      type: 'category',
-      label: 'Note',
-      items: [
-        'note/note',
-        'note/architecture',
-        'note/aa',
-        'note/erc-eip',
-        'note/biconomy',
-      ],
-    }
   ],
 };
 

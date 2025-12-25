@@ -3,7 +3,7 @@
 variable "api_name" {
   description = "API Gateway name"
   type        = string
-  default     = "dev"
+  default     = "oliver-api-dev"
 }
 
 variable "cors_enabled" {
