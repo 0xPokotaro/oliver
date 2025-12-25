@@ -1,22 +1,14 @@
-aws_region = "ap-northeast-1"
-env        = "dev"
-
-lambda_function_name = "api-dev"
-lambda_source_path   = "../../apps/api"
-lambda_handler       = "bootstrap"
-lambda_runtime       = "provided.al2023"
-
-lambda_environment = {
-  DATABASE_URL              = ""
-  X402_PAY_TO              = ""
-  X402_ASSET               = ""
-  X402_MAX_AMOUNT_REQUIRED = ""
-  X402_NETWORK             = ""
-  X402_MAX_TIMEOUT_SECONDS = ""
-  X402_DESCRIPTION         = ""
-  FACILITATOR_URL          = ""
-}
-
-api_name     = "api-dev"
-cors_enabled = true
+# This file is deprecated in favor of environment-specific configuration files.
+# Please use the files in the src/environments/ directory instead:
+#
+# - src/environments/dev.tfvars
+# - src/environments/staging.tfvars
+# - src/environments/prod.tfvars
+#
+# To use them, run (from src/ directory):
+#   terraform plan -var-file=./environments/dev.tfvars
+#   terraform apply -var-file=./environments/dev.tfvars
+#
+# Or copy the appropriate file to src/terraform.tfvars:
+#   cp src/environments/dev.tfvars src/terraform.tfvars
 

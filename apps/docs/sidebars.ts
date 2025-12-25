@@ -84,6 +84,7 @@ const sidebars: SidebarsConfig = {
       label: 'Developer Guide',
       items: [
         'developer-guide/monorepo-structure',
+        'developer-guide/gadget-configuration',
         {
           type: 'category',
           label: 'For Merchants',

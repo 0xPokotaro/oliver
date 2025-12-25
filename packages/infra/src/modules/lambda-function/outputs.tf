@@ -13,3 +13,8 @@ output "function_invoke_arn" {
   value       = aws_lambda_function.lambda.invoke_arn
 }
 
+output "security_group_id" {
+  description = "Lambda security group ID"
+  value       = var.vpc_id != null ? aws_security_group.lambda_sg[0].id : null
+}
+

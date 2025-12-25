@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "terraform:init": "terraform init",
-    "terraform:plan": "npm run build:lambda && terraform plan",
-    "terraform:apply": "npm run build:lambda && terraform apply",
-    "terraform:destroy": "terraform destroy",
-    "terraform:fmt": "terraform fmt",
-    "terraform:validate": "terraform validate",
+    "terraform:init": "cd src && terraform init",
+    "terraform:plan": "npm run build:lambda && cd src && terraform plan",
+    "terraform:apply": "npm run build:lambda && cd src && terraform apply",
+    "terraform:destroy": "cd src && terraform destroy",
+    "terraform:fmt": "cd src && terraform fmt",
+    "terraform:validate": "cd src && terraform validate",
     "build:lambda": "cd ../../apps/api && make build-lambda"
   }
 }

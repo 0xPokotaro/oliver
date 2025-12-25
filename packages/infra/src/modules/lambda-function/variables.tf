@@ -24,3 +24,15 @@ variable "environment" {
   default     = {}
 }
 
+variable "vpc_id" {
+  description = "VPC ID for Lambda function"
+  type        = string
+  default     = null
+}
+
+variable "subnet_ids" {
+  description = "Subnet IDs for Lambda function"
+  type        = list(string)
+  default     = []
+}
+

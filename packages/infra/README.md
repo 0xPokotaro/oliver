@@ -7,6 +7,7 @@
 ### 1. Terraformの初期化
 
 ```bash
+cd src
 terraform init
 ```
 
@@ -23,6 +24,7 @@ cp terraform.tfvars.example terraform.tfvars
 ### 3. コードの検証
 
 ```bash
+cd src
 terraform fmt
 terraform validate
 ```
@@ -43,7 +45,7 @@ npm run terraform:plan
 または
 
 ```bash
-npm run build:lambda && terraform plan
+npm run build:lambda && cd src && terraform plan
 ```
 
 ### デプロイ
@@ -55,7 +57,7 @@ npm run terraform:apply
 または
 
 ```bash
-npm run build:lambda && terraform apply
+npm run build:lambda && cd src && terraform apply
 ```
 
 ### 削除
@@ -67,7 +69,7 @@ npm run terraform:destroy
 または
 
 ```bash
-terraform destroy
+cd src && terraform destroy
 ```
 
 ## 環境変数
@@ -94,9 +96,48 @@ terraform destroy
 
 ## 構造
 
-- `main.tf`: メインのTerraform設定
-- `variables.tf`: 変数定義
-- `outputs.tf`: 出力定義
-- `terraform.tfvars.example`: 変数の例ファイル
-- `modules/lambda-function/`: Lambda関数モジュール
-- `modules/api-gateway/`: API Gatewayモジュール
+- `src/`: Terraform設定ファイルとモジュール
+  - `*.tf`: メインのTerraform設定ファイル
+    - `main.tf`: メインのTerraform設定
+    - `variables-*.tf`: 変数定義
+    - `outputs.tf`: 出力定義
+    - `backend.tf`: S3バックエンド設定
+    - `provider.tf`: プロバイダー設定
+    - `data.tf`: データソース定義
+    - `locals.tf`: ローカル変数定義
+  - `modules/`: 再利用可能なモジュール
+    - `lambda-function/`: Lambda関数モジュール
+    - `api-gateway/`: API Gatewayモジュール
+    - `rds/`: RDSモジュール
+  - `environments/`: 環境別設定ファイル
+    - `dev.tfvars`: 開発環境設定
+    - `staging.tfvars`: ステージング環境設定
+    - `prod.tfvars`: 本番環境設定
+- `README.md`: プロジェクトドキュメント
+- `package.json`: ビルドスクリプト
+- `terraform.tfvars.example`: 設定例
+
+## 環境別デプロイ
+
+環境別の設定ファイルを使用してデプロイできます：
+
+### 開発環境
+```bash
+cd src
+terraform plan -var-file=./environments/dev.tfvars
+terraform apply -var-file=./environments/dev.tfvars
+```
+
+### ステージング環境
+```bash
+cd src
+terraform plan -var-file=./environments/staging.tfvars
+terraform apply -var-file=./environments/staging.tfvars
+```
+
+### 本番環境
+```bash
+cd src
+terraform plan -var-file=./environments/prod.tfvars
+terraform apply -var-file=./environments/prod.tfvars
+```

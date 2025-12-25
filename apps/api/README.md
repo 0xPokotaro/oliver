@@ -159,4 +159,3 @@ typeshare . --lang=typescript --output-file=../../packages/types/src/generated/a
 **注意事項:**
 - `#[typeshare]`属性が付与された型のみが生成されます
 - `src/models/mod.rs`の`Product`と`StockStatus`が生成対象です
-
