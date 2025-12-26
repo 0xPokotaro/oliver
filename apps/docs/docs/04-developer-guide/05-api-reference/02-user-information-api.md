@@ -38,6 +38,7 @@ User Information APIは、ユーザーのウォレット情報、各種通貨の
 | API名 | メソッド | エンドポイント | 説明 | 認証 |
 |-------|---------|---------------|------|------|
 | ユーザー情報取得 | GET | `/api/v1/users/:userId` | ユーザーIDに基づく詳細情報を取得 | なし |
+| 音声コマンド実行 | POST | `/api/v1/users/:userId/voice` | 音声（WAV）を受け取り、コマンドを実行 | なし |
 
 ---
 
@@ -182,6 +183,86 @@ console.log(userInfo);
 ```
 
 ---
+
+### 2. 音声コマンド実行
+
+ユーザーIDに紐づく音声コマンド（WAV）を受け取り、サーバー側でコマンドを実行します。
+
+**パス:** `POST` `/api/v1/users/:userId/voice`
+
+**リクエストヘッダー:**
+
+| ヘッダー名 | 必須 | 説明 |
+|-----------|------|------|
+| `Content-Type` | 必須 | `multipart/form-data` |
+
+**リクエストボディ:** あり（`multipart/form-data`）
+
+**multipart form fields:**
+
+| フィールド名 | 必須 | 型 | 説明 |
+|------------|------|----|------|
+| `audio` | 必須 | file | WAV音声ファイル（推奨: `audio/wav`） |
+
+**パスパラメータ:**
+
+| パラメータ名 | 必須 | 説明 |
+|------------|------|------|
+| `userId` | 必須 | ユーザーID（例: `user_12345`） |
+
+**レスポンス (200 OK):**
+
+```json
+{
+  "success": true
+}
+```
+
+**レスポンス (400 Bad Request):**
+音声ファイルが不正、またはWAV形式ではない場合。
+
+```json
+{
+  "success": false,
+  "error": "Invalid audio format: only WAV is supported",
+  "code": "INVALID_AUDIO_FORMAT"
+}
+```
+
+**レスポンス (500 Internal Server Error):**
+音声処理・コマンド実行に失敗した場合。
+
+```json
+{
+  "success": false,
+  "error": "Audio processing failed",
+  "code": "AUDIO_PROCESSING_ERROR"
+}
+```
+
+#### 使用例
+
+**curl（multipart/form-data）:**
+
+```bash
+curl -X POST http://localhost:8080/api/v1/users/user_12345/voice \
+  -F "audio=@./command.wav;type=audio/wav"
+```
+
+**JavaScript（FormData）:**
+
+```javascript
+const formData = new FormData();
+formData.append('audio', file); // file: WAV File object
+
+const response = await fetch('/api/v1/users/user_12345/voice', {
+  method: 'POST',
+  body: formData,
+});
+
+const result = await response.json();
+console.log(result);
+```
 
 ## データモデル
 
