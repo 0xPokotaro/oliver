@@ -270,6 +270,13 @@ pub struct Purchase {
     pub purchased_at: String, // ISO 8601形式
 }
 
-pub mod db;
+/// 音声コマンド実行のレスポンス（成功時）
+#[typeshare]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct VoiceCommandResponse {
+    pub success: bool,
+}
+
+    pub mod db;
 pub mod mapper;
 
