@@ -56,7 +56,7 @@ jobs:
           echo "/opt/zig" >> $GITHUB_PATH
 
       - name: Install cargo-lambda
-        run: cargo install cargo-lambda
+        run: cargo install cargo-lambda --force
 
       - name: Build Lambda function
         run: |
