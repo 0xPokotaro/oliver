@@ -59,6 +59,7 @@ import {
   CreditCard,
   Folder,
   Forward,
+  Eye,
   Frame,
   GalleryVerticalEnd,
   LogOut,
@@ -100,6 +101,17 @@ const DATA = {
     },
   ],
   navMain: [
+    {
+      title: "Preview",
+      url: "/preview",
+      icon: Eye,
+      items: [
+        {
+          title: "Preview",
+          url: "/preview/gadget",
+        },
+      ],
+    },
     {
       title: "Users",
       url: "#",

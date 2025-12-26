@@ -6,3 +6,12 @@
 .env.keys
 .env.local
 .env.*.local
+
+# Dependencies
+node_modules
+
+# Build output
+dist
+
+# Prisma
+prisma/migrations/**/*.lock

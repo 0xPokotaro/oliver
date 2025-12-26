@@ -4,27 +4,18 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "prisma:gen": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:push": "prisma db push",
-    "prisma:reset": "prisma migrate reset && prisma db seed",
-    "prisma:seed": "tsx prisma/seed.ts",
-    "postinstall": "prisma generate",
-    "build": "prisma generate && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "biome check",
     "format": "biome format --write",
     "test": "vitest",
     "test:ui": "vitest --ui"
   },
-  "prisma": {
-    "seed": "tsx prisma/seed.ts"
-  },
   "dependencies": {
     "@base-ui-components/react": "1.0.0-rc.0",
     "@floating-ui/react": "^0.27.16",
+    "@oliver/database": "workspace:*",
     "@prisma/adapter-pg": "^7.2.0",
-    "@prisma/client": "^7.2.0",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-separator": "^1.1.8",
     "@radix-ui/react-slot": "^1.2.4",
@@ -57,10 +48,7 @@
     "@types/react-dom": "^19",
     "@vitest/ui": "^1.0.0",
     "babel-plugin-react-compiler": "1.0.0",
-    "prisma": "^7.2.0",
     "tailwindcss": "^4",
-    "ts-node": "^10.9.2",
-    "tsx": "^4.19.2",
     "typescript": "^5.8.3",
     "vitest": "^1.6.1"
   }
