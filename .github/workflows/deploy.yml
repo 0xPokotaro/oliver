@@ -113,13 +113,26 @@ jobs:
           name: terraform-plan-output
           path: packages/infra/plan.txt
 
-      - name: Upload tfplan file
-        uses: actions/upload-artifact@v4
+      - name: Verify tfplan file exists
+        id: verify-tfplan
         if: steps.terraform-plan.outcome == 'success'
+        working-directory: packages/infra
+        run: |
+          if [ ! -f tfplan ]; then
+            echo "Error: tfplan file not found after terraform plan"
+            exit 1
+          fi
+          echo "tfplan file exists"
+
+      - name: Upload tfplan file
+        id: upload-tfplan
+        uses: actions/upload-artifact@v4
+        if: steps.terraform-plan.outcome == 'success' && steps.verify-tfplan.outcome == 'success'
         with:
           name: terraform-plan-file
           path: packages/infra/tfplan
           retention-days: 1
+        continue-on-error: false
 
       - name: Check for changes
         id: plan
@@ -132,11 +145,12 @@ jobs:
           fi
 
       - name: Download tfplan file
-        if: steps.terraform-plan.outcome == 'success' && steps.plan.outputs.has_changes == 'true'
+        if: steps.terraform-plan.outcome == 'success' && steps.plan.outputs.has_changes == 'true' && steps.upload-tfplan.outcome == 'success'
         uses: actions/download-artifact@v4
         with:
           name: terraform-plan-file
           path: packages/infra
+        continue-on-error: false
 
       - name: Terraform Apply
         if: steps.terraform-plan.outcome == 'success' && steps.plan.outputs.has_changes == 'true'
