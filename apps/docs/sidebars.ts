@@ -83,7 +83,6 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Developer Guide',
       items: [
-        'developer-guide/monorepo-structure',
         'developer-guide/gadget-configuration',
         'developer-guide/gadget-operation',
         {

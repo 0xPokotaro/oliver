@@ -1,7 +1,7 @@
 ---
 id: ai-agent
-title: AI Agent
-sidebar_label: AI Agent
+title: AIエージェント
+sidebar_label: AIエージェント
 ---
 
 # AI Agent

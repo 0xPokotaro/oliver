@@ -1,3 +1,9 @@
+---
+id: glossary
+title: 用語集
+sidebar_label: 用語集
+---
+
 # 用語集
 
 ## Oliver

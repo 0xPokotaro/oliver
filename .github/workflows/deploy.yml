@@ -110,8 +110,16 @@ jobs:
       - name: Upload plan output
         uses: actions/upload-artifact@v4
         with:
-          name: terraform-plan
+          name: terraform-plan-output
           path: packages/infra/plan.txt
+
+      - name: Upload tfplan file
+        uses: actions/upload-artifact@v4
+        if: steps.terraform-plan.outcome == 'success'
+        with:
+          name: terraform-plan-file
+          path: packages/infra/tfplan
+          retention-days: 1
 
       - name: Check for changes
         id: plan
@@ -122,6 +130,13 @@ jobs:
           else
             echo "has_changes=true" >> $GITHUB_OUTPUT
           fi
+
+      - name: Download tfplan file
+        if: steps.terraform-plan.outcome == 'success' && steps.plan.outputs.has_changes == 'true'
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-plan-file
+          path: packages/infra
 
       - name: Terraform Apply
         if: steps.terraform-plan.outcome == 'success' && steps.plan.outputs.has_changes == 'true'
