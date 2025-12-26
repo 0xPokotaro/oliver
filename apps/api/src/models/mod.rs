@@ -210,6 +210,66 @@ pub struct Signature {
     pub s: String,
 }
 
+/// ユーザー情報取得のクエリパラメータ
+#[derive(Debug, Deserialize)]
+pub struct GetUserQuery {
+    #[serde(rename = "includeHistory")]
+    #[serde(default = "default_include_history")]
+    pub include_history: bool,
+    #[serde(rename = "historyLimit")]
+    #[serde(default = "default_history_limit")]
+    pub history_limit: i32,
+}
+
+fn default_include_history() -> bool {
+    true
+}
+
+fn default_history_limit() -> i32 {
+    10
+}
+
+/// ユーザー情報（APIレスポンス用）
+#[typeshare]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct UserInformation {
+    #[serde(rename = "userId")]
+    pub user_id: String,
+    #[serde(rename = "walletId")]
+    pub wallet_id: String,
+    pub balances: Vec<Balance>,
+    #[serde(rename = "purchaseHistory")]
+    pub purchase_history: Vec<Purchase>,
+}
+
+/// 通貨残高情報
+#[typeshare]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Balance {
+    pub currency: String, // トークンコントラクトアドレス
+    #[serde(rename = "currencyName")]
+    pub currency_name: String,
+    pub balance: String, // wei単位の文字列
+    pub decimals: i32,
+}
+
+/// 購入履歴情報
+#[typeshare]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Purchase {
+    #[serde(rename = "orderId")]
+    pub order_id: String,
+    pub sku: String,
+    #[serde(rename = "productName")]
+    pub product_name: String,
+    pub quantity: i32,
+    pub amount: String, // wei単位の文字列
+    pub currency: String, // トークンコントラクトアドレス
+    pub status: OrderStatus,
+    #[serde(rename = "purchasedAt")]
+    pub purchased_at: String, // ISO 8601形式
+}
+
 pub mod db;
 pub mod mapper;
 

@@ -42,3 +42,38 @@ pub struct DbPaymentHistory {
     pub product_name: Option<String>,
 }
 
+/// データベースから取得するUser型
+#[derive(Debug, FromRow)]
+pub struct DbUser {
+    #[sqlx(rename = "userId")]
+    pub user_id: String,
+    #[sqlx(rename = "walletId")]
+    pub wallet_id: String,
+}
+
+/// データベースから取得するBalance型
+#[derive(Debug, FromRow)]
+pub struct DbBalance {
+    pub currency: String,
+    #[sqlx(rename = "currencyName")]
+    pub currency_name: String,
+    pub balance: String,
+    pub decimals: i32,
+}
+
+/// データベースから取得するPurchase型（購入履歴用）
+#[derive(Debug, FromRow)]
+pub struct DbPurchase {
+    #[sqlx(rename = "orderId")]
+    pub order_id: String,
+    pub sku: String,
+    #[sqlx(rename = "productName")]
+    pub product_name: String,
+    pub quantity: i32,
+    pub amount: String,
+    pub currency: String,
+    pub status: String,
+    #[sqlx(rename = "purchasedAt")]
+    pub purchased_at: DateTime<Utc>,
+}
+

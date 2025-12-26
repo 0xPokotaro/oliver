@@ -2,6 +2,7 @@
 
 pub mod payment;
 pub mod product;
+pub mod user;
 
 // 関数を直接エクスポート（後方互換性のため）
 #[allow(unused_imports)]
@@ -14,4 +15,6 @@ pub use product::{find_all, find_by_category};
 pub use payment::{DefaultPaymentRepository, PaymentRepository};
 #[allow(unused_imports)]
 pub use product::{DefaultProductRepository, ProductRepository};
+#[allow(unused_imports)]
+pub use user::{DefaultUserRepository, UserRepository};
 

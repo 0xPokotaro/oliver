@@ -98,7 +98,9 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           label: 'API Reference',
           items: [
+            'developer-guide/api-reference/common-reference',
             'developer-guide/api-reference/api-specification',
+            'developer-guide/api-reference/user-information-api',
           ],
         },
         {

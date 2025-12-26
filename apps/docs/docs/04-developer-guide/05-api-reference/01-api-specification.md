@@ -1,4 +1,4 @@
-# Merchant API仕様書 (x402決済プロトコル)
+# Merchant API仕様書
 
 ## 概要
 
@@ -10,15 +10,7 @@ Merchant APIは、x402決済プロトコルを使用して商品販売を行うA
 
 ### ベースURL
 
-**PoC環境:**
-```
-http://localhost:8080/api/v1
-```
-
-**本番環境:**
-```
-https://api.merchant.oliver.dev/v1
-```
+ベースURLについては、[共通リファレンス](./00-common-reference.md#ベースurl)を参照してください。
 
 ---
 
@@ -216,7 +208,9 @@ WWW-Authenticate: X402 token="0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", price
 
 ### Common response parameters
 
-APIレスポンスはエンドポイントによって異なりますが、以下のパラメータが共通して使用されます：
+共通レスポンスパラメータ（`error`, `code`）については、[共通リファレンス](./00-common-reference.md#共通レスポンスパラメータ)を参照してください。
+
+以下は、Merchant API固有のレスポンスパラメータです：
 
 | パラメータ | 型 | 説明 | 使用エンドポイント |
 |----------|-----|------|------------------|
@@ -224,8 +218,6 @@ APIレスポンスはエンドポイントによって異なりますが、以�
 | `payment` | Object | 決済情報（x402決済プロトコル使用時） | `/products/:sku/buy` |
 | `x402Version` | number | x402プロトコルバージョン（402エラー時） | `/products/:sku/buy` (402時) |
 | `accepts` | Array | 受け入れ可能な決済方法（402エラー時） | `/products/:sku/buy` (402時) |
-| `error` | string | エラーメッセージ（エラー時） | 全エンドポイント（エラー時） |
-| `code` | string | エラーコード（エラー時） | 全エンドポイント（エラー時） |
 
 **成功レスポンス例（決済エンドポイント）:**
 
@@ -637,12 +629,7 @@ const response = await fetchWithX402(
 }
 ```
 
-**status の値:**
-- `processing`: 決済OK、発送準備中
-- `shipped`: 発送済み
-- `delivered`: 到着済み
-- `cancelled`: 在庫切れ等で返金
-- `failed`: 決済失敗
+**status の値については、[共通リファレンス - OrderStatus](./00-common-reference.md#orderstatus)を参照してください。**
 
 **レスポンス (404 Not Found):**
 注文が存在しない場合。
@@ -798,17 +785,7 @@ interface Order {
 
 ### OrderStatus
 
-注文ステータスの列挙型
-
-```typescript
-enum OrderStatus {
-  Processing = "processing",    // 決済OK、発送準備中
-  Shipped = "shipped",          // 発送済み
-  Delivered = "delivered",      // 到着済み
-  Cancelled = "cancelled",      // 在庫切れ等で返金
-  Failed = "failed"             // 決済失敗
-}
-```
+注文ステータスの列挙型については、[共通リファレンス](./00-common-reference.md#orderstatus)を参照してください。
 
 ### StockStatus
 
@@ -826,42 +803,11 @@ enum StockStatus {
 
 ## エラーハンドリング
 
-### 共通エラーレスポンス形式
+共通エラーレスポンス形式、ステータスコード一覧、基本的なエラーコードについては、[共通リファレンス](./00-common-reference.md#エラーハンドリング)を参照してください。
 
-エラーが発生した場合、以下の形式でエラーレスポンスが返されます。
+### Merchant API固有のエラーコード
 
-```json
-{
-  "error": "エラーメッセージ",
-  "code": "ERROR_CODE"
-}
-```
-
-一部のエラーでは、追加情報が含まれる場合があります：
-
-```json
-{
-  "error": "Shipping address not found",
-  "code": "ADDRESS_MISSING",
-  "action": "Please register your address on the Oliver Dashboard."
-}
-```
-
-### ステータスコード一覧
-
-| ステータスコード | 説明 | 使用例 |
-|----------------|------|--------|
-| 200 | 成功 | リクエストが正常に処理された |
-| 400 | バリデーションエラー | リクエストパラメータが不正、または配送先住所が未登録 |
-| 402 | 決済が必要 | 保護リソースにアクセスする際、決済ヘッダーがない、または検証に失敗した |
-| 403 | 認証・認可エラー | 署名検証失敗、または残高不足 |
-| 404 | リソースが見つからない | 商品や注文が存在しない |
-| 409 | 競合エラー | すでに処理済みのNonce（リプレイ攻撃） |
-| 500 | サーバーエラー | データベースエラーなど、サーバー側のエラーが発生した |
-
-### エラーコード体系
-
-クライアントが適切にハンドリングすべき独自エラーコードです。
+x402決済プロトコルおよびMerchant APIに固有のエラーコードです。
 
 | HTTP Status | Code | Description | Action |
 |------------|------|-------------|--------|
@@ -869,13 +815,14 @@ enum StockStatus {
 | 402 | `PAYMENT_REQUIRED` | 正常な決済フロー | 署名して再送する |
 | 403 | `SIGNATURE_INVALID` | 署名検証失敗 | 秘密鍵や署名ロジックを確認 |
 | 403 | `INSUFFICIENT_FUNDS` | Agentの残高不足 | ウォレットへチャージを促す |
-| 404 | `PRODUCT_NOT_FOUND` | SKU間違い | 商品カタログを再確認 |
 | 404 | `OUT_OF_STOCK` | 在庫切れ | 別のショップを探す |
-| 404 | `ORDER_NOT_FOUND` | 注文IDが存在しない | 注文IDを確認 |
 | 409 | `NONCE_USED` | 処理済みのリクエスト | 新しいNonceでやり直す |
-| 500 | `INTERNAL_ERROR` | サーバー内部エラー | リトライまたは管理者へ連絡 |
 
 ### エラーメッセージ詳細
+
+基本的なエラーメッセージ（`INVALID_PARAMETER`, `USER_NOT_FOUND`, `PRODUCT_NOT_FOUND`, `ORDER_NOT_FOUND`, `INTERNAL_ERROR`）については、[共通リファレンス](./00-common-reference.md#エラーメッセージ詳細)を参照してください。
+
+以下は、Merchant API固有のエラーメッセージです。
 
 #### 400 Bad Request
 
@@ -968,18 +915,6 @@ Agentの残高が不足している場合に返されます。
 
 #### 404 Not Found
 
-**PRODUCT_NOT_FOUND**
-
-商品が存在しない場合に返されます。
-
-**レスポンス例:**
-```json
-{
-  "error": "Product not found",
-  "code": "PRODUCT_NOT_FOUND"
-}
-```
-
 **OUT_OF_STOCK**
 
 在庫切れの場合に返されます。
@@ -989,18 +924,6 @@ Agentの残高が不足している場合に返されます。
 {
   "error": "Product out of stock",
   "code": "OUT_OF_STOCK"
-}
-```
-
-**ORDER_NOT_FOUND**
-
-注文が存在しない場合に返されます。
-
-**レスポンス例:**
-```json
-{
-  "error": "Order not found",
-  "code": "ORDER_NOT_FOUND"
 }
 ```
 
@@ -1015,18 +938,6 @@ Agentの残高が不足している場合に返されます。
 {
   "error": "Nonce already used",
   "code": "NONCE_USED"
-}
-```
-
-#### 500 Internal Server Error
-
-サーバー側のエラーが発生した場合に返されます。Facilitatorへの接続エラーなど、x402ミドルウェアの内部エラーが発生した場合に使用されます。
-
-**レスポンス例:**
-```json
-{
-  "error": "Internal server error",
-  "code": "INTERNAL_ERROR"
 }
 ```
 

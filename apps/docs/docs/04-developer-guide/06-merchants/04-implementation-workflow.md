@@ -30,7 +30,7 @@ apiは、Rust（Axum）で実装されたバックエンドAPIと、TypeScript�
 
 ### Step 1: Prismaスキーマ修正
 
-まず、`apps/web/prisma/schema.prisma`を修正して、API仕様に必要なフィールドを追加します。
+まず、`packages/database/prisma/schema.prisma`を修正して、API仕様に必要なフィールドを追加します。
 
 **例：商品一覧取得APIの場合**
 
@@ -63,8 +63,8 @@ model Product {
 データベースの構造を変更します。
 
 ```bash
-cd apps/web
-pnpm prisma:migrate dev --name add_product_fields
+cd packages/database
+pnpm prisma:migrate --name add_product_fields
 ```
 
 **開発環境の場合：**
@@ -76,7 +76,13 @@ pnpm prisma:push
 **本番環境の場合：**
 ```bash
 # 本番環境では migrate deploy を使用
-pnpm prisma:migrate deploy
+pnpm prisma migrate deploy
+```
+
+**DBリセット（開発環境のみ）：**
+```bash
+# マイグレーションをリセットしてシードデータを投入
+pnpm prisma:reset
 ```
 
 ---
@@ -86,11 +92,11 @@ pnpm prisma:migrate deploy
 フロントエンド側の型定義を更新します。
 
 ```bash
-cd apps/web
+cd packages/database
 pnpm prisma:gen
 ```
 
-これにより、`apps/web/src/generated/prisma/client`にTypeScript型定義が生成されます。
+これにより、`node_modules/.prisma/client`にTypeScript型定義が生成されます。
 
 ---
 
@@ -250,7 +256,7 @@ import { Product, StockStatus } from '@oliver/types/generated/api';
 Prisma Clientの型とAPI型は別物なので、必要に応じて変換関数を作成します。
 
 ```typescript
-import { Product as PrismaProduct } from '@/generated/prisma/client';
+import { Product as PrismaProduct } from '@oliver/database';
 import { Product, StockStatus } from '@/lib/types/generated/merchant-api';
 
 function prismaToApiProduct(prisma: PrismaProduct): Product {
@@ -276,7 +282,7 @@ function prismaToApiProduct(prisma: PrismaProduct): Product {
 
 ```typescript
 // apps/web/src/app/api/products/route.ts
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@oliver/database';
 import { prismaToApiProduct } from '@/lib/utils/product-mapper';
 
 export async function GET(request: Request) {

@@ -1,7 +1,7 @@
 .PHONY: test-serial test build clean build-lambda
 
 test-serial:
-	cargo test -- --test-threads=1
+	unset CC && cargo test -- --test-threads=1
 
 test:
 	cargo test

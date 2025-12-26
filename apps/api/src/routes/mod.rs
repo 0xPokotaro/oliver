@@ -13,6 +13,7 @@ pub fn create_router(state: AppState) -> Router {
         .route("/api/v1/products/:id", get(handlers::products::get_product_by_id))
         .route("/api/v1/products/:id/buy", post(handlers::products::buy_product))
         .route("/api/v1/orders/:orderId", get(handlers::orders::get_order_by_id))
+        .route("/api/v1/users/:userId", get(handlers::users::get_user_by_id))
         .with_state(state)
 }
 
