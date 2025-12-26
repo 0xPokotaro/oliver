@@ -102,8 +102,10 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
+        id: terraform-plan
         working-directory: packages/infra
         run: terraform plan -out=tfplan -no-color | tee plan.txt
+        continue-on-error: false
 
       - name: Upload plan output
         uses: actions/upload-artifact@v4
@@ -122,7 +124,12 @@ jobs:
           fi
 
       - name: Terraform Apply
-        if: steps.plan.outputs.has_changes == 'true'
+        if: steps.terraform-plan.outcome == 'success' && steps.plan.outputs.has_changes == 'true'
         working-directory: packages/infra
-        run: terraform apply -auto-approve tfplan
+        run: |
+          if [ ! -f tfplan ]; then
+            echo "Error: tfplan file not found"
+            exit 1
+          fi
+          terraform apply -auto-approve tfplan
 
