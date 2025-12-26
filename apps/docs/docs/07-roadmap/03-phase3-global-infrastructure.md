@@ -1,7 +1,7 @@
 ---
 id: phase3-global-infrastructure
-title: Phase 3: Global Infrastructure
-sidebar_label: Phase 3: Global Infrastructure
+title: "Phase 3: Global Infrastructure"
+sidebar_label: "Phase 3: Global Infrastructure"
 ---
 
 # Phase 3: Global Infrastructure

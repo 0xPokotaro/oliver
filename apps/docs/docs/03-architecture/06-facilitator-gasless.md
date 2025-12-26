@@ -1,7 +1,7 @@
 ---
 id: facilitator-gasless
-title: Facilitator: ガスレス決済
-sidebar_label: Facilitator: ガスレス決済
+title: "Facilitator: ガスレス決済"
+sidebar_label: "Facilitator: ガスレス決済"
 ---
 
 # Facilitator & Gasless: ガス代負担と署名検証の仕組み

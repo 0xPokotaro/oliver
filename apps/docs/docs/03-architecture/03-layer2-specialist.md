@@ -1,7 +1,7 @@
 ---
 id: layer2-specialist
-title: Layer 2: スペシャリスト
-sidebar_label: Layer 2: スペシャリスト
+title: "Layer 2: スペシャリスト"
+sidebar_label: "Layer 2: スペシャリスト"
 ---
 
 # Layer 2: Specialist

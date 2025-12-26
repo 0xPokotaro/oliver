@@ -1,7 +1,7 @@
 ---
 id: layer1-orchestrator
-title: Layer 1: オーケストレーター
-sidebar_label: Layer 1: オーケストレーター
+title: "Layer 1: オーケストレーター"
+sidebar_label: "Layer 1: オーケストレーター"
 ---
 
 # Layer 1: Orchestrator

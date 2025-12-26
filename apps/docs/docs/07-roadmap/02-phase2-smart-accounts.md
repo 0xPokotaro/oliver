@@ -1,7 +1,7 @@
 ---
 id: phase2-smart-accounts
-title: Phase 2: Smart Accounts
-sidebar_label: Phase 2: Smart Accounts
+title: "Phase 2: Smart Accounts"
+sidebar_label: "Phase 2: Smart Accounts"
 ---
 
 # Phase 2: Smart Accounts

@@ -1,7 +1,7 @@
 ---
 id: phase1-poc
-title: Phase 1: PoC
-sidebar_label: Phase 1: PoC
+title: "Phase 1: PoC"
+sidebar_label: "Phase 1: PoC"
 ---
 
 # Phase 1: PoC (Current)
