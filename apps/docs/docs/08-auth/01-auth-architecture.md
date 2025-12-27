@@ -104,18 +104,30 @@ sequenceDiagram
 
 ### ログインエンドポイント
 
-- **目的**: ログインおよび新規登録処理。
-- **リクエスト**: 認証トークンをBodyに含む。
-- **レスポンス**: 成功時、セキュリティ属性付きセッションCookieをSet-Cookieする。
-- **処理概要**: 前述のJWT検証を行い、データベースと同期してセッションを発行する。
+- **エンドポイント**: `POST /api/auth/login`
+- **目的**: ログインおよび新規登録処理（Upsertパターン）。
+- **リクエスト**: 認証トークンをBodyに含む（`{ authToken: string }`）。
+- **レスポンス**:
+  - 成功時（200 OK）、セキュリティ属性付きセッションCookieをSet-Cookieする。
+  - レスポンスボディ: `{ userId: string, walletAddress: string }`
+- **Cookie属性**: HttpOnly, Secure, SameSite=Strict, Path=/, Max-Age=7日間
+- **処理概要**: JWT検証 → ユーザー情報抽出 → データベースUpsert → セッション発行
+- **詳細**: [ログインAPI仕様](../99-api-reference/user-api/01-user-login.md)を参照
 
 ### ログアウトエンドポイント
 
+- **エンドポイント**: `POST /api/auth/logout`
 - **目的**: ログアウト処理。
-- **処理概要**: セッションCookieを破棄する。
+- **リクエスト**: リクエストボディは不要（Cookieから認証情報を取得）。
+- **レスポンス**:
+  - 成功時（200 OK）、セッションCookieを削除するSet-Cookieヘッダーを返す。
+  - レスポンスボディ: `{ message: "Logged out successfully" }`
+- **処理概要**: セッションCookieのMax-Ageを0に設定して即座に期限切れにする。
+- **詳細**: [ログアウトAPI仕様](../99-api-reference/user-api/02-user-logout.md)を参照
 
 ### ユーザー情報取得エンドポイント
 
+- **エンドポイント**: `GET /api/v1/user/profile`
 - **目的**: ログイン中のユーザー自身のプロフィール取得。
 - **要件**: 有効なセッションCookieが必要。
 - **レスポンス**: ユーザーID、ニックネーム、アイコン、保有ポイント等。

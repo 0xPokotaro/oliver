@@ -47,3 +47,42 @@ export async function login(authToken: string): Promise<LoginResponse> {
     throw new Error("Login failed");
   }
 }
+
+/**
+ * Logout from the application
+ * @returns Promise that resolves when logout is complete
+ */
+export async function logout(): Promise<void> {
+  try {
+    // ブラウザからはNext.jsのAPIルート経由でアクセス
+    const requestUrl = typeof window !== "undefined" 
+      ? "/api/auth/logout"
+      : `${API_BASE_URL}/api/auth/logout`;
+    const response = await fetch(requestUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include", // Include cookies in request
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({
+        error: "Unknown error",
+        code: "UNKNOWN_ERROR",
+      }));
+      throw new Error(errorData.error || `Logout failed: ${response.statusText}`);
+    }
+
+    // レスポンスは成功として扱う
+    return;
+  } catch (error) {
+    console.error("Logout error:", error);
+    
+    if (error instanceof Error) {
+      throw error;
+    }
+    
+    throw new Error("Logout failed");
+  }
+}

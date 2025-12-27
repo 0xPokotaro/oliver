@@ -82,8 +82,18 @@ sequenceDiagram
 **レスポンスヘッダー:**
 
 ```
-Set-Cookie: session=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...; HttpOnly; Secure; SameSite=Strict; Path=/
+Set-Cookie: session=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=604800
 ```
+
+**Cookie属性の詳細:**
+
+| 属性 | 値 | 説明 |
+|------|-----|------|
+| `HttpOnly` | true | JavaScriptからのアクセスを防止 |
+| `Secure` | true | HTTPS通信のみで送信 |
+| `SameSite` | Strict | CSRF攻撃を防止 |
+| `Path` | / | すべてのパスでCookieを送信 |
+| `Max-Age` | 604800 | 7日間（604800秒）で有効期限切れ |
 
 ### 400 Bad Request
 

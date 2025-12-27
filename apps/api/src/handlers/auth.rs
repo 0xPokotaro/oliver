@@ -65,3 +65,21 @@ pub async fn login(
     Ok((cookie_jar, Json(response)).into_response())
 }
 
+/// POST /api/auth/logout ハンドラー
+pub async fn logout(jar: CookieJar) -> Result<impl IntoResponse, ApiError> {
+    // セッションCookieを削除
+    // 削除時は同じ属性（path, same_site等）を設定する必要がある
+    // max_ageを0に設定することでCookieを削除する
+    let mut cookie = axum_extra::extract::cookie::Cookie::new("session", "");
+    cookie.set_http_only(true);
+    cookie.set_secure(true);
+    cookie.set_same_site(axum_extra::extract::cookie::SameSite::Strict);
+    cookie.set_path("/");
+    cookie.set_max_age(time::Duration::seconds(0)); // 即座に期限切れにする
+    
+    let cookie_jar = jar.add(cookie);
+    
+    // 成功レスポンスを返却
+    Ok((cookie_jar, Json(serde_json::json!({ "message": "Logged out successfully" }))).into_response())
+}
+

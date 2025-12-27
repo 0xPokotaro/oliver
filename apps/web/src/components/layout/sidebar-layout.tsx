@@ -1,8 +1,10 @@
 "use client";
 
 import * as React from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
+import { logout } from "@/lib/auth/client";
 
 import {
   Breadcrumb,
@@ -58,7 +60,7 @@ import {
   Folder,
   Forward,
   Eye,
-  Frame,
+  Home,
   LogOut,
   Map,
   MoreHorizontal,
@@ -201,9 +203,9 @@ const DATA = {
   ],
   projects: [
     {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
+      name: "Dashboard",
+      url: "/",
+      icon: Home,
     },
     {
       name: "Sales & Marketing",
@@ -227,6 +229,37 @@ export const RadixSidebarDemo = ({
   const [activeTeam, setActiveTeam] = React.useState(DATA.teams[0]);
   const pathname = usePathname();
   const { activeMenuTitle, setActiveMenu } = useSidebarStore();
+  const router = useRouter();
+  const { handleLogOut, primaryWallet } = useDynamicContext();
+
+  // ウォレットアドレスを短縮形式でフォーマット
+  const formatAddress = (address: string | undefined) => {
+    if (!address) return "";
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+
+  const walletAddress = primaryWallet?.address;
+  const walletKey = (primaryWallet?.connector as any)?.key || "";
+
+  const handleLogout = React.useCallback(async () => {
+    try {
+      // バックエンドAPIのログアウトを呼び出し
+      await logout();
+      // Dynamic Labsのログアウトも実行
+      await handleLogOut();
+      // ログインページにリダイレクト
+      router.push("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+      // エラーが発生してもDynamic Labsのログアウトとリダイレクトは実行
+      try {
+        await handleLogOut();
+      } catch (e) {
+        // 無視
+      }
+      router.push("/login");
+    }
+  }, [router, handleLogOut]);
 
   // パスに基づいてアクティブなメニュー項目を自動判定
   React.useEffect(() => {
@@ -464,10 +497,10 @@ export const RadixSidebarDemo = ({
                     </Avatar>
                     <div className="grid flex-1 text-left text-sm leading-tight">
                       <span className="truncate font-semibold">
-                        {DATA.user.name}
+                        {walletKey || "Not Connected"}
                       </span>
                       <span className="truncate text-xs">
-                        {DATA.user.email}
+                        {walletAddress || "No wallet connected"}
                       </span>
                     </div>
                     <ChevronsUpDown className="ml-auto size-4" />
@@ -492,10 +525,10 @@ export const RadixSidebarDemo = ({
                       </Avatar>
                       <div className="grid flex-1 text-left text-sm leading-tight">
                         <span className="truncate font-semibold">
-                          {DATA.user.name}
+                          {walletKey || "Not Connected"}
                         </span>
                         <span className="truncate text-xs">
-                          {DATA.user.email}
+                          {walletAddress || "No wallet connected"}
                         </span>
                       </div>
                     </div>
@@ -523,7 +556,7 @@ export const RadixSidebarDemo = ({
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogout}>
                     <LogOut />
                     Log out
                   </DropdownMenuItem>

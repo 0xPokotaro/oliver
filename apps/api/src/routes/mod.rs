@@ -36,6 +36,7 @@ pub fn create_router(state: AppState) -> Router {
         .route("/api/v1/users/:userId/voice", post(handlers::users::execute_voice_command))
         // Auth routes
         .route("/api/auth/login", post(handlers::auth::login))
+        .route("/api/auth/logout", post(handlers::auth::logout))
         .layer(cors)
         .with_state(state)
 }
