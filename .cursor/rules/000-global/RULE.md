@@ -18,6 +18,7 @@ When generating commit messages, strictly follow these rules:
 
 - emoji: Select appropriate emoji from [gitmoji.dev](https://gitmoji.dev/)
 - subject: Brief description of changes (50 characters or less, in English)
+- **Character limit**: Maximum 50 characters for the entire commit message (including emoji and space)
 
 ### Common gitmoji
 
@@ -58,3 +59,4 @@ When generating commit messages, strictly follow these rules:
 - Start subject with a verb (imperative mood)
 - Write in English only
 - Keep it simple - no body text needed
+- **Strict 50 character limit**: The entire message (emoji + space + subject) must not exceed 50 characters

@@ -13,75 +13,73 @@ datasource db {
 }
 
 model User {
-  id          String   @id @default(uuid())
-  walletAddress String @unique // ウォレットアドレス（0x...形式）
-  name        String?  // ユーザー名（オプション）
-  email       String?   // メールアドレス（オプション）
-  avatar      String?   // アバター画像URL（オプション）
-  metadata    Json?     // 追加情報（JSON）
-  payments    PaymentHistory[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String   @id @default(uuid())
+  dynamicUserId String   @unique
+  walletAddress String   @unique
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
-  @@map("users")
+  payments PaymentHistory[]
+
   @@index([walletAddress])
+  @@map("users")
 }
 
 model Merchant {
-  id        String   @id @default(uuid())
+  id        String    @id @default(uuid())
   name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   products  Product[]
 
   @@map("merchants")
 }
 
 model Product {
-  id          String   @id @default(uuid())
+  id          String           @id @default(uuid())
   name        String
   description String
-  price       BigInt   // wei単位の価格（6桁小数点想定）
-  currency    String   @default("0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913")  // トークンコントラクトアドレス
-  stockStatus String   @default("in_stock")  // 在庫ステータス（"in_stock" | "low_stock" | "out_of_stock"）
-  imageUrl    String?  // 商品画像URL
-  category    String?  // カテゴリ（例: "cat_food", "dog_food"など）
-  attributes  Json?    // カテゴリごとの属性（キー・バリューのマップ）
+  price       BigInt // wei単位の価格（6桁小数点想定）
+  currency    String           @default("0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913") // トークンコントラクトアドレス
+  stockStatus String           @default("in_stock") // 在庫ステータス（"in_stock" | "low_stock" | "out_of_stock"）
+  imageUrl    String? // 商品画像URL
+  category    String? // カテゴリ（例: "cat_food", "dog_food"など）
+  attributes  Json? // カテゴリごとの属性（キー・バリューのマップ）
   merchantId  String
-  merchant    Merchant @relation(fields: [merchantId], references: [id], onDelete: Cascade)
+  merchant    Merchant         @relation(fields: [merchantId], references: [id], onDelete: Cascade)
   payments    PaymentHistory[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
 
   @@map("products")
 }
 
 model PaymentHistory {
-  id          String   @id @default(uuid())
-  paymentId   String   @unique // x402決済ID（0x...形式）
-  payer       String   // 支払い者のアドレス
-  userId      String?  // ユーザーID（ユーザーが登録されている場合）
-  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
-  recipient   String   // 受取人のアドレス
-  amount      String   // 決済金額（wei単位の文字列）
-  asset       String   // トークンコントラクトアドレス
-  network     String   // ネットワーク名（例: "base", "localhost"）
-  chainId     Int      // チェーンID
-  status      String   @default("pending") // pending, settled, failed
-  txHash      String?  // トランザクションハッシュ（settle後）
-  blockNumber String?  // ブロック番号（settle後）
-  orderId     String?  // 注文ID（商品購入の場合）
-  productId   String?  // 商品ID（商品購入の場合）
-  product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
-  metadata    Json?    // 追加情報（JSON）
-  createdAt   DateTime @default(now())
+  id          String    @id @default(uuid())
+  paymentId   String    @unique // x402決済ID（0x...形式）
+  payer       String // 支払い者のアドレス
+  userId      String? // ユーザーID（ユーザーが登録されている場合）
+  user        User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  recipient   String // 受取人のアドレス
+  amount      String // 決済金額（wei単位の文字列）
+  asset       String // トークンコントラクトアドレス
+  network     String // ネットワーク名（例: "base", "localhost"）
+  chainId     Int // チェーンID
+  status      String    @default("pending") // pending, settled, failed
+  txHash      String? // トランザクションハッシュ（settle後）
+  blockNumber String? // ブロック番号（settle後）
+  orderId     String? // 注文ID（商品購入の場合）
+  productId   String? // 商品ID（商品購入の場合）
+  product     Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+  metadata    Json? // 追加情報（JSON）
+  createdAt   DateTime  @default(now())
   settledAt   DateTime? // 決済完了日時
 
-  @@map("payment_history")
   @@index([paymentId])
   @@index([payer])
   @@index([userId])
   @@index([productId])
   @@index([status])
   @@index([createdAt])
+  @@map("payment_history")
 }

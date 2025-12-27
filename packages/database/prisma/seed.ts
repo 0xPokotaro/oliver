@@ -1,6 +1,13 @@
-import { prisma } from "../src/lib/prisma";
+import "dotenv/config";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { defineAttributes, ProductCategories } from "../src/lib/types/product-attributes";
-import type { Prisma } from "../src/generated/prisma/client";
+
+// PrismaClientを初期化
+const connectionString = process.env.DATABASE_URL || "postgresql://postgres:postgres@127.0.0.1:54322/postgres";
+const adapter = new PrismaPg({ connectionString });
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
   console.log("🌱 Seeding database...");
@@ -37,27 +44,22 @@ async function main() {
   console.log("👤 Creating users...");
   const user1 = await prisma.user.create({
     data: {
+      dynamicUserId: "dyn_user_001",
       walletAddress: "0x1234567890123456789012345678901234567890",
-      name: "山田太郎",
-      email: "yamada@example.com",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=yamada",
     },
   });
 
   const user2 = await prisma.user.create({
     data: {
+      dynamicUserId: "dyn_user_002",
       walletAddress: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
-      name: "佐藤花子",
-      email: "sato@example.com",
-      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=sato",
     },
   });
 
   const user3 = await prisma.user.create({
     data: {
+      dynamicUserId: "dyn_user_003",
       walletAddress: "0x9876543210987654321098765432109876543210",
-      name: "田中一郎",
-      email: "tanaka@example.com",
     },
   });
 
