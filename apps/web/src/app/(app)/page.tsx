@@ -1,4 +1,15 @@
-export default function Home() {
+'use client';
+
+import { useEffect } from 'react';
+import { getAuthToken } from '@dynamic-labs/sdk-react-core';
+
+const Home = () => {
+  const authToken = getAuthToken();
+
+  useEffect(() => {
+    console.log('JWT: ', authToken);
+  }, [authToken]);
+
   return (
     <>
       <div className="grid auto-rows-min gap-4 md:grid-cols-3">
@@ -10,3 +21,5 @@ export default function Home() {
     </>
   );
 }
+
+export default Home;

@@ -17,6 +17,8 @@ pub enum ApiError {
     InternalError(String),
     /// バリデーションエラー
     ValidationError { message: String },
+    /// 認証エラー（401 Unauthorized）
+    Unauthorized { code: Option<String> },
     /// 402 Payment Required（特殊なレスポンス）
     PaymentRequired { response: PaymentRequiredResponse, authenticate_header: String },
     /// 決済関連エラー
@@ -71,6 +73,14 @@ impl IntoResponse for ApiError {
                     StatusCode::BAD_REQUEST,
                     "VALIDATION_ERROR",
                     &message,
+                )
+            },
+            ApiError::Unauthorized { code } => {
+                let code = code.as_deref().unwrap_or("UNAUTHORIZED");
+                create_error_response(
+                    StatusCode::UNAUTHORIZED,
+                    code,
+                    "Unauthorized",
                 )
             },
             ApiError::PaymentError { kind, code } => {

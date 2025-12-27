@@ -13,7 +13,7 @@
     "db:seed": "pnpm --filter @oliver/database prisma:seed",
     "web:dev": "pnpm --filter web dev",
     "api:dev": "cd apps/api && DATABASE_URL=postgresql://postgres:postgres@localhost:54322/postgres cargo run --bin api",
-    "all:dev": "concurrently \"pnpm web:dev\" \"pnpm api:dev\"",
+    "all:dev": "concurrently \"pnpm web:dev\" \"pnpm api:dev\" \"pnpm docs:start\"",
     "docs:start": "pnpm --filter docs start",
     "evm:node": "pnpm --filter evm node",
     "evm:deploy:erc20": "pnpm --filter evm deploy:erc20",

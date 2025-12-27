@@ -677,8 +677,6 @@ const response = await fetchWithX402(
 
 ユーザーのプロフィール情報（ウォレットID、各種通貨の残高、商品購入履歴）を取得します。
 
-詳細については、[User API - ユーザープロフィール取得](../user-api/user-profile.md)を参照してください。
-
 ---
 
 ### 7. 音声コマンド実行

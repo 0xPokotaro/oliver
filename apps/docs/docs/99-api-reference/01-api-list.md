@@ -6,7 +6,7 @@ sidebar_label: API一覧
 
 # API一覧
 
-このドキュメントは、Oliver APIの全エンドポイントを一覧で表示します。各エンドポイントの詳細については、[API仕様書](./01-api-specification.md)を参照してください。
+このドキュメントは、Oliver APIの全エンドポイントを一覧で表示します。各エンドポイントの詳細については、[API仕様書](./02-api-specification.md)を参照してください。
 
 APIカテゴリについては、[共通リファレンス](./00-common-reference.md#apiカテゴリ)を参照してください。
 
@@ -24,6 +24,7 @@ APIカテゴリについては、[共通リファレンス](./00-common-referenc
 
 | API名 | メソッド | エンドポイント | 説明 | 認証 |
 |-------|---------|---------------|------|------|
+| ユーザー新規作成 | POST | `/api/v1/user` | 情報を新規作成 | なし |
 | ユーザー情報取得 | GET | `/api/v1/user/:userId` | ユーザーIDに基づく詳細情報を取得 | なし |
 | 音声コマンド実行 | POST | `/api/v1/user/:userId/voice` | 音声（WAV）を受け取り、コマンドを実行 | なし |
 
@@ -49,4 +50,4 @@ APIカテゴリについては、[共通リファレンス](./00-common-referenc
 ## 関連ドキュメント
 
 - [共通リファレンス](./00-common-reference.md) - ベースURL、エラーハンドリング、共通データモデル
-- [API仕様書](./01-api-specification.md) - 各エンドポイントの詳細仕様
+- [API仕様書](./02-api-specification.md) - 各エンドポイントの詳細仕様

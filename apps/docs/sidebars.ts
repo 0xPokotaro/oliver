@@ -127,6 +127,7 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           label: 'User API',
           items: [
+            'api-reference/user-api/user-creation',
             'api-reference/user-api/user-profile',
           ],
         },
@@ -146,6 +147,13 @@ const sidebars: SidebarsConfig = {
         },
       ],
     },
+    {
+      type: 'category',
+      label: 'Auth',
+      items: [
+        'auth/auth-architecture',
+      ],
+    }
   ],
 };
 
