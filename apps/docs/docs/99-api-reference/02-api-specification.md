@@ -26,7 +26,7 @@ x402は、HTTP 402ステータスコードを拡張した決済プロトコル�
 
 ### API Resources and Support Channels
 
-* 📌 [プロジェクトドキュメント](../../../)
+* 📌 [プロジェクトドキュメント](/)
 * 💡 [x402ミドルウェア実装](https://github.com/0xPokotaro/oliver/blob/main/apps/web/src/lib/x402/middleware.ts)
 * 💡 [x402クライアントSDK](https://github.com/0xPokotaro/oliver/blob/main/apps/web/src/lib/x402/client.ts)
 * 💡 [x402型定義](https://github.com/0xPokotaro/oliver/blob/main/apps/web/src/lib/types/x402-types.ts)
