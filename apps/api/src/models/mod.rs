@@ -277,6 +277,23 @@ pub struct VoiceCommandResponse {
     pub success: bool,
 }
 
+/// ログインリクエスト
+#[derive(Debug, Deserialize)]
+pub struct LoginRequest {
+    #[serde(rename = "authToken")]
+    pub auth_token: String,
+}
+
+/// ログインレスポンス
+#[typeshare]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct LoginResponse {
+    #[serde(rename = "userId")]
+    pub user_id: String,
+    #[serde(rename = "walletAddress")]
+    pub wallet_address: String,
+}
+
     pub mod db;
 pub mod mapper;
 

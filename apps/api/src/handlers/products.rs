@@ -1,5 +1,5 @@
 use axum::{extract::{Path, Query, State}, http::HeaderMap, response::Response, Json};
-use crate::error::ApiError;
+use crate::error::{ApiError, error_codes};
 use crate::models::{GetProductsQuery, Product, ProductDetail, BuyRequest, mapper::{db_product_to_api_product, db_product_to_product_detail}};
 use crate::repository::product::{find_all, find_by_category, find_by_id};
 use crate::services::payment::{estimate_payment, process_payment};
@@ -36,7 +36,7 @@ pub async fn get_product_by_id(
         .await?
         .ok_or_else(|| ApiError::NotFound {
             resource: "Product".to_string(),
-            code: Some("PRODUCT_NOT_FOUND".to_string()),
+            code: Some(error_codes::PRODUCT_NOT_FOUND.to_string()),
         })?;
 
     // DbProductからProductDetailへ変換
@@ -57,7 +57,7 @@ pub async fn buy_product(
         .await?
         .ok_or_else(|| ApiError::NotFound {
             resource: "Product".to_string(),
-            code: Some("PRODUCT_NOT_FOUND".to_string()),
+            code: Some(error_codes::PRODUCT_NOT_FOUND.to_string()),
         })?;
 
     // X-PAYMENTヘッダーの有無を確認

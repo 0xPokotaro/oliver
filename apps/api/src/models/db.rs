@@ -45,6 +45,17 @@ pub struct DbPaymentHistory {
 /// データベースから取得するUser型
 #[derive(Debug, FromRow)]
 pub struct DbUser {
+    pub id: String,
+    #[sqlx(rename = "dynamicUserId")]
+    #[allow(dead_code)]
+    pub dynamic_user_id: String,
+    #[sqlx(rename = "walletAddress")]
+    pub wallet_address: String,
+}
+
+/// 簡易的なDbUser（既存コードとの互換性のため）
+#[derive(Debug, FromRow)]
+pub struct DbUserLegacy {
     #[sqlx(rename = "userId")]
     pub user_id: String,
     #[sqlx(rename = "walletId")]

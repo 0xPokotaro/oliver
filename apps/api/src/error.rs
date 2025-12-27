@@ -69,18 +69,30 @@ impl IntoResponse for ApiError {
                 )
             },
             ApiError::ValidationError { message } => {
+                // INVALID_PARAMETERとして扱う（ドキュメントに合わせる）
+                let code = if message.contains("authToken") {
+                    error_codes::INVALID_PARAMETER
+                } else {
+                    error_codes::VALIDATION_ERROR
+                };
                 create_error_response(
                     StatusCode::BAD_REQUEST,
-                    "VALIDATION_ERROR",
+                    code,
                     &message,
                 )
             },
             ApiError::Unauthorized { code } => {
-                let code = code.as_deref().unwrap_or("UNAUTHORIZED");
+                let code = code.as_deref().unwrap_or(error_codes::UNAUTHORIZED);
+                let message = match code {
+                    error_codes::INVALID_TOKEN => "Invalid or expired JWT token",
+                    error_codes::REQUIRES_ADDITIONAL_AUTH => "Additional verification required",
+                    error_codes::INVALID_SESSION => "Invalid session token",
+                    _ => "Unauthorized",
+                };
                 create_error_response(
                     StatusCode::UNAUTHORIZED,
                     code,
-                    "Unauthorized",
+                    message,
                 )
             },
             ApiError::PaymentError { kind, code } => {
@@ -117,5 +129,28 @@ impl From<sqlx::Error> for ApiError {
     fn from(err: sqlx::Error) -> Self {
         ApiError::DatabaseError(err.to_string())
     }
+}
+
+/// エラーコード定数
+pub mod error_codes {
+    // リソースが見つからない系
+    pub const PRODUCT_NOT_FOUND: &str = "PRODUCT_NOT_FOUND";
+    pub const USER_NOT_FOUND: &str = "USER_NOT_FOUND";
+    pub const ORDER_NOT_FOUND: &str = "ORDER_NOT_FOUND";
+
+    // 認証・認可系
+    pub const UNAUTHORIZED: &str = "UNAUTHORIZED";
+    pub const INVALID_TOKEN: &str = "INVALID_TOKEN";
+    pub const INVALID_SESSION: &str = "INVALID_SESSION";
+    pub const REQUIRES_ADDITIONAL_AUTH: &str = "REQUIRES_ADDITIONAL_AUTH";
+
+    // 決済系
+    pub const NONCE_USED: &str = "NONCE_USED";
+    pub const INSUFFICIENT_FUNDS: &str = "INSUFFICIENT_FUNDS";
+    pub const SIGNATURE_INVALID: &str = "SIGNATURE_INVALID";
+
+    // バリデーション系
+    pub const VALIDATION_ERROR: &str = "VALIDATION_ERROR";
+    pub const INVALID_PARAMETER: &str = "INVALID_PARAMETER";
 }
 

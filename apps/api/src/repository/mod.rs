@@ -4,6 +4,9 @@ pub mod payment;
 pub mod product;
 pub mod user;
 
+#[cfg(feature = "mock-data")]
+mod user_mock;
+
 // 関数を直接エクスポート（後方互換性のため）
 #[allow(unused_imports)]
 pub use payment::{create_payment, find_by_order_id, find_by_payment_id};

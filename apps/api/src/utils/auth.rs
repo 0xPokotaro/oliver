@@ -1,7 +1,7 @@
 /// JWT認証関連のユーティリティ関数
 
 use axum::http::HeaderMap;
-use crate::error::ApiError;
+use crate::error::{ApiError, error_codes};
 
 /// AuthorizationヘッダーからJWTトークンを抽出し、ユーザーIDを取得
 /// 
@@ -12,20 +12,20 @@ pub fn extract_user_id_from_jwt(headers: &HeaderMap) -> Result<String, ApiError>
     let auth_header = headers
         .get("Authorization")
         .ok_or_else(|| ApiError::Unauthorized {
-            code: Some("UNAUTHORIZED".to_string()),
+            code: Some(error_codes::UNAUTHORIZED.to_string()),
         })?;
 
     // ヘッダー値を文字列に変換
     let auth_str = auth_header
         .to_str()
         .map_err(|_| ApiError::Unauthorized {
-            code: Some("UNAUTHORIZED".to_string()),
+            code: Some(error_codes::UNAUTHORIZED.to_string()),
         })?;
 
     // "Bearer " プレフィックスを確認
     if !auth_str.starts_with("Bearer ") {
         return Err(ApiError::Unauthorized {
-            code: Some("UNAUTHORIZED".to_string()),
+            code: Some(error_codes::UNAUTHORIZED.to_string()),
         });
     }
 
@@ -34,7 +34,7 @@ pub fn extract_user_id_from_jwt(headers: &HeaderMap) -> Result<String, ApiError>
 
     if token.is_empty() {
         return Err(ApiError::Unauthorized {
-            code: Some("UNAUTHORIZED".to_string()),
+            code: Some(error_codes::UNAUTHORIZED.to_string()),
         });
     }
 

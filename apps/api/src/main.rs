@@ -19,6 +19,12 @@ use std::sync::Arc;
 async fn main() -> anyhow::Result<()> {
     dotenv::dotenv().ok();
 
+    // tracingの初期化
+    tracing_subscriber::fmt()
+        .with_env_filter(tracing_subscriber::EnvFilter::from_default_env())
+        .with_target(false)
+        .init();
+
     let x402_config = Arc::new(get_x402_config()?);
     let db_pool = get_db_pool().await.context("Failed to create database pool")?;
     let port = get_port();

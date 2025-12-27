@@ -7,7 +7,7 @@ use axum::{
 use chrono::Utc;
 use serde_json::json;
 
-use crate::error::{ApiError, PaymentErrorKind};
+use crate::error::{ApiError, PaymentErrorKind, error_codes};
 use crate::models::{
     db::DbProduct,
     BuyRequest, BuyResponse, PaymentInfo,
@@ -35,7 +35,7 @@ pub async fn estimate_payment(
         .await?
         .ok_or_else(|| ApiError::NotFound {
             resource: "Product".to_string(),
-            code: Some("PRODUCT_NOT_FOUND".to_string()),
+            code: Some(error_codes::PRODUCT_NOT_FOUND.to_string()),
         })?;
 
     let price = db_product.price;
@@ -104,7 +104,7 @@ pub async fn process_payment(
     if payment_amount < expected_amount {
         return Err(ApiError::PaymentError {
             kind: PaymentErrorKind::InsufficientFunds,
-            code: "INSUFFICIENT_FUNDS".to_string(),
+            code: error_codes::INSUFFICIENT_FUNDS.to_string(),
         });
     }
 
@@ -118,7 +118,7 @@ pub async fn process_payment(
     if existing_payment.is_some() {
         return Err(ApiError::PaymentError {
             kind: PaymentErrorKind::NonceUsed,
-            code: "NONCE_USED".to_string(),
+            code: error_codes::NONCE_USED.to_string(),
         });
     }
 

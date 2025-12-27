@@ -1,7 +1,7 @@
 /// ユーザーリポジトリ
 
 use crate::error::ApiError;
-use crate::models::db::{DbUser, DbBalance, DbPurchase};
+use crate::models::db::{DbBalance, DbPurchase, DbUser, DbUserLegacy};
 use sqlx::PgPool;
 
 /// ユーザーリポジトリトレイト
@@ -9,7 +9,7 @@ use sqlx::PgPool;
 #[async_trait::async_trait]
 pub trait UserRepository: Send + Sync {
     /// ユーザーIDでユーザー情報を取得
-    async fn find_by_id(&self, pool: &PgPool, user_id: &str) -> Result<Option<DbUser>, ApiError>;
+    async fn find_by_id(&self, pool: &PgPool, user_id: &str) -> Result<Option<DbUserLegacy>, ApiError>;
 
     /// ユーザーの残高を取得
     async fn find_balances_by_user_id(
@@ -33,7 +33,7 @@ pub struct DefaultUserRepository;
 
 #[async_trait::async_trait]
 impl UserRepository for DefaultUserRepository {
-    async fn find_by_id(&self, pool: &PgPool, user_id: &str) -> Result<Option<DbUser>, ApiError> {
+    async fn find_by_id(&self, pool: &PgPool, user_id: &str) -> Result<Option<DbUserLegacy>, ApiError> {
         find_by_id(pool, user_id).await
     }
 
@@ -55,94 +55,109 @@ impl UserRepository for DefaultUserRepository {
     }
 }
 
+/// ユーザーをUpsert（存在しない場合は作成、存在する場合は更新）
+pub async fn upsert_user(
+    pool: &PgPool,
+    dynamic_user_id: &str,
+    wallet_address: &str,
+) -> Result<DbUser, ApiError> {
+    sqlx::query_as::<_, DbUser>(
+        r#"
+        INSERT INTO users (id, "dynamicUserId", "walletAddress", "createdAt", "updatedAt")
+        VALUES (gen_random_uuid()::text, $1, $2, NOW(), NOW())
+        ON CONFLICT ("dynamicUserId")
+        DO UPDATE SET "walletAddress" = EXCLUDED."walletAddress", "updatedAt" = NOW()
+        RETURNING id, "dynamicUserId", "walletAddress"
+        "#,
+    )
+    .bind(dynamic_user_id)
+    .bind(wallet_address)
+    .fetch_one(pool)
+    .await
+    .map_err(ApiError::from)
+}
+
 /// ユーザーIDでユーザー情報を取得
 pub async fn find_by_id(
-    _pool: &PgPool,
+    pool: &PgPool,
     user_id: &str,
-) -> Result<Option<DbUser>, ApiError> {
-    // TODO: 実際のデータベースクエリに置き換える
-    // 現在はモックデータを返す（PoC環境用）
+) -> Result<Option<DbUserLegacy>, ApiError> {
+    #[cfg(feature = "mock-data")]
+    {
+        return super::user_mock::find_by_id_mock(pool, user_id).await;
+    }
 
-    // user_12345 のみ存在するとする
-    if user_id == "user_12345" {
-        Ok(Some(DbUser {
-            user_id: user_id.to_string(),
-            wallet_id: "0x1234567890abcdef1234567890abcdef12345678".to_string(),
-        }))
-    } else {
-        Ok(None)
+    #[cfg(not(feature = "mock-data"))]
+    {
+        // 本番用SQLクエリ
+        sqlx::query_as::<_, DbUserLegacy>(
+            r#"
+            SELECT user_id, wallet_id
+            FROM users
+            WHERE user_id = $1
+            "#,
+        )
+        .bind(user_id)
+        .fetch_optional(pool)
+        .await
+        .map_err(ApiError::from)
     }
 }
 
 /// ユーザーの残高を取得
 pub async fn find_balances_by_user_id(
-    _pool: &PgPool,
+    pool: &PgPool,
     user_id: &str,
 ) -> Result<Vec<DbBalance>, ApiError> {
-    // TODO: 実際のデータベースクエリに置き換える
-    // 現在はモックデータを返す（PoC環境用）
+    #[cfg(feature = "mock-data")]
+    {
+        return super::user_mock::find_balances_by_user_id_mock(pool, user_id).await;
+    }
 
-    if user_id == "user_12345" {
-        Ok(vec![
-            DbBalance {
-                currency: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913".to_string(),
-                currency_name: "USDC".to_string(),
-                balance: "1000000000".to_string(),
-                decimals: 6,
-            },
-            DbBalance {
-                currency: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48".to_string(),
-                currency_name: "JPYC".to_string(),
-                balance: "500000000000000000000".to_string(),
-                decimals: 18,
-            },
-        ])
-    } else {
-        Ok(vec![])
+    #[cfg(not(feature = "mock-data"))]
+    {
+        // 本番用SQLクエリ
+        sqlx::query_as::<_, DbBalance>(
+            r#"
+            SELECT currency, currency_name, balance, decimals
+            FROM balances
+            WHERE user_id = $1
+            "#,
+        )
+        .bind(user_id)
+        .fetch_all(pool)
+        .await
+        .map_err(ApiError::from)
     }
 }
 
 /// ユーザーの購入履歴を取得
 pub async fn find_purchases_by_user_id(
-    _pool: &PgPool,
+    pool: &PgPool,
     user_id: &str,
     limit: i32,
 ) -> Result<Vec<DbPurchase>, ApiError> {
-    // TODO: 実際のデータベースクエリに置き換える
-    // 現在はモックデータを返す（PoC環境用）
+    #[cfg(feature = "mock-data")]
+    {
+        return super::user_mock::find_purchases_by_user_id_mock(pool, user_id, limit).await;
+    }
 
-    if user_id == "user_12345" {
-        let purchases = vec![
-            DbPurchase {
-                order_id: "ord_20251222_abc123".to_string(),
-                sku: "cat-food-rc-2kg".to_string(),
-                product_name: "Royal Canin Indoor 2kg".to_string(),
-                quantity: 1,
-                amount: "3000500".to_string(),
-                currency: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913".to_string(),
-                status: "delivered".to_string(),
-                purchased_at: chrono::Utc::now() - chrono::Duration::days(3),
-            },
-            DbPurchase {
-                order_id: "ord_20251220_xyz789".to_string(),
-                sku: "water-2l-box".to_string(),
-                product_name: "Mineral Water 2L x 6".to_string(),
-                quantity: 2,
-                amount: "1600500".to_string(),
-                currency: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913".to_string(),
-                status: "shipped".to_string(),
-                purchased_at: chrono::Utc::now() - chrono::Duration::days(5),
-            },
-        ];
-
-        // limitを適用
-        let limited_purchases: Vec<_> = purchases
-            .into_iter()
-            .take(limit as usize)
-            .collect();
-
-        Ok(limited_purchases)
-    } else {
-        Ok(vec![])
+    #[cfg(not(feature = "mock-data"))]
+    {
+        // 本番用SQLクエリ
+        sqlx::query_as::<_, DbPurchase>(
+            r#"
+            SELECT order_id, sku, product_name, quantity, amount, currency, status, purchased_at
+            FROM purchases
+            WHERE user_id = $1
+            ORDER BY purchased_at DESC
+            LIMIT $2
+            "#,
+        )
+        .bind(user_id)
+        .bind(limit)
+        .fetch_all(pool)
+        .await
+        .map_err(ApiError::from)
     }
 }

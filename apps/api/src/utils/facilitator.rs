@@ -1,6 +1,6 @@
 /// Facilitator APIクライアント
 
-use crate::error::ApiError;
+use crate::error::{ApiError, error_codes};
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 
@@ -116,7 +116,7 @@ pub async fn verify_payment(
     if !verify_response.valid {
         return Err(ApiError::PaymentError {
             kind: crate::error::PaymentErrorKind::SignatureInvalid,
-            code: "SIGNATURE_INVALID".to_string(),
+            code: error_codes::SIGNATURE_INVALID.to_string(),
         });
     }
 
