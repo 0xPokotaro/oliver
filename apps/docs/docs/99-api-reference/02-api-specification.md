@@ -1,18 +1,20 @@
 ---
 id: api-specification
-title: Merchant API仕様書
-sidebar_label: Merchant API仕様書
+title: API仕様書
+sidebar_label: API仕様書
 ---
 
-# Merchant API仕様書
+# API仕様書
 
 ## 概要
 
-このドキュメントは、Oliverプロジェクトの **Merchant API (Resource Server)** の完全なインターフェース仕様を定義します。
+このドキュメントは、Oliverプロジェクトの **Oliver API** の完全なインターフェース仕様を定義します。
 
-Merchant APIは、x402決済プロトコルを使用して商品販売を行うAPIです。x402は、HTTP 402ステータスコードを拡張した決済プロトコルで、保護されたリソースにアクセスする際に決済が必要であることを示し、クライアント（Agent）が自動的に決済を実行できるようにします。
+APIカテゴリについては、[共通リファレンス](./00-common-reference.md#apiカテゴリ)を参照してください。
 
-この仕様は、Rust (Axum) での実装、およびクライアントサイド（Agent）の fetch 処理の実装基準となります。
+x402は、HTTP 402ステータスコードを拡張した決済プロトコルで、保護されたリソースにアクセスする際に決済が必要であることを示し、クライアント（Agent）が自動的に決済を実行できるようにします。
+
+この仕様は、Rust (Axum) での実装、およびクライアントサイド（Agent）の実装基準となります。
 
 ### ベースURL
 
@@ -32,10 +34,14 @@ Merchant APIは、x402決済プロトコルを使用して商品販売を行うA
 ### Authentication
 
 **通常のエンドポイント:**
-- `/health`, `/products`, `/products/:sku` は認証不要（Public）
+- `/health`, `/v1/commerce/products`, `/v1/commerce/products/:sku`, `/v1/commerce/orders/:orderId` は認証不要（Public）
+
+**認証が必要なエンドポイント:**
+- `/v1/user/profile` は `Authorization: Bearer <JWT_TOKEN>` ヘッダーによるJWT認証が必要
+- `/v1/user/:userId/voice` は認証不要（本番環境では認証機構の追加を推奨）
 
 **決済エンドポイント:**
-- `/products/:sku/buy` は `X-PAYMENT` ヘッダーによる署名認証が必要
+- `/v1/commerce/products/:sku/buy` は `X-PAYMENT` ヘッダーによる署名認証が必要
 - x402決済プロトコルでは、HTTPヘッダーに決済情報を含めることで認証を行います。決済ヘッダーが含まれていない場合、または決済検証に失敗した場合は402ステータスコードが返されます。
 
 #### HTTP Headers for x402 Endpoints
@@ -105,7 +111,7 @@ x402決済プロトコルを使用したリクエストの作成手順：
 
 ```bash
 # 初回リクエスト（決済ヘッダーなし）
-POST /api/v1/products/cat-food-rc-2kg/buy HTTP/1.1
+POST /api/v1/commerce/products/cat-food-rc-2kg/buy HTTP/1.1
 Host: localhost:8080
 Content-Type: application/json
 
@@ -119,7 +125,7 @@ Content-Type: application/json
 
 ```bash
 # 決済ヘッダー付きの再リクエスト
-POST /api/v1/products/cat-food-rc-2kg/buy HTTP/1.1
+POST /api/v1/commerce/products/cat-food-rc-2kg/buy HTTP/1.1
 Host: localhost:8080
 Content-Type: application/json
 X-PAYMENT: <base64-encoded-payment-payload>
@@ -136,7 +142,7 @@ X-PAYMENT: <base64-encoded-payment-payload>
 import { fetchWithX402 } from '@/lib/x402/client';
 
 const response = await fetchWithX402(
-  '/api/v1/products/cat-food-rc-2kg/buy',
+  '/api/v1/commerce/products/cat-food-rc-2kg/buy',
   {
     method: 'POST',
     body: JSON.stringify({
@@ -167,7 +173,7 @@ const response = await fetchWithX402(
       "scheme": "evm-permit",
       "network": "base",
       "maxAmountRequired": "3000500",
-      "resource": "/api/v1/products/cat-food-rc-2kg/buy",
+      "resource": "/api/v1/commerce/products/cat-food-rc-2kg/buy",
       "description": "Purchase cat food",
       "payTo": "0x1234567890123456789012345678901234567890",
       "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
@@ -216,14 +222,14 @@ WWW-Authenticate: X402 token="0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", price
 
 共通レスポンスパラメータ（`error`, `code`）については、[共通リファレンス](./00-common-reference.md#共通レスポンスパラメータ)を参照してください。
 
-以下は、Merchant API固有のレスポンスパラメータです：
+以下は、Oliver API固有のレスポンスパラメータです：
 
 | パラメータ | 型 | 説明 | 使用エンドポイント |
 |----------|-----|------|------------------|
-| `status` | string | ステータス（成功時: `"success"`, `"ok"`） | `/health`, `/products/:sku/buy` |
-| `payment` | Object | 決済情報（x402決済プロトコル使用時） | `/products/:sku/buy` |
-| `x402Version` | number | x402プロトコルバージョン（402エラー時） | `/products/:sku/buy` (402時) |
-| `accepts` | Array | 受け入れ可能な決済方法（402エラー時） | `/products/:sku/buy` (402時) |
+| `status` | string | ステータス（成功時: `"success"`, `"ok"`） | `/health`, `/v1/commerce/products/:sku/buy` |
+| `payment` | Object | 決済情報（x402決済プロトコル使用時） | `/v1/commerce/products/:sku/buy` |
+| `x402Version` | number | x402プロトコルバージョン（402エラー時） | `/v1/commerce/products/:sku/buy` (402時) |
+| `accepts` | Array | 受け入れ可能な決済方法（402エラー時） | `/v1/commerce/products/:sku/buy` (402時) |
 
 **成功レスポンス例（決済エンドポイント）:**
 
@@ -279,13 +285,31 @@ WWW-Authenticate: X402 token="0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", price
 
 ## API一覧
 
+### システム
+
 | API名 | メソッド | エンドポイント | 説明 | 認証 |
 |-------|---------|---------------|------|------|
 | ヘルスチェック | GET | `/api/v1/health` | サーバーの稼働状況を確認 | なし |
-| 商品一覧取得 | GET | `/api/v1/products` | 販売中の商品リストを取得 | なし |
-| 商品詳細取得 | GET | `/api/v1/products/:sku` | SKUに基づく商品詳細情報を取得 | なし |
-| 購入リクエスト | POST | `/api/v1/products/:sku/buy` | 商品を購入（x402決済プロトコル） | x402決済必須 |
-| 注文ステータス確認 | GET | `/api/v1/orders/:orderId` | 注文のステータスを確認 | なし |
+
+### ユーザーカテゴリ (`/v1/user`)
+
+| API名 | メソッド | エンドポイント | 説明 | 認証 |
+|-------|---------|---------------|------|------|
+| ユーザープロフィール取得 | GET | `/api/v1/user/profile` | ユーザーのプロフィール情報を取得 | JWT必須 |
+| 音声コマンド実行 | POST | `/api/v1/user/:userId/voice` | 音声（WAV）を受け取り、コマンドを実行 | なし |
+
+### 決済カテゴリ (`/v1/commerce`)
+
+| API名 | メソッド | エンドポイント | 説明 | 認証 |
+|-------|---------|---------------|------|------|
+| 商品一覧取得 | GET | `/api/v1/commerce/products` | 販売中の商品リストを取得 | なし |
+| 商品詳細取得 | GET | `/api/v1/commerce/products/:sku` | SKUに基づく商品詳細情報を取得 | なし |
+| 購入リクエスト | POST | `/api/v1/commerce/products/:sku/buy` | 商品を購入（x402決済プロトコル） | x402決済必須 |
+| 注文ステータス確認 | GET | `/api/v1/commerce/orders/:orderId` | 注文のステータスを確認 | なし |
+
+### AIカテゴリ (`/v1/agent`)
+
+現在、AIカテゴリのエンドポイントは実装されていません。将来の拡張予定です。
 
 ---
 
@@ -319,7 +343,7 @@ WWW-Authenticate: X402 token="0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", price
 
 販売中の商品リストを取得します。
 
-**パス:** `GET` `/api/v1/products`
+**パス:** `GET` `/api/v1/commerce/products`
 
 **リクエストヘッダー:** なし
 
@@ -364,7 +388,7 @@ WWW-Authenticate: X402 token="0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913", price
 
 SKUに基づく詳細情報を取得します。
 
-**パス:** `GET` `/api/v1/products/:sku`
+**パス:** `GET` `/api/v1/commerce/products/:sku`
 
 **リクエストヘッダー:** なし
 
@@ -414,7 +438,7 @@ SKUに基づく詳細情報を取得します。
 
 最も重要なエンドポイントです。見積もり（402）と決済実行（200）を同一URLで処理します。
 
-**パス:** `POST` `/api/v1/products/:sku/buy`
+**パス:** `POST` `/api/v1/commerce/products/:sku/buy`
 
 **パスパラメータ:**
 
@@ -450,7 +474,7 @@ SKUに基づく詳細情報を取得します。
       "scheme": "evm-permit",
       "network": "base",
       "maxAmountRequired": "3000500",
-      "resource": "/api/v1/products/cat-food-rc-2kg/buy",
+      "resource": "/api/v1/commerce/products/cat-food-rc-2kg/buy",
       "description": "Purchase cat food",
       "payTo": "0x1234567890123456789012345678901234567890",
       "asset": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
@@ -558,7 +582,7 @@ X-PAYMENT-RESPONSE: {"paymentId":"0x...","payer":"0x...","amount":"3000500"}
 
 **見積もり要求:**
 ```bash
-curl -X POST http://localhost:8080/api/v1/products/cat-food-rc-2kg/buy \
+curl -X POST http://localhost:8080/api/v1/commerce/products/cat-food-rc-2kg/buy \
   -H "Content-Type: application/json" \
   -d '{
     "agentAddress": "0x1234567890abcdef1234567890abcdef12345678",
@@ -569,7 +593,7 @@ curl -X POST http://localhost:8080/api/v1/products/cat-food-rc-2kg/buy \
 
 **決済実行:**
 ```bash
-curl -X POST http://localhost:8080/api/v1/products/cat-food-rc-2kg/buy \
+curl -X POST http://localhost:8080/api/v1/commerce/products/cat-food-rc-2kg/buy \
   -H "Content-Type: application/json" \
   -H "X-PAYMENT: <base64-encoded-payment-payload>" \
   -d '{
@@ -582,7 +606,7 @@ curl -X POST http://localhost:8080/api/v1/products/cat-food-rc-2kg/buy \
 import { fetchWithX402 } from '@/lib/x402/client';
 
 const response = await fetchWithX402(
-  '/api/v1/products/cat-food-rc-2kg/buy',
+  '/api/v1/commerce/products/cat-food-rc-2kg/buy',
   {
     method: 'POST',
     body: JSON.stringify({
@@ -607,7 +631,7 @@ const response = await fetchWithX402(
 
 注文のステータスを確認します。
 
-**パス:** `GET` `/api/v1/orders/:orderId`
+**パス:** `GET` `/api/v1/commerce/orders/:orderId`
 
 **リクエストヘッダー:** なし
 
@@ -645,6 +669,96 @@ const response = await fetchWithX402(
   "error": "Order not found",
   "code": "ORDER_NOT_FOUND"
 }
+```
+
+---
+
+### 6. ユーザープロフィール取得
+
+ユーザーのプロフィール情報（ウォレットID、各種通貨の残高、商品購入履歴）を取得します。
+
+詳細については、[User API - ユーザープロフィール取得](../user-api/user-profile.md)を参照してください。
+
+---
+
+### 7. 音声コマンド実行
+
+ユーザーIDに紐づく音声コマンド（WAV）を受け取り、サーバー側でコマンドを実行します。
+
+**パス:** `POST` `/api/v1/user/:userId/voice`
+
+**リクエストヘッダー:**
+
+| ヘッダー名 | 必須 | 説明 |
+|-----------|------|------|
+| `Content-Type` | 必須 | `multipart/form-data` |
+
+**リクエストボディ:** あり（`multipart/form-data`）
+
+**multipart form fields:**
+
+| フィールド名 | 必須 | 型 | 説明 |
+|------------|------|----|------|
+| `audio` | 必須 | file | WAV音声ファイル（推奨: `audio/wav`） |
+
+**パスパラメータ:**
+
+| パラメータ名 | 必須 | 説明 |
+|------------|------|------|
+| `userId` | 必須 | ユーザーID（例: `user_12345`） |
+
+**レスポンス (200 OK):**
+
+```json
+{
+  "success": true
+}
+```
+
+**レスポンス (400 Bad Request):**
+音声ファイルが不正、またはWAV形式ではない場合。
+
+```json
+{
+  "success": false,
+  "error": "Invalid audio format: only WAV is supported",
+  "code": "INVALID_AUDIO_FORMAT"
+}
+```
+
+**レスポンス (500 Internal Server Error):**
+音声処理・コマンド実行に失敗した場合。
+
+```json
+{
+  "success": false,
+  "error": "Audio processing failed",
+  "code": "AUDIO_PROCESSING_ERROR"
+}
+```
+
+#### 使用例
+
+**curl（multipart/form-data）:**
+
+```bash
+curl -X POST http://localhost:8080/api/v1/user/user_12345/voice \
+  -F "audio=@./command.wav;type=audio/wav"
+```
+
+**JavaScript（FormData）:**
+
+```javascript
+const formData = new FormData();
+formData.append('audio', file); // file: WAV File object
+
+const response = await fetch('/api/v1/user/user_12345/voice', {
+  method: 'POST',
+  body: formData,
+});
+
+const result = await response.json();
+console.log(result);
 ```
 
 ---
@@ -805,30 +919,75 @@ enum StockStatus {
 }
 ```
 
+### UserInformation
+
+ユーザー情報
+
+```typescript
+interface UserInformation {
+  userId: string;              // ユーザーID
+  walletId: string;            // ウォレットアドレス（0x形式）
+  balances: Balance[];         // 各種通貨の残高一覧
+  purchaseHistory: Purchase[]; // 商品購入履歴
+}
+```
+
+### Balance
+
+通貨残高情報
+
+```typescript
+interface Balance {
+  currency: string;      // トークンコントラクトアドレス（0x形式）
+  currencyName: string;  // 通貨名（例: "USDC", "JPYC"）
+  balance: string;       // 残高（wei単位の文字列）
+  decimals: number;      // 小数点桁数（例: 6 for USDC, 18 for ETH）
+}
+```
+
+### Purchase
+
+購入履歴情報
+
+```typescript
+interface Purchase {
+  orderId: string;       // 注文ID
+  sku: string;           // 商品SKU
+  productName: string;   // 商品名
+  quantity: number;      // 購入数量
+  amount: string;        // 決済金額（wei単位の文字列）
+  currency: string;      // トークンコントラクトアドレス
+  status: OrderStatus;   // 注文ステータス（"processing", "shipped", "delivered", "cancelled", "failed"）
+  purchasedAt: string;   // 購入日時（ISO 8601形式）
+}
+```
+
 ---
 
 ## エラーハンドリング
 
 共通エラーレスポンス形式、ステータスコード一覧、基本的なエラーコードについては、[共通リファレンス](./00-common-reference.md#エラーハンドリング)を参照してください。
 
-### Merchant API固有のエラーコード
+### Oliver API固有のエラーコード
 
-x402決済プロトコルおよびMerchant APIに固有のエラーコードです。
+x402決済プロトコルおよびOliver APIに固有のエラーコードです。
 
 | HTTP Status | Code | Description | Action |
 |------------|------|-------------|--------|
 | 400 | `ADDRESS_MISSING` | 配送先住所が未登録 | ダッシュボードで登録を促す |
+| 400 | `INVALID_AUDIO_FORMAT` | 音声ファイル形式が不正 | WAV形式のファイルを送信する |
 | 402 | `PAYMENT_REQUIRED` | 正常な決済フロー | 署名して再送する |
 | 403 | `SIGNATURE_INVALID` | 署名検証失敗 | 秘密鍵や署名ロジックを確認 |
 | 403 | `INSUFFICIENT_FUNDS` | Agentの残高不足 | ウォレットへチャージを促す |
 | 404 | `OUT_OF_STOCK` | 在庫切れ | 別のショップを探す |
 | 409 | `NONCE_USED` | 処理済みのリクエスト | 新しいNonceでやり直す |
+| 500 | `AUDIO_PROCESSING_ERROR` | 音声処理失敗 | 音声ファイルを確認して再送する |
 
 ### エラーメッセージ詳細
 
 基本的なエラーメッセージ（`INVALID_PARAMETER`, `USER_NOT_FOUND`, `PRODUCT_NOT_FOUND`, `ORDER_NOT_FOUND`, `INTERNAL_ERROR`）については、[共通リファレンス](./00-common-reference.md#エラーメッセージ詳細)を参照してください。
 
-以下は、Merchant API固有のエラーメッセージです。
+以下は、Oliver API固有のエラーメッセージです。
 
 #### 400 Bad Request
 
@@ -863,7 +1022,7 @@ x402決済プロトコルおよびMerchant APIに固有のエラーコードで�
       "scheme": "evm-permit",
       "network": "base",
       "maxAmountRequired": "3000500",
-      "resource": "/api/v1/products/cat-food-rc-2kg/buy",
+      "resource": "/api/v1/commerce/products/cat-food-rc-2kg/buy",
       "description": "Purchase cat food",
       "payTo": "0x...",
       "asset": "0x...",
@@ -946,6 +1105,38 @@ Agentの残高が不足している場合に返されます。
   "code": "NONCE_USED"
 }
 ```
+
+#### 500 Internal Server Error
+
+**AUDIO_PROCESSING_ERROR**
+
+音声処理またはコマンド実行に失敗した場合に返されます。
+
+**レスポンス例:**
+```json
+{
+  "success": false,
+  "error": "Audio processing failed",
+  "code": "AUDIO_PROCESSING_ERROR"
+}
+```
+
+---
+
+## セキュリティ考慮事項
+
+### 推奨事項
+
+1. **認証の実装**: 本番環境では、特にユーザーカテゴリのエンドポイント（`/v1/user/:userId`, `/v1/user/:userId/voice`）に適切な認証機構（JWT、OAuth2など）の追加を強く推奨します。
+2. **レート制限**: API呼び出しのレート制限を実装し、過度なリクエストを防止してください。特に音声処理エンドポイントは処理コストが高いため、厳格な制限を設けることを推奨します。
+3. **データマスキング**: ウォレットアドレスや残高などの機密情報は、必要に応じてマスキングすることを検討してください。
+4. **HTTPS使用**: 本番環境では必ずHTTPSを使用してください。
+
+### プライバシー保護
+
+- ユーザーの購入履歴は個人情報として扱い、適切なアクセス制御を実装してください。
+- GDPRやその他のプライバシー規制に準拠するため、ユーザーデータの削除や取得制限の機能を検討してください。
+- 音声データは機密性が高いため、処理後は速やかに削除し、長期保存を避けてください。
 
 ---
 

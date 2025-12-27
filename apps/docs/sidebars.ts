@@ -91,25 +91,6 @@ const sidebars: SidebarsConfig = {
             'developer-guide/agent-builders/wallet-integration',
           ],
         },
-        {
-          type: 'category',
-          label: 'API Reference',
-          items: [
-            'developer-guide/api-reference/common-reference',
-            'developer-guide/api-reference/api-specification',
-            'developer-guide/api-reference/user-information-api',
-          ],
-        },
-        {
-          type: 'category',
-          label: 'For Merchants',
-          items: [
-            'developer-guide/merchants/getting-started',
-            'developer-guide/merchants/middleware-sdk',
-            'developer-guide/merchants/mock-server-tutorial',
-            'developer-guide/merchants/implementation-workflow',
-          ],
-        },
       ],
     },
     {
@@ -128,6 +109,41 @@ const sidebars: SidebarsConfig = {
         'roadmap/phase1-poc',
         'roadmap/phase2-smart-accounts',
         'roadmap/phase3-global-infrastructure',
+      ],
+    },
+    {
+      type: 'doc',
+      id: 'overall-structure',
+      label: 'Overall Structure',
+    },
+    {
+      type: 'category',
+      label: 'API Reference',
+      items: [
+        'api-reference/common-reference',
+        'api-reference/api-list',
+        'api-reference/api-specification',
+        {
+          type: 'category',
+          label: 'User API',
+          items: [
+            'api-reference/user-api/user-profile',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Agent API',
+          items: [
+            'api-reference/agent-api/hoge',
+          ],
+        },
+        {
+          type: 'category',
+          label: 'Commerce API',
+          items: [
+            'api-reference/commerce-api/hoge',
+          ],
+        },
       ],
     },
   ],
