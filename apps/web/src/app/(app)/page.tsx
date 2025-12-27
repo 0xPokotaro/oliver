@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { getAuthToken } from '@dynamic-labs/sdk-react-core';
+import { useEffect } from "react";
+import { getAuthToken } from "@dynamic-labs/sdk-react-core";
 
 const Home = () => {
   const authToken = getAuthToken();
 
   useEffect(() => {
-    console.log('JWT: ', authToken);
+    console.log("JWT: ", authToken);
   }, [authToken]);
 
   return (
@@ -20,6 +20,6 @@ const Home = () => {
       <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
     </>
   );
-}
+};
 
 export default Home;

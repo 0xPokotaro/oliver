@@ -127,7 +127,7 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           label: 'User API',
           items: [
-            'api-reference/user-api/user-creation',
+            'api-reference/user-api/user-login',
             'api-reference/user-api/user-profile',
           ],
         },
