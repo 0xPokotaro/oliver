@@ -56,10 +56,14 @@ export function useBuyProduct() {
     mutate,
     mutateAsync,
     data,
-    error: error instanceof Error ? error : error ? new Error("Unknown error") : null,
+    error:
+      error instanceof Error
+        ? error
+        : error
+          ? new Error("Unknown error")
+          : null,
     isLoading: isPending,
     isSuccess,
     isError,
   };
 }
-

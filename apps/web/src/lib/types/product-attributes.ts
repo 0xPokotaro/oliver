@@ -71,14 +71,13 @@ export const ProductAttributesSchemaMap = {
 /**
  * カテゴリに応じたattributesの型を取得
  */
-export type ProductAttributes<T extends ProductCategory> =
-  T extends "cat_food"
-    ? CatFoodAttributes
-    : T extends "beverage"
-      ? BeverageAttributes
-      : T extends "daily_goods"
-        ? DailyGoodsAttributes
-        : never;
+export type ProductAttributes<T extends ProductCategory> = T extends "cat_food"
+  ? CatFoodAttributes
+  : T extends "beverage"
+    ? BeverageAttributes
+    : T extends "daily_goods"
+      ? DailyGoodsAttributes
+      : never;
 
 /**
  * 任意のカテゴリのattributes型
@@ -126,4 +125,3 @@ export function createProductDataForPrisma<T extends ProductCategory>(
     attributes: validatedAttributes as Prisma.InputJsonValue,
   };
 }
-

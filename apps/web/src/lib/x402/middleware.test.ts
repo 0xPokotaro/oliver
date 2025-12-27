@@ -51,7 +51,9 @@ describe("x402Middleware", () => {
         paymentSignature: { v: 27, r: "0x...", s: "0x..." },
       },
     };
-    const base64Payload = Buffer.from(JSON.stringify(mockPaymentPayload)).toString("base64");
+    const base64Payload = Buffer.from(
+      JSON.stringify(mockPaymentPayload),
+    ).toString("base64");
     headers.set("X-PAYMENT", base64Payload);
 
     vi.mocked(facilitatorClient.verifyPayment).mockResolvedValue({
@@ -89,7 +91,9 @@ describe("x402Middleware", () => {
         paymentSignature: { v: 27, r: "0x...", s: "0x..." },
       },
     };
-    const base64Payload = Buffer.from(JSON.stringify(mockPaymentPayload)).toString("base64");
+    const base64Payload = Buffer.from(
+      JSON.stringify(mockPaymentPayload),
+    ).toString("base64");
     headers.set("X-PAYMENT", base64Payload);
 
     vi.mocked(facilitatorClient.verifyPayment).mockResolvedValue({
@@ -123,7 +127,9 @@ describe("x402Middleware", () => {
         paymentSignature: { v: 27, r: "0x...", s: "0x..." },
       },
     };
-    const base64Payload = Buffer.from(JSON.stringify(mockPaymentPayload)).toString("base64");
+    const base64Payload = Buffer.from(
+      JSON.stringify(mockPaymentPayload),
+    ).toString("base64");
     headers.set("X-PAYMENT", base64Payload);
 
     vi.mocked(facilitatorClient.verifyPayment).mockResolvedValue({
@@ -136,7 +142,9 @@ describe("x402Middleware", () => {
     const result = await x402Middleware(headers, "/test/resource", mockConfig);
 
     expect(result.success).toBe(false);
-    expect(result.errorResponse?.error).toBe("Invalid payment intent signature");
+    expect(result.errorResponse?.error).toBe(
+      "Invalid payment intent signature",
+    );
   });
 
   it("無効なBase64ペイロードの場合、エラーを返す", async () => {
@@ -167,7 +175,9 @@ describe("x402Middleware", () => {
         paymentSignature: { v: 27, r: "0x...", s: "0x..." },
       },
     };
-    const base64Payload = Buffer.from(JSON.stringify(mockPaymentPayload)).toString("base64");
+    const base64Payload = Buffer.from(
+      JSON.stringify(mockPaymentPayload),
+    ).toString("base64");
     headers.set("X-PAYMENT", base64Payload);
 
     vi.mocked(facilitatorClient.verifyPayment).mockRejectedValue(
@@ -203,7 +213,8 @@ describe("getX402Config", () => {
     process.env.X402_ASSET = "0xasset";
     process.env.X402_MAX_AMOUNT_REQUIRED = "1000";
 
-    expect(() => getX402Config()).toThrow("X402_PAY_TO environment variable is not set");
+    expect(() => getX402Config()).toThrow(
+      "X402_PAY_TO environment variable is not set",
+    );
   });
 });
-

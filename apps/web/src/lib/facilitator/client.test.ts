@@ -26,18 +26,15 @@ describe("facilitator-client", () => {
 
       const result = await verifyPayment("dummy-payload");
 
-      expect(fetch).toHaveBeenCalledWith(
-        "http://localhost:8403/verify",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            payment: "dummy-payload",
-          }),
+      expect(fetch).toHaveBeenCalledWith("http://localhost:8403/verify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          payment: "dummy-payload",
+        }),
+      });
       expect(result).toEqual(mockResponse);
     });
 
@@ -89,22 +86,21 @@ describe("facilitator-client", () => {
       // settlePaymentは非同期で実行されるため、少し待つ
       await new Promise((resolve) => setTimeout(resolve, 100));
 
-      expect(fetch).toHaveBeenCalledWith(
-        "http://localhost:8403/settle",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            payment: "dummy-payload",
-          }),
+      expect(fetch).toHaveBeenCalledWith("http://localhost:8403/settle", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          payment: "dummy-payload",
+        }),
+      });
     });
 
     it("決済が失敗した場合、エラーをログに記録する", async () => {
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
 
       vi.mocked(fetch).mockResolvedValue({
         ok: false,
@@ -125,7 +121,9 @@ describe("facilitator-client", () => {
     });
 
     it("ネットワークエラーの場合、エラーをログに記録する", async () => {
-      const consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      const consoleErrorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
 
       vi.mocked(fetch).mockRejectedValue(new Error("Network error"));
 
@@ -143,4 +141,3 @@ describe("facilitator-client", () => {
     });
   });
 });
-

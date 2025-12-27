@@ -1,10 +1,6 @@
-import { handle } from 'hono/vercel'
-import { app } from '@/lib/hono/app'
+import { handle } from "hono/vercel";
+import { app } from "@/lib/hono/app";
 
-const handler = handle(app)
+const handler = handle(app);
 
-export {
-  handler as GET,
-  handler as POST,
-}
-
+export { handler as GET, handler as POST };

@@ -25,7 +25,7 @@ export function useUser(options: UseUserOptions): {
         includeHistory: includeHistory.toString(),
         historyLimit: historyLimit.toString(),
       });
-      
+
       const url = `/api/users/${userId}?${queryParams.toString()}`;
       const response = await fetch(url);
 
@@ -42,7 +42,11 @@ export function useUser(options: UseUserOptions): {
   return {
     user: data,
     isLoading,
-    error: error instanceof Error ? error : error ? new Error("Unknown error") : null,
+    error:
+      error instanceof Error
+        ? error
+        : error
+          ? new Error("Unknown error")
+          : null,
   };
 }
-

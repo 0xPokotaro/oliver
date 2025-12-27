@@ -361,4 +361,3 @@ export async function fetchWithX402(
 
   return response;
 }
-

@@ -19,7 +19,7 @@ import type { Balance, Purchase } from "@/lib/types";
 const GadgetPreviewPage = () => {
   const [userId, setUserId] = useState("user_12345");
   const [inputValue, setInputValue] = useState("user_12345");
-  
+
   const { user, isLoading, error } = useUser({
     userId,
     includeHistory: true,
@@ -132,8 +132,7 @@ const GadgetPreviewPage = () => {
                     </p>
                     <p className="text-2xl font-bold">
                       {(
-                        Number(balance.balance) /
-                        Math.pow(10, balance.decimals)
+                        Number(balance.balance) / Math.pow(10, balance.decimals)
                       ).toLocaleString()}
                     </p>
                     <p className="text-xs text-gray-500 mt-1">
@@ -176,13 +175,15 @@ const GadgetPreviewPage = () => {
                           {purchase.currency}
                         </TableCell>
                         <TableCell>
-                          <Badge variant={getStatusBadgeVariant(purchase.status)}>
+                          <Badge
+                            variant={getStatusBadgeVariant(purchase.status)}
+                          >
                             {getStatusLabel(purchase.status)}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-sm">
                           {new Date(purchase.purchasedAt).toLocaleString(
-                            "ja-JP"
+                            "ja-JP",
                           )}
                         </TableCell>
                       </TableRow>

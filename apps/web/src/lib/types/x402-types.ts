@@ -110,4 +110,3 @@ export interface X402MiddlewareResult {
   paymentInfo?: PaymentInfo;
   errorResponse?: PaymentRequiredResponse;
 }
-

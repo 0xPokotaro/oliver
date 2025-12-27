@@ -59,9 +59,7 @@ export async function verifyPayment(
  * @param paymentPayload Base64エンコードされた決済ペイロード
  * @returns Promise（エラーはログに記録される）
  */
-export async function settlePayment(
-  paymentPayload: string,
-): Promise<void> {
+export async function settlePayment(paymentPayload: string): Promise<void> {
   const facilitatorUrl = getFacilitatorUrl();
   const url = `${facilitatorUrl}/settle`;
 
@@ -91,4 +89,3 @@ export async function settlePayment(
       console.error("Failed to settle payment:", error);
     });
 }
-

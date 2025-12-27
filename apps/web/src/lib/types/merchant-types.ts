@@ -131,4 +131,3 @@ export interface HealthResponse {
   chainConnection: boolean;
   timestamp: number;
 }
-

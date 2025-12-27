@@ -83,7 +83,9 @@ function decodePaymentPayload(base64Payload: string): PaymentPayload {
     const payload = JSON.parse(decoded) as PaymentPayload;
     return payload;
   } catch (error) {
-    throw new Error(`Invalid payment payload: ${error instanceof Error ? error.message : "Unknown error"}`);
+    throw new Error(
+      `Invalid payment payload: ${error instanceof Error ? error.message : "Unknown error"}`,
+    );
   }
 }
 
@@ -183,4 +185,3 @@ export async function x402Middleware(
     };
   }
 }
-

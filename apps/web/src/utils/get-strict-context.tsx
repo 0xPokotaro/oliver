@@ -34,4 +34,3 @@ function getStrictContext<T>(
 }
 
 export { getStrictContext };
-

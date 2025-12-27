@@ -26,4 +26,3 @@ export interface UserInformation {
   balances: Balance[];
   purchaseHistory: Purchase[];
 }
-

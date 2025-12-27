@@ -32,7 +32,11 @@ export function useProducts(options?: UseProductsOptions) {
   return {
     products: data ?? [],
     isLoading,
-    error: error instanceof Error ? error : error ? new Error("Unknown error") : null,
+    error:
+      error instanceof Error
+        ? error
+        : error
+          ? new Error("Unknown error")
+          : null,
   };
 }
-

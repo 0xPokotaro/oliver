@@ -3,6 +3,11 @@
  */
 
 /**
+ * Application name used throughout the application
+ */
+export const APP_NAME = "Oliver";
+
+/**
  * Default product category used throughout the application
  */
 export const DEFAULT_PRODUCT_CATEGORY = "cat_food";

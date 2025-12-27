@@ -23,25 +23,25 @@ describe("x402-client", () => {
 
   describe("createX402PaymentHeader", () => {
     it("決済ヘッダーを生成する", async () => {
-      const mockAddress = "0x1234567890123456789012345678901234567890" as `0x${string}`;
+      const mockAddress =
+        "0x1234567890123456789012345678901234567890" as `0x${string}`;
       vi.mocked(mockWalletClient.getAddresses).mockResolvedValue([mockAddress]);
 
-      vi.mocked(mockPublicClient.readContract).mockImplementation((args: any) => {
-        if (args.functionName === "DOMAIN_SEPARATOR") {
-          return Promise.resolve("0xdomainseparator");
-        }
-        if (args.functionName === "nonces") {
-          return Promise.resolve(BigInt(0));
-        }
-        return Promise.resolve(null);
-      });
+      vi.mocked(mockPublicClient.readContract).mockImplementation(
+        (args: any) => {
+          if (args.functionName === "DOMAIN_SEPARATOR") {
+            return Promise.resolve("0xdomainseparator");
+          }
+          if (args.functionName === "nonces") {
+            return Promise.resolve(BigInt(0));
+          }
+          return Promise.resolve(null);
+        },
+      );
 
       const { signTypedData } = await import("viem/actions");
       vi.mocked(signTypedData).mockResolvedValue(
-        "0x" +
-          "r".repeat(64) +
-          "s".repeat(64) +
-          "1b",
+        "0x" + "r".repeat(64) + "s".repeat(64) + "1b",
       );
 
       const result = await createX402PaymentHeader({
@@ -92,39 +92,43 @@ describe("x402-client", () => {
 
       vi.mocked(fetch).mockResolvedValue(mockResponse);
 
-      const response = await fetchWithX402("/api/test", {}, {
-        tokenAddress: "0xtoken",
-        tokenName: "Test Token",
-        escrowAddress: "0xescrow",
-        chainId: 31337,
-        walletClient: mockWalletClient,
-        publicClient: mockPublicClient,
-      });
+      const response = await fetchWithX402(
+        "/api/test",
+        {},
+        {
+          tokenAddress: "0xtoken",
+          tokenName: "Test Token",
+          escrowAddress: "0xescrow",
+          chainId: 31337,
+          walletClient: mockWalletClient,
+          publicClient: mockPublicClient,
+        },
+      );
 
       expect(response.status).toBe(200);
       expect(fetch).toHaveBeenCalledTimes(1);
     });
 
     it("402レスポンスの場合、決済ヘッダーを生成して再リクエスト", async () => {
-      const mockAddress = "0x1234567890123456789012345678901234567890" as `0x${string}`;
+      const mockAddress =
+        "0x1234567890123456789012345678901234567890" as `0x${string}`;
       vi.mocked(mockWalletClient.getAddresses).mockResolvedValue([mockAddress]);
 
-      vi.mocked(mockPublicClient.readContract).mockImplementation((args: any) => {
-        if (args.functionName === "DOMAIN_SEPARATOR") {
-          return Promise.resolve("0xdomainseparator");
-        }
-        if (args.functionName === "nonces") {
-          return Promise.resolve(BigInt(0));
-        }
-        return Promise.resolve(null);
-      });
+      vi.mocked(mockPublicClient.readContract).mockImplementation(
+        (args: any) => {
+          if (args.functionName === "DOMAIN_SEPARATOR") {
+            return Promise.resolve("0xdomainseparator");
+          }
+          if (args.functionName === "nonces") {
+            return Promise.resolve(BigInt(0));
+          }
+          return Promise.resolve(null);
+        },
+      );
 
       const { signTypedData } = await import("viem/actions");
       vi.mocked(signTypedData).mockResolvedValue(
-        "0x" +
-          "r".repeat(64) +
-          "s".repeat(64) +
-          "1b",
+        "0x" + "r".repeat(64) + "s".repeat(64) + "1b",
       );
 
       // 最初の402レスポンス
@@ -158,14 +162,18 @@ describe("x402-client", () => {
         .mockResolvedValueOnce(paymentRequiredResponse)
         .mockResolvedValueOnce(successResponse);
 
-      const response = await fetchWithX402("/api/test", {}, {
-        tokenAddress: "0xtoken",
-        tokenName: "Test Token",
-        escrowAddress: "0xescrow",
-        chainId: 31337,
-        walletClient: mockWalletClient,
-        publicClient: mockPublicClient,
-      });
+      const response = await fetchWithX402(
+        "/api/test",
+        {},
+        {
+          tokenAddress: "0xtoken",
+          tokenName: "Test Token",
+          escrowAddress: "0xescrow",
+          chainId: 31337,
+          walletClient: mockWalletClient,
+          publicClient: mockPublicClient,
+        },
+      );
 
       expect(response.status).toBe(200);
       expect(fetch).toHaveBeenCalledTimes(2);
@@ -192,16 +200,19 @@ describe("x402-client", () => {
       vi.mocked(fetch).mockResolvedValue(paymentRequiredResponse);
 
       await expect(
-        fetchWithX402("/api/test", {}, {
-          tokenAddress: "0xtoken",
-          tokenName: "Test Token",
-          escrowAddress: "0xescrow",
-          chainId: 31337,
-          walletClient: mockWalletClient,
-          publicClient: mockPublicClient,
-        }),
+        fetchWithX402(
+          "/api/test",
+          {},
+          {
+            tokenAddress: "0xtoken",
+            tokenName: "Test Token",
+            escrowAddress: "0xescrow",
+            chainId: 31337,
+            walletClient: mockWalletClient,
+            publicClient: mockPublicClient,
+          },
+        ),
       ).rejects.toThrow("No payment method accepted");
     });
   });
 });
-

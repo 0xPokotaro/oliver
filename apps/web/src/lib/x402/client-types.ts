@@ -38,4 +38,3 @@ export interface CreateX402PaymentHeaderResult {
   paymentHeader: string; // Base64エンコードされた決済ヘッダー
   paymentId: string; // 決済ID
 }
-

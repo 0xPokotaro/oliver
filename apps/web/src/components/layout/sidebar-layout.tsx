@@ -48,20 +48,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/animate-ui/components/radix/dropdown-menu";
 import {
-  AudioWaveform,
   BadgeCheck,
   Bell,
   BookOpen,
   Bot,
   ChevronRight,
   ChevronsUpDown,
-  Command,
   CreditCard,
   Folder,
   Forward,
   Eye,
   Frame,
-  GalleryVerticalEnd,
   LogOut,
   Map,
   MoreHorizontal,
@@ -72,6 +69,7 @@ import {
   SquareTerminal,
   Trash2,
 } from "lucide-react";
+import Image from "next/image";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useSidebarStore } from "@/stores/sidebar-store";
@@ -86,17 +84,17 @@ const DATA = {
   teams: [
     {
       name: "Oliver",
-      logo: GalleryVerticalEnd,
+      logo: "/logo.svg",
       plan: "Enterprise",
     },
     {
       name: "Oliver Corp.",
-      logo: AudioWaveform,
+      logo: "/logo.svg",
       plan: "Startup",
     },
     {
       name: "Evil Corp.",
-      logo: Command,
+      logo: "/logo.svg",
       plan: "Free",
     },
   ],
@@ -268,7 +266,12 @@ export const RadixSidebarDemo = ({
                     className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                   >
                     <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                      <activeTeam.logo className="size-4" />
+                      <Image
+                        src={activeTeam.logo}
+                        alt={activeTeam.name}
+                        width={16}
+                        height={16}
+                      />
                     </div>
                     <div className="grid flex-1 text-left text-sm leading-tight">
                       <span className="truncate font-semibold">
@@ -297,7 +300,13 @@ export const RadixSidebarDemo = ({
                       className="gap-2 p-2"
                     >
                       <div className="flex size-6 items-center justify-center rounded-sm border">
-                        <team.logo className="size-4 shrink-0" />
+                        <Image
+                          src={team.logo}
+                          alt={team.name}
+                          width={16}
+                          height={16}
+                          className="shrink-0"
+                        />
                       </div>
                       {team.name}
                       <DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>

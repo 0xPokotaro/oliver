@@ -20,9 +20,7 @@ function getMerchantApiUrl(): string {
  * @param category カテゴリ（オプション）
  * @returns 商品一覧
  */
-export async function getProducts(
-  category?: string,
-): Promise<Product[]> {
+export async function getProducts(category?: string): Promise<Product[]> {
   const merchantApiUrl = getMerchantApiUrl();
   const url = new URL(`${merchantApiUrl}/api/v1/products`);
 
@@ -78,4 +76,3 @@ export async function buyProduct(
 
   return response;
 }
-

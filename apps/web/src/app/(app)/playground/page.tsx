@@ -154,117 +154,120 @@ export default function PlaygroundPage() {
                     <div className="text-sm font-semibold">
                       Payment Information
                     </div>
-                    {data.paymentRequiredResponse.accepts.map((accept, index) => (
-                      <div
-                        key={index}
-                        className="border rounded p-4 space-y-2 bg-muted/50"
-                      >
-                        <div className="grid grid-cols-2 gap-2 text-sm">
-                          <div>
-                            <span className="text-muted-foreground">
-                              Amount Required:
-                            </span>{" "}
-                            <span className="font-semibold">
-                              {formatCurrency(
-                                Number(accept.maxAmountRequired) / 1e6,
-                                "USD",
-                                "en-US",
-                              )}
-                            </span>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground">
-                              Pay To:
-                            </span>{" "}
-                            <span className="font-mono text-xs">
-                              {accept.payTo}
-                            </span>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground">
-                              Asset:
-                            </span>{" "}
-                            <span className="font-mono text-xs">
-                              {accept.asset}
-                            </span>
-                          </div>
-                          <div>
-                            <span className="text-muted-foreground">
-                              Network:
-                            </span>{" "}
-                            <span>{accept.network}</span>
-                          </div>
-                          {accept.chainId && (
+                    {data.paymentRequiredResponse.accepts.map(
+                      (accept, index) => (
+                        <div
+                          key={index}
+                          className="border rounded p-4 space-y-2 bg-muted/50"
+                        >
+                          <div className="grid grid-cols-2 gap-2 text-sm">
                             <div>
                               <span className="text-muted-foreground">
-                                Chain ID:
+                                Amount Required:
                               </span>{" "}
-                              <span>{accept.chainId}</span>
+                              <span className="font-semibold">
+                                {formatCurrency(
+                                  Number(accept.maxAmountRequired) / 1e6,
+                                  "USD",
+                                  "en-US",
+                                )}
+                              </span>
                             </div>
-                          )}
-                          {accept.nonce && (
                             <div>
                               <span className="text-muted-foreground">
-                                Nonce:
+                                Pay To:
                               </span>{" "}
                               <span className="font-mono text-xs">
-                                {accept.nonce}
+                                {accept.payTo}
                               </span>
                             </div>
-                          )}
-                          {accept.deadline && (
                             <div>
                               <span className="text-muted-foreground">
-                                Deadline:
+                                Asset:
                               </span>{" "}
-                              <span>
-                                {new Date(
-                                  accept.deadline * 1000,
-                                ).toLocaleString()}
+                              <span className="font-mono text-xs">
+                                {accept.asset}
                               </span>
+                            </div>
+                            <div>
+                              <span className="text-muted-foreground">
+                                Network:
+                              </span>{" "}
+                              <span>{accept.network}</span>
+                            </div>
+                            {accept.chainId && (
+                              <div>
+                                <span className="text-muted-foreground">
+                                  Chain ID:
+                                </span>{" "}
+                                <span>{accept.chainId}</span>
+                              </div>
+                            )}
+                            {accept.nonce && (
+                              <div>
+                                <span className="text-muted-foreground">
+                                  Nonce:
+                                </span>{" "}
+                                <span className="font-mono text-xs">
+                                  {accept.nonce}
+                                </span>
+                              </div>
+                            )}
+                            {accept.deadline && (
+                              <div>
+                                <span className="text-muted-foreground">
+                                  Deadline:
+                                </span>{" "}
+                                <span>
+                                  {new Date(
+                                    accept.deadline * 1000,
+                                  ).toLocaleString()}
+                                </span>
+                              </div>
+                            )}
+                          </div>
+
+                          {accept.metadata && (
+                            <div className="mt-3 pt-3 border-t">
+                              <div className="text-xs font-semibold mb-2">
+                                Metadata
+                              </div>
+                              <div className="grid grid-cols-2 gap-2 text-xs">
+                                {accept.metadata.subtotal && (
+                                  <div>
+                                    <span className="text-muted-foreground">
+                                      Subtotal:
+                                    </span>{" "}
+                                    <span>
+                                      {formatCurrency(
+                                        Number(accept.metadata.subtotal) / 1e6,
+                                        "USD",
+                                        "en-US",
+                                      )}
+                                    </span>
+                                  </div>
+                                )}
+                                {accept.metadata.shippingFee && (
+                                  <div>
+                                    <span className="text-muted-foreground">
+                                      Shipping Fee:
+                                    </span>{" "}
+                                    <span>
+                                      {formatCurrency(
+                                        Number(accept.metadata.shippingFee) /
+                                          1e6,
+                                        "USD",
+                                        "en-US",
+                                      )}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
                             </div>
                           )}
                         </div>
-
-                        {accept.metadata && (
-                          <div className="mt-3 pt-3 border-t">
-                            <div className="text-xs font-semibold mb-2">
-                              Metadata
-                            </div>
-                            <div className="grid grid-cols-2 gap-2 text-xs">
-                              {accept.metadata.subtotal && (
-                                <div>
-                                  <span className="text-muted-foreground">
-                                    Subtotal:
-                                  </span>{" "}
-                                  <span>
-                                    {formatCurrency(
-                                      Number(accept.metadata.subtotal) / 1e6,
-                                      "USD",
-                                      "en-US",
-                                    )}
-                                  </span>
-                                </div>
-                              )}
-                              {accept.metadata.shippingFee && (
-                                <div>
-                                  <span className="text-muted-foreground">
-                                    Shipping Fee:
-                                  </span>{" "}
-                                  <span>
-                                    {formatCurrency(
-                                      Number(accept.metadata.shippingFee) / 1e6,
-                                      "USD",
-                                      "en-US",
-                                    )}
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                      ),
+                    )}
                   </div>
                 )}
               </div>

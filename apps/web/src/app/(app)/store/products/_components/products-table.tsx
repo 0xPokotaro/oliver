@@ -37,11 +37,7 @@ import {
 } from "@/components/ui/table";
 import type { Product } from "@/lib/types";
 import { useProducts } from "@/hooks/use-products";
-import {
-  weiToNumber,
-  formatCurrency,
-  truncateString,
-} from "@/lib/formatting";
+import { weiToNumber, formatCurrency, truncateString } from "@/lib/formatting";
 import { DEFAULT_PRODUCT_CATEGORY, STOCK_STATUS_LABELS } from "@/lib/constants";
 
 const columns: ColumnDef<Product>[] = [
@@ -62,7 +58,14 @@ const columns: ColumnDef<Product>[] = [
       if (!category) {
         return <div className="text-muted-foreground">-</div>;
       }
-      return <Badge variant="secondary" className="bg-blue-500 text-white dark:bg-blue-600">{category}</Badge>;
+      return (
+        <Badge
+          variant="secondary"
+          className="bg-blue-500 text-white dark:bg-blue-600"
+        >
+          {category}
+        </Badge>
+      );
     },
   },
   {
@@ -319,4 +322,3 @@ export function ProductsTable() {
     </>
   );
 }
-
