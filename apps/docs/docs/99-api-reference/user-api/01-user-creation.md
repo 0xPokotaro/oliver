@@ -1,17 +1,17 @@
 ---
 id: user-creation
-title: ユーザー新規作成
-sidebar_label: ユーザー新規作成
+title: ログイン
+sidebar_label: ログイン
 ---
 
-# ユーザー新規作成
+# ログイン
 
 ユーザーを新規作成します。
 
 ## エンドポイント
 
 **HTTP Method:** `POST`  
-**Endpoint:** `/api/v1/user`
+**Endpoint:** `/api/v1/user/login`
 
 ## リクエスト
 
