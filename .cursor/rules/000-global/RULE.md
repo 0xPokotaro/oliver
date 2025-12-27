@@ -1,18 +1,25 @@
 ---
-description: github commit message rule
-alwaysApply: false
+description: "Project-wide basic standards and communication"
+alwaysApply: true
 ---
-# Commit Message Rules
+# Global Project Rules
+
+- 言語: 常に日本語で回答してください。
+- ツール: パッケージ管理には `pnpm` を使用してください。
+- 修正方針: 既存のコードスタイルを厳守し、破壊的な変更を行う前には必ず確認を求めてください。
+- モノレポ構造: ルートの `Cargo.toml` や `package.json` を不用意に書き換えないでください。
+
+## Commit Message Rules
 
 When generating commit messages, strictly follow these rules:
 
-## Format
+### Format
 `<emoji> <subject>`
 
 - emoji: Select appropriate emoji from [gitmoji.dev](https://gitmoji.dev/)
 - subject: Brief description of changes (50 characters or less, in English)
 
-## Common gitmoji
+### Common gitmoji
 
 - ✨ `:sparkles:` - Introduce new features
 - 🐛 `:bug:` - Fix a bug
@@ -34,7 +41,7 @@ When generating commit messages, strictly follow these rules:
 - ⬆️ `:arrow_up:` - Upgrade dependencies
 - ⬇️ `:arrow_down:` - Downgrade dependencies
 
-## Examples
+### Examples
 
 - `✨ Add MockERC20 deployment module`
 - `🐛 Fix account address retrieval method`
@@ -45,7 +52,7 @@ When generating commit messages, strictly follow these rules:
 - `⚡️ Improve build performance`
 - `🔥 Remove unused dependencies`
 
-## Notes
+### Notes
 
 - Use a single space between emoji and subject
 - Start subject with a verb (imperative mood)
