@@ -1,8 +1,3 @@
----
-id: index
-title: Core Features
----
-
 # Core Features
 
 Oliverは、単なるAIアシスタントではありません。
@@ -12,9 +7,6 @@ Oliverは、単なるAIアシスタントではありません。
 
 ## 主要機能
 
+- [A2A Commerce](/docs/core-features/a2a-commerce)
 - [AI Agent](/docs/core-features/ai-agent)
-- [x402プロトコル](/docs/core-features/x402-protocol)
-- [ガスレス決済](/docs/core-features/gasless-payment)
-- [ヘッドレスコマース](/docs/core-features/headless-commerce)
-- [セキュリティ](/docs/core-features/security)
-
+- [AI Payment](/docs/core-features/ai-payment)

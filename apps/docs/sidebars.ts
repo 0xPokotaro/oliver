@@ -18,11 +18,9 @@ const sidebars: SidebarsConfig = {
         id: 'core-features/index',
       },
       items: [
+        'core-features/a2a-commerce',
         'core-features/ai-agent',
-        'core-features/x402-protocol',
-        'core-features/gasless-payment',
-        'core-features/headless-commerce',
-        'core-features/security',
+        'core-features/ai-payment',
       ],
     },
     {
