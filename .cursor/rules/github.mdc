@@ -1,3 +1,7 @@
+---
+description: github commit message rule
+alwaysApply: false
+---
 # Commit Message Rules
 
 When generating commit messages, strictly follow these rules:
@@ -56,4 +60,3 @@ When API specifications are changed, you MUST update the documentation in `apps/
 - If you change x402 protocol implementation, update the API specification document at `apps/docs/docs/04-developer-guide/api-reference/01-api-specification.md`
 - Keep the documentation synchronized with the actual implementation
 - Include examples and type definitions when updating API documentation
-
