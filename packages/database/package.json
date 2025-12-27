@@ -13,7 +13,9 @@
     "prisma:push": "prisma db push",
     "prisma:reset": "prisma migrate reset && prisma db seed",
     "prisma:seed": "tsx prisma/seed.ts",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "db:start": "supabase start",
+    "db:stop": "supabase stop"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -27,6 +29,7 @@
     "@types/node": "^20.19.27",
     "@types/pg": "^8.16.0",
     "prisma": "^7.2.0",
+    "supabase": "^2.70.5",
     "tsx": "^4.19.2",
     "typescript": "^5.8.3"
   }

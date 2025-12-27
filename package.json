@@ -4,8 +4,8 @@
   "private": true,
   "description": "",
   "scripts": {
-    "db:start": "supabase start --workdir packages/database",
-    "db:stop": "supabase stop --workdir packages/database",
+    "db:start": "pnpm --filter @oliver/database db:start",
+    "db:stop": "pnpm --filter @oliver/database db:stop",
     "db:gen": "pnpm --filter @oliver/database prisma:gen",
     "db:migrate": "pnpm --filter @oliver/database prisma:migrate",
     "db:push": "pnpm --filter @oliver/database prisma:push",
