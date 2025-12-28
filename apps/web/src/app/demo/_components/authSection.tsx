@@ -20,8 +20,8 @@ const AuthSection = () => {
   useEffect(() => {
     if (data) {
       console.log("Login response:", data);
-      toast.success("ログインに成功しました", {
-        description: `ウォレットアドレス: ${formatWalletAddress(data.walletAddress)}`,
+      toast.success("Login successful", {
+        description: `Wallet address: ${formatWalletAddress(data.walletAddress)}`,
       });
     }
   }, [data]);
