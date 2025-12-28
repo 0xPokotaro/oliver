@@ -1,7 +1,7 @@
 export function formatWalletAddress(
   address: string,
   startLength = 6,
-  endLength = 4
+  endLength = 4,
 ): string {
   if (!address) return "";
   if (address.length <= startLength + endLength) return address;

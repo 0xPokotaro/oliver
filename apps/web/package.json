@@ -10,6 +10,7 @@
     "format": "biome format --write"
   },
   "dependencies": {
+    "@biconomy/abstractjs": "^1.1.19",
     "@oliver/api": "workspace:*",
     "@prisma/client-runtime-utils": "^7.2.0",
     "@radix-ui/react-slot": "^1.2.4",

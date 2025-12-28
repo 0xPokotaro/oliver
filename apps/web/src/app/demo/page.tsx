@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { client } from "@/lib/hono";
-import AuthSection from "./_components/authSection";
+import { AuthSection } from "./_components/authSection";
+import { RegisterSection } from "./_components/registerSection";
 
 const DemoPage = () => {
   const [data, setData] = useState<{ message: string } | null>(null);
@@ -20,6 +21,7 @@ const DemoPage = () => {
       <h1>Demo Page</h1>
       {data && <p>{data.message}</p>}
       <AuthSection />
+      <RegisterSection />
     </div>
   );
 };

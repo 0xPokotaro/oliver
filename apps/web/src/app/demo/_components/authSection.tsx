@@ -9,7 +9,7 @@ import { formatWalletAddress } from "@/lib/format";
 
 const walletKey = "metamask";
 
-const AuthSection = () => {
+export const AuthSection = () => {
   const { user, handleLogOut } = useDynamicContext();
   const { login, isLoading, error, data } = useLogin();
 
@@ -39,5 +39,3 @@ const AuthSection = () => {
     </div>
   );
 };
-
-export default AuthSection;

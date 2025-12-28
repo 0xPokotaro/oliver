@@ -5,7 +5,7 @@ import { DynamicContextProvider } from "@dynamic-labs/sdk-react-core";
 import { DynamicWagmiConnector } from "@dynamic-labs/wagmi-connector";
 import { createConfig, WagmiProvider } from "wagmi";
 import { http } from "viem";
-import { avalancheFuji } from "viem/chains";
+import { avalanche } from "viem/chains";
 import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
 
 const dynamicEnvironmentId = process.env.NEXT_PUBLIC_DYNAMIC_ENV_ID ?? "";
@@ -16,28 +16,28 @@ if (!dynamicEnvironmentId) {
 
 const evmNetworks = [
   {
-    blockExplorerUrls: [avalancheFuji.blockExplorers.default.url],
-    chainId: avalancheFuji.id,
-    chainName: avalancheFuji.name,
+    blockExplorerUrls: [avalanche.blockExplorers.default.url],
+    chainId: avalanche.id,
+    chainName: avalanche.name,
     iconUrls: ["https://app.dynamic.xyz/assets/networks/avax.svg"],
-    name: avalancheFuji.name,
+    name: avalanche.name,
     nativeCurrency: {
       decimals: 18,
       name: "AVAX",
       symbol: "AVAX",
       iconUrl: "https://app.dynamic.xyz/assets/networks/avax.svg",
     },
-    networkId: avalancheFuji.id,
+    networkId: avalanche.id,
     rpcUrls: ["https://api.avax-test.network/ext/bc/C/rpc"],
-    vanityName: avalancheFuji.name,
+    vanityName: avalanche.name,
   },
 ];
 
 const config = createConfig({
-  chains: [avalancheFuji],
+  chains: [avalanche],
   multiInjectedProviderDiscovery: false,
   transports: {
-    [avalancheFuji.id]: http(),
+    [avalanche.id]: http(),
   },
 });
 
