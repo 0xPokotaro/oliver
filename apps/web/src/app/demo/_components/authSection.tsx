@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import { useWalletOptions } from "@dynamic-labs/sdk-react-core";
 import { Button } from '@/components/ui/button'
@@ -8,11 +9,15 @@ const walletKey = "metamask";
 
 const AuthSection = () => {
   const { selectWalletOption } = useWalletOptions();
-  const { handleLogOut } = useDynamicContext();
+  const {user,  handleLogOut } = useDynamicContext();
 
   const connectWithWallet = async (walletKey: string) => {
     return await selectWalletOption(walletKey)
   }
+
+  useEffect(() => {
+    console.log('user: ', user)
+  }, [user])
 
   return (
     <div>
