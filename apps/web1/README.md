@@ -2,6 +2,29 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+### Environment Variables
+
+Create a `.env.local` file in the `apps/web` directory with the following variables:
+
+```bash
+# Database
+DATABASE_URL="postgresql://user:password@localhost:5432/db"
+
+# Merchant API
+MERCHANT_API_URL="http://localhost:3001"
+
+# Facilitator API
+FACILITATOR_URL="http://localhost:8403"
+
+# X402 Configuration
+X402_PAY_TO="0x..."
+X402_ASSET="0x..."
+X402_MAX_AMOUNT_REQUIRED="1000000000000000000"
+X402_NETWORK="localhost"
+X402_MAX_TIMEOUT_SECONDS="3600"
+X402_DESCRIPTION="Access to protected resource"
+```
+
 First, run the development server:
 
 ```bash

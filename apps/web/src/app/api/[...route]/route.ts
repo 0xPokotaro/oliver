@@ -1,6 +1,5 @@
-import { handle } from "hono/vercel";
-import { app } from "@/lib/hono/app";
+import app from '@oliver/api'
+import { handle } from 'hono/vercel'
 
-const handler = handle(app);
-
-export { handler as GET, handler as POST };
+export const GET = handle(app)
+export const POST = handle(app)

@@ -36,6 +36,7 @@ APIカテゴリについては、[共通リファレンス](./00-common-referenc
 | ユーザー情報取得 | GET | `/api/v1/user/:userId` | ユーザーIDに基づく詳細情報を取得 | なし |
 | 音声コマンド実行 | POST | `/api/v1/user/:userId/voice` | 音声（WAV）を受け取り、コマンドを実行 | なし |
 | ユーザープロフィール取得 | GET | `/api/v1/user/profile` | ログイン中のユーザー自身のプロフィールを取得 | セッションCookie必須 |
+| Smart Account 登録 | POST | `/api/v1/user/smart-account` | Biconomy Smart Account アドレスの登録 | セッションCookie必須 |
 
 ---
 

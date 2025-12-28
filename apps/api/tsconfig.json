@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "noImplicitAny": true,
+
+    "moduleResolution": "Node",
+    "baseUrl": ".",
+    "paths": {
+      "@oliver/api/*": ["./src/*"]
+    }
+  }
+}
