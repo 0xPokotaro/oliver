@@ -1,3 +1,6 @@
 packages:
-  - 'apps/*'
-  - 'packages/*'
+  - 'apps/web'
+  - 'apps/api'
+  - 'packages/database'
+  - 'packages/infra'
+  - 'packages/evm'
