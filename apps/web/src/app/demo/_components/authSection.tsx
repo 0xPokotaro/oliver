@@ -5,6 +5,7 @@ import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
 import { Button } from "@/components/ui/button";
 import { useLogin } from "@/hooks/use-login";
 import { toast } from "sonner";
+import { formatWalletAddress } from "@/lib/format";
 
 const walletKey = "metamask";
 
@@ -20,7 +21,7 @@ const AuthSection = () => {
     if (data) {
       console.log("Login response:", data);
       toast.success("ログインに成功しました", {
-        description: `ウォレットアドレス: ${data.walletAddress.slice(0, 6)}...${data.walletAddress.slice(-4)}`,
+        description: `ウォレットアドレス: ${formatWalletAddress(data.walletAddress)}`,
       });
     }
   }, [data]);
