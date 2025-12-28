@@ -1,33 +1,42 @@
-'use client'
+"use client";
 
-import { useEffect } from 'react'
+import { useEffect } from "react";
 import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
-import { useWalletOptions } from "@dynamic-labs/sdk-react-core";
-import { Button } from '@/components/ui/button'
+import { Button } from "@/components/ui/button";
+import { useLogin } from "@/hooks/use-login";
+import { toast } from "sonner";
 
 const walletKey = "metamask";
 
 const AuthSection = () => {
-  const { selectWalletOption } = useWalletOptions();
-  const {user,  handleLogOut } = useDynamicContext();
-
-  const connectWithWallet = async (walletKey: string) => {
-    return await selectWalletOption(walletKey)
-  }
+  const { user, handleLogOut } = useDynamicContext();
+  const { login, isLoading, error, data } = useLogin();
 
   useEffect(() => {
-    console.log('user: ', user)
-  }, [user])
+    console.log("user: ", user);
+  }, [user]);
+
+  useEffect(() => {
+    if (data) {
+      console.log("Login response:", data);
+      toast.success("ログインに成功しました", {
+        description: `ウォレットアドレス: ${data.walletAddress.slice(0, 6)}...${data.walletAddress.slice(-4)}`,
+      });
+    }
+  }, [data]);
 
   return (
     <div>
       <h1>Auth Section</h1>
+      {error && <p className="text-red-500 text-sm">{error.message}</p>}
       <div className="flex gap-2">
-        <Button onClick={() => connectWithWallet(walletKey)}>Login</Button>
+        <Button onClick={() => login({ walletKey })} disabled={isLoading}>
+          {isLoading ? "Logging in..." : "Login"}
+        </Button>
         <Button onClick={() => handleLogOut()}>Logout</Button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default AuthSection
+export default AuthSection;

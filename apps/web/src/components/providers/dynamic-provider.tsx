@@ -8,7 +8,7 @@ import { http } from "viem";
 import { avalancheFuji } from "viem/chains";
 import { EthereumWalletConnectors } from "@dynamic-labs/ethereum";
 
-const dynamicEnvironmentId = process.env.NEXT_PUBLIC_DYNAMIC_ENV_ID ?? ""
+const dynamicEnvironmentId = process.env.NEXT_PUBLIC_DYNAMIC_ENV_ID ?? "";
 
 if (!dynamicEnvironmentId) {
   throw new Error("NEXT_PUBLIC_DYNAMIC_ENVIRONMENT_ID is not set");
