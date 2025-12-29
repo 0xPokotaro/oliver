@@ -28,7 +28,6 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton,
-  SidebarMenuAction,
 } from '@/components/animate-ui/components/radix/sidebar';
 import {
   Collapsible,
@@ -69,7 +68,7 @@ const DATA = {
       title: 'Playground',
       url: '#',
       icon: SquareTerminal,
-      isActive: true,
+      isActive: false,
       items: [
         {
           title: 'History',

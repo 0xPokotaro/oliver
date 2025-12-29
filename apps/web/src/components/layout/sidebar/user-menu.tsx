@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import {
   SidebarMenuItem,
   SidebarMenuButton,
@@ -22,11 +23,19 @@ export const UserMenu = () => {
   const { user, handleLogOut, primaryWallet } = useDynamicContext();
   const { login, isLoading } = useLogin();
 
-  const walletAddress = primaryWallet?.address;
+  const [mounted, setMounted] = useState(false);
+  const [userState, setUserState] = useState(user);
+  const [walletAddressState, setWalletAddressState] = useState<string | undefined>(primaryWallet?.address);
+
+  useEffect(() => {
+    setMounted(true);
+    setUserState(user);
+    setWalletAddressState(primaryWallet?.address);
+  }, [user, primaryWallet]);
 
   return (
     <SidebarMenuItem>
-      {user ? (
+      {mounted && userState ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
@@ -37,9 +46,9 @@ export const UserMenu = () => {
                 <span className="truncate font-semibold">
                   Metamask
                 </span>
-                {walletAddress && (
+                {walletAddressState && (
                   <span className="truncate text-xs text-muted-foreground">
-                    {formatWalletAddress(walletAddress)}
+                    {formatWalletAddress(walletAddressState)}
                   </span>
                 )}
               </div>

@@ -7,7 +7,6 @@ export const loginRequestSchema = z.object({
 export const loginResponseSchema = z.object({
   userId: z.string().uuid(),
   walletAddress: z.string().regex(/^0x[a-fA-F0-9]{40}$/, 'Invalid wallet address format'),
-  smartAccountAddress: z.string().regex(/^0x[a-fA-F0-9]{40}$/, 'Invalid smart account address format'),
 })
 
 export const logoutResponseSchema = z.object({

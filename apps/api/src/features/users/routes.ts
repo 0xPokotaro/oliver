@@ -1,5 +1,8 @@
 import { Hono } from 'hono'
-import * as handlers from '@oliver/api/features/users/handlers'
+import { getProfilHandlere } from '@oliver/api/features/users/handlers'
+import { requireAuthMiddleware } from '@oliver/api/infrastructure/middleware'
+import type { Env } from '@oliver/api/infrastructure/types'
 
-export const userRoutes = new Hono()
-  .get('/list', handlers.listUsers)
+export const userRoutes = new Hono<Env>()
+  .use('*', requireAuthMiddleware)
+  .get('/profile', getProfilHandlere)

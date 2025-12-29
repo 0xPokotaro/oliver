@@ -92,7 +92,6 @@ export class AuthService {
     const response: LoginResponse = {
       userId: user.id,
       walletAddress: user.walletAddress,
-      smartAccountAddress: sessionKey.sessionKeyAddress,
     }
 
     return {
