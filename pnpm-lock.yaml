@@ -14,6 +14,9 @@ importers:
 
   apps/api:
     dependencies:
+      '@biconomy/abstractjs':
+        specifier: ^1.1.19
+        version: 1.1.19(@metamask/delegation-toolkit@0.11.0(viem@2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@rhinestone/module-sdk@0.4.0(viem@2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(typescript@5.8.3)(viem@2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
       '@hono/zod-validator':
         specifier: ^0.4.1
         version: 0.4.3(hono@4.11.3)(zod@3.25.76)
@@ -29,6 +32,9 @@ importers:
       jose:
         specifier: ^5.0.0
         version: 5.10.0
+      viem:
+        specifier: ^2.43.2
+        version: 2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
       zod:
         specifier: ^3.24.1
         version: 3.25.76
@@ -2277,6 +2283,13 @@ snapshots:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
 
+  '@biconomy/abstractjs@1.1.19(@metamask/delegation-toolkit@0.11.0(viem@2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(@rhinestone/module-sdk@0.4.0(viem@2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)))(typescript@5.8.3)(viem@2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))':
+    dependencies:
+      '@metamask/delegation-toolkit': 0.11.0(viem@2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
+      '@rhinestone/module-sdk': 0.4.0(viem@2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
+      typescript: 5.8.3
+      viem: 2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
+
   '@biconomy/abstractjs@1.1.19(@metamask/delegation-toolkit@0.11.0(viem@2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@4.2.1)))(@rhinestone/module-sdk@0.4.0(viem@2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@4.2.1)))(typescript@5.8.3)(viem@2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@4.2.1))':
     dependencies:
       '@metamask/delegation-toolkit': 0.11.0(viem@2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@4.2.1))
@@ -2697,11 +2710,24 @@ snapshots:
 
   '@metamask/delegation-deployments@0.11.0': {}
 
+  '@metamask/delegation-toolkit@0.11.0(viem@2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))':
+    dependencies:
+      '@metamask/delegation-utils': 0.11.0(viem@2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))
+      viem: 2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
+      webauthn-p256: 0.0.5
+
   '@metamask/delegation-toolkit@0.11.0(viem@2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@4.2.1))':
     dependencies:
       '@metamask/delegation-utils': 0.11.0(viem@2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@4.2.1))
       viem: 2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@4.2.1)
       webauthn-p256: 0.0.5
+
+  '@metamask/delegation-utils@0.11.0(viem@2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))':
+    dependencies:
+      '@metamask/delegation-abis': 0.11.0
+      '@metamask/delegation-deployments': 0.11.0
+      buffer: 6.0.3
+      viem: 2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
 
   '@metamask/delegation-utils@0.11.0(viem@2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@4.2.1))':
     dependencies:
@@ -3097,6 +3123,12 @@ snapshots:
       react: 19.2.3
     optionalDependencies:
       '@types/react': 19.2.7
+
+  '@rhinestone/module-sdk@0.4.0(viem@2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76))':
+    dependencies:
+      solady: 0.0.235
+      tslib: 2.8.1
+      viem: 2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@3.25.76)
 
   '@rhinestone/module-sdk@0.4.0(viem@2.43.2(bufferutil@4.1.0)(typescript@5.8.3)(utf-8-validate@5.0.10)(zod@4.2.1))':
     dependencies:

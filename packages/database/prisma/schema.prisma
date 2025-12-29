@@ -14,15 +14,18 @@ datasource db {
 }
 
 model User {
-  id            String   @id @default(uuid())
-  dynamicUserId String   @unique
-  walletAddress String   @unique
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id                String   @id @default(uuid())
+  dynamicUserId     String   @unique
+  walletAddress     String   @unique
+  smartAccountAddress String? @unique
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
-  payments PaymentHistory[]
+  sessionKeys       SessionKey[]
+  payments          PaymentHistory[]
 
   @@index([walletAddress])
+  @@index([smartAccountAddress])
   @@map("users")
 }
 
@@ -83,4 +86,24 @@ model PaymentHistory {
   @@index([status])
   @@index([createdAt])
   @@map("payment_history")
+}
+
+model SessionKey {
+  id                String   @id @default(uuid())
+  userId            String
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // 暗号化された秘密鍵情報
+  encryptedPrivateKeyIv      String   // 暗号化のIV
+  encryptedPrivateKeyContent String   // 暗号化された秘密鍵
+  
+  // セッションキーのアドレス（公開情報）
+  sessionKeyAddress String   @unique
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([sessionKeyAddress])
+  @@map("session_keys")
 }

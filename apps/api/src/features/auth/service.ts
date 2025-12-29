@@ -1,11 +1,17 @@
 import { decodeJwt, SignJWT, type JWTPayload } from 'jose'
 import type { DynamicJWTPayload, SessionPayload, LoginResponse, LogoutResponse } from './types'
 import { UserRepository } from '@oliver/api/domain/repositories/user.repository'
+import { SessionKeyRepository } from '@oliver/api/domain/repositories/session-key.repository'
+import { encrypt } from '@oliver/api/shared/utils/encryption'
+import { generateWalletKeyPair } from '@oliver/api/shared/utils/wallet'
 
 export class AuthService {
   private readonly jwtSecret: Uint8Array
 
-  constructor(private readonly userRepository: UserRepository) {
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly sessionKeyRepository: SessionKeyRepository
+  ) {
     // 最小構成のため、シンプルな秘密鍵を使用（本番ではenv変数から読み込むべき）
     const secret = process.env.JWT_SECRET || 'development-secret-key-change-in-production'
     this.jwtSecret = new TextEncoder().encode(secret)
@@ -66,10 +72,27 @@ export class AuthService {
       walletAddress: user.walletAddress,
     })
 
-    // 5. レスポンス形式を決定
+    // 5. セッションキーの確認と生成
+    let sessionKey = await this.sessionKeyRepository.findByUserId(user.id)
+    
+    if (!sessionKey) {
+      // セッションキーが存在しない場合、新規生成してDBに保存
+      const { privateKey, account } = generateWalletKeyPair();
+      const { iv, content } = encrypt(privateKey);
+      
+      sessionKey = await this.sessionKeyRepository.create({
+        userId: user.id,
+        encryptedPrivateKeyIv: iv,
+        encryptedPrivateKeyContent: content,
+        sessionKeyAddress: account.address,
+      });
+    }
+
+    // 6. レスポンス形式を決定
     const response: LoginResponse = {
       userId: user.id,
       walletAddress: user.walletAddress,
+      smartAccountAddress: sessionKey.sessionKeyAddress,
     }
 
     return {

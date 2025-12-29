@@ -7,7 +7,7 @@ import {
   toMultichainNexusAccount,
   getMEEVersion,
   MEEVersion,
-  createMeeClient,
+  createNexusClient,
 } from "@biconomy/abstractjs";
 import { avalanche } from 'viem/chains';
 import { http } from 'viem';
@@ -29,8 +29,7 @@ export const RegisterSection = () => {
       const orchestrator = await toMultichainNexusAccount({
         signer: walletClient,
         chainConfigurations: [
-
-          { 
+          {
             chain: avalanche, 
             transport: http(), 
             version: getMEEVersion(MEEVersion.V2_2_1)
@@ -38,16 +37,9 @@ export const RegisterSection = () => {
         ]
       });
 
-      const avalancheFujiAddress = await orchestrator.addressOn(avalanche.id, true);
+      const smartAccountAddress = await orchestrator.addressOn(avalanche.id, true);
 
-      console.log('avalancheFuji address: ', avalancheFujiAddress, 'chainId: ', avalanche.id)
-
-      const meeClient = await createMeeClient({
-        account: orchestrator,
-        apiKey: 'mee_V3uiyj16zK9q8z7p7SA85s',
-      })
-
-      console.log('meeClient: ', meeClient)
+      console.log('smartAccountAddress: ', smartAccountAddress, 'chainId: ', avalanche.id)
     } catch (error) {
       console.error("Error registering smart account:", error);
     }

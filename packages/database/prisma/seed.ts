@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "@prisma/client";
-import type { Prisma } from "@prisma/client";
+import { PrismaClient } from "../generated/client";
+import type { Prisma } from "../generated/client";
 import { defineAttributes, ProductCategories } from "../src/lib/types/product-attributes";
 
 // PrismaClientを初期化
@@ -46,6 +46,7 @@ async function main() {
     data: {
       dynamicUserId: "dyn_user_001",
       walletAddress: "0x1234567890123456789012345678901234567890",
+      smartAccountAddress: "0x1111111111111111111111111111111111111111",
     },
   });
 
@@ -53,6 +54,7 @@ async function main() {
     data: {
       dynamicUserId: "dyn_user_002",
       walletAddress: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+      smartAccountAddress: "0x2222222222222222222222222222222222222222",
     },
   });
 
@@ -60,6 +62,7 @@ async function main() {
     data: {
       dynamicUserId: "dyn_user_003",
       walletAddress: "0x9876543210987654321098765432109876543210",
+      smartAccountAddress: "0x3333333333333333333333333333333333333333",
     },
   });
 
