@@ -35,4 +35,16 @@ export class UserRepository {
 
     return user ? UserEntity.fromPrisma(user) : null
   }
+
+  async updateSmartAccountAddress(id: string, smartAccountAddress: string): Promise<UserEntity> {
+    const user = await this.prisma.user.update({
+      where: { id },
+      data: {
+        smartAccountAddress,
+        updatedAt: new Date(),
+      },
+    })
+
+    return UserEntity.fromPrisma(user)
+  }
 }
