@@ -5,6 +5,7 @@ export class UserEntity {
     public readonly id: string,
     public readonly dynamicUserId: string,
     public readonly walletAddress: string,
+    public readonly smartAccountAddress: string | null,
     public readonly createdAt: Date,
     public readonly updatedAt: Date
   ) {}
@@ -14,6 +15,7 @@ export class UserEntity {
       prismaUser.id,
       prismaUser.dynamicUserId,
       prismaUser.walletAddress,
+      prismaUser.smartAccountAddress,
       prismaUser.createdAt,
       prismaUser.updatedAt
     )
@@ -24,6 +26,7 @@ export class UserEntity {
       id: this.id,
       dynamicUserId: this.dynamicUserId,
       walletAddress: this.walletAddress,
+      smartAccountAddress: this.smartAccountAddress,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
     }
