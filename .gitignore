@@ -43,3 +43,5 @@ pnpm-debug.log*
 # Hardhat
 **/ignition/deployments
 **/coverage
+
+.pnpm-store
