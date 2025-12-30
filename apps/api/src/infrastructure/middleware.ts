@@ -11,7 +11,7 @@ export const injectDependencies: MiddlewareHandler<Env> = async (c, next) => {
 
 export const requireAuthMiddleware: MiddlewareHandler<Env> = async (c, next) => {
   try {
-    // AuthorizationヘッダーからJWTを取得
+    // Authorizationヘッダーからアクセストークンを取得
     const authHeader = c.req.header('Authorization')
     if (!authHeader) {
       throw new Error('Authorization header is missing')
@@ -22,22 +22,24 @@ export const requireAuthMiddleware: MiddlewareHandler<Env> = async (c, next) => 
       ? authHeader.substring(7)
       : authHeader
 
-    // JWTを検証
+    // Privyトークンを検証
     const authService = c.get('authService')
-    const payload = await authService.verifyDynamicJWT(authToken)
+    const payload = await authService.verifyPrivyToken(authToken)
 
     // Contextに検証済みペイロードをset
     c.set('jwtPayload', payload)
 
-    // ペイロードからdynamicUserIdを取得
-    const dynamicUserId = payload.sub
+    // ペイロードからprivyUserIdを取得
+    const privyUserId = payload.sub
 
     // DBからユーザー情報を取得
     const userRepository = createUserRepository()
-    const user = await userRepository.findByDynamicUserId(dynamicUserId)
+    let user = await userRepository.findByPrivyUserId(privyUserId)
 
-    if (!user) {
-      throw new Error('User not found')
+    if (user === null) {
+      // 新規ユーザーの場合、エラーを返す
+      // フロントエンドはログインエンドポイントを呼び出す必要がある
+      throw new Error('USER_NOT_FOUND: User not found. Please login first.')
     }
 
     // Contextにユーザー情報をset

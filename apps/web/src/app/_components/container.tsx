@@ -1,15 +1,39 @@
 'use client';
 
+import { useState } from 'react';
 import { useUserProfile } from "@/hooks/use-user-profile";
-import { useCreateSmartAccount } from "@/hooks/use-create-smart-account";
 import { Button } from "@/components/ui/button";
+import { useSign7702Authorization, useWallets } from '@privy-io/react-auth'
+import { avalanche } from 'viem/chains'
+
+const NEXUS_IMPLEMENTATION_V1_3_1 = '0x0000000020fe2F30453074aD916eDeB653eC7E9D' as `0x${string}`
 
 const Container = () => {
+  const { wallets } = useWallets()
   const { data, isLoading, error } = useUserProfile()
-  const { createSmartAccount, isLoading: isCreating } = useCreateSmartAccount()
 
-  const handleCreateSmartAccount = () => {
-    createSmartAccount()
+  const { signAuthorization } = useSign7702Authorization();
+  const [isCreating, setIsCreating] = useState(false)
+
+  const handleCreateSmartAccount = async () => {
+    setIsCreating(true)
+ 
+    try {
+      console.log("createSmartAccount")
+      
+      const authorization = await signAuthorization({
+        contractAddress: NEXUS_IMPLEMENTATION_V1_3_1,
+        chainId: avalanche.id,
+      }, {
+          address: wallets[0].address // Optional: Specify the wallet to use for signing. If not provided, the first wallet will be used.
+      });
+
+      console.log("authorization: ", authorization)
+    } catch (error) {
+      console.error("Error creating smart account:", error)
+    } finally {
+      setIsCreating(false)
+    }
   }
 
   if (isLoading) return <div className="p-8">Loading...</div>
@@ -26,8 +50,8 @@ const Container = () => {
             <dd className="text-base font-mono break-all">{data.id}</dd>
           </div>
           <div className="border-b border-border pb-4">
-            <dt className="text-sm font-medium text-muted-foreground mb-1">Dynamic User ID</dt>
-            <dd className="text-base font-mono break-all">{data.dynamicUserId}</dd>
+            <dt className="text-sm font-medium text-muted-foreground mb-1">Privy User ID</dt>
+            <dd className="text-base font-mono break-all">{data.privyUserId}</dd>
           </div>
           <div className="border-b border-border pb-4">
             <dt className="text-sm font-medium text-muted-foreground mb-1">Wallet Address</dt>

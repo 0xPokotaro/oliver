@@ -5,11 +5,11 @@ import type { Env } from '@oliver/api/infrastructure/types'
 
 export const loginHandler = async (c: Context<Env>) => {
   try {
-    const { authToken } = await c.req.json()
+    const { authToken, walletAddress } = await c.req.json()
 
     // 認証サービスでログイン処理を実行
     const authService = c.get('authService')
-    const { response, sessionToken } = await authService.login(authToken)
+    const { response, sessionToken } = await authService.login(authToken, walletAddress)
 
     // セッションCookieを設定（7日間有効）
     setSessionCookie(c, sessionToken, 604800)

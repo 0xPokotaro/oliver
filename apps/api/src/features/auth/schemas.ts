@@ -2,6 +2,7 @@ import { z } from 'zod'
 
 export const loginRequestSchema = z.object({
   authToken: z.string().min(1, 'authToken is required'),
+  walletAddress: z.string().regex(/^0x[a-fA-F0-9]{40}$/, 'Invalid wallet address format'),
 })
 
 export const loginResponseSchema = z.object({

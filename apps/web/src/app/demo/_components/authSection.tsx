@@ -1,41 +1,48 @@
 "use client";
 
 import { useEffect } from "react";
-import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
+import { usePrivy } from "@privy-io/react-auth";
 import { Button } from "@/components/ui/button";
-import { useLogin } from "@/hooks/use-login";
 import { toast } from "sonner";
 import { formatWalletAddress } from "@/lib/format";
 
-const walletKey = "metamask";
-
 export const AuthSection = () => {
-  const { user, handleLogOut } = useDynamicContext();
-  const { login, isLoading, error, data } = useLogin();
+  const { user, logout, authenticated, ready } = usePrivy();
 
   useEffect(() => {
     console.log("user: ", user);
   }, [user]);
 
   useEffect(() => {
-    if (data) {
-      console.log("Login response:", data);
-      toast.success("Login successful", {
-        description: `Wallet address: ${formatWalletAddress(data.walletAddress)}`,
-      });
+    if (authenticated && user) {
+      console.log("User authenticated:", user);
+      const walletAddress = user.wallet?.address || user.linkedAccounts?.find(acc => acc.type === 'wallet')?.address;
+      if (walletAddress) {
+        toast.success("Login successful", {
+          description: `Wallet address: ${formatWalletAddress(walletAddress)}`,
+        });
+      }
     }
-  }, [data]);
+  }, [authenticated, user]);
+
+  if (!ready) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
       <h1>Auth Section</h1>
-      {error && <p className="text-red-500 text-sm">{error.message}</p>}
-      <div className="flex gap-2">
-        <Button onClick={() => login({ walletKey })} disabled={isLoading}>
-          {isLoading ? "Logging in..." : "Login"}
-        </Button>
-        <Button onClick={() => handleLogOut()}>Logout</Button>
-      </div>
+      {authenticated && user ? (
+        <div className="space-y-4">
+          <p>Authenticated as: {user.id}</p>
+          {user.wallet?.address && (
+            <p>Wallet: {formatWalletAddress(user.wallet.address)}</p>
+          )}
+          <Button onClick={logout}>Logout</Button>
+        </div>
+      ) : (
+        <p>Please sign in to continue</p>
+      )}
     </div>
   );
 };

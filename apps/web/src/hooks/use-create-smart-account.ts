@@ -1,23 +1,24 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAuthToken } from "@dynamic-labs/sdk-react-core";
+import { usePrivy } from "@privy-io/react-auth";
 import { client } from "@/lib/hono";
 
 interface CreateSmartAccountResponse {
   id: string;
-  dynamicUserId: string;
+  privyUserId: string;
   walletAddress: string;
   smartAccountAddress: string;
 }
 
 export const useCreateSmartAccount = () => {
   const queryClient = useQueryClient();
+  const { getAccessToken } = usePrivy();
 
   const mutation = useMutation<CreateSmartAccountResponse, Error, void>({
     mutationFn: async () => {
       // 1. authTokenを取得
-      const authToken = getAuthToken();
+      const authToken = await getAccessToken();
       if (!authToken) {
         throw new Error("No authentication token available");
       }
@@ -48,7 +49,7 @@ export const useCreateSmartAccount = () => {
       // 6. 成功レスポンスを返す
       if (
         "id" in data &&
-        "dynamicUserId" in data &&
+        "privyUserId" in data &&
         "walletAddress" in data &&
         "smartAccountAddress" in data
       ) {

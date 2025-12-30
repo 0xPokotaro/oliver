@@ -4,15 +4,15 @@ import { UserEntity } from '../entities/user.entity'
 export class UserRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
-  async upsert(dynamicUserId: string, walletAddress: string): Promise<UserEntity> {
+  async upsert(privyUserId: string, walletAddress: string): Promise<UserEntity> {
     const user = await this.prisma.user.upsert({
-      where: { dynamicUserId },
+      where: { privyUserId },
       update: {
         walletAddress,
         updatedAt: new Date(),
       },
       create: {
-        dynamicUserId,
+        privyUserId,
         walletAddress,
       },
     })
@@ -20,9 +20,9 @@ export class UserRepository {
     return UserEntity.fromPrisma(user)
   }
 
-  async findByDynamicUserId(dynamicUserId: string): Promise<UserEntity | null> {
+  async findByPrivyUserId(privyUserId: string): Promise<UserEntity | null> {
     const user = await this.prisma.user.findUnique({
-      where: { dynamicUserId },
+      where: { privyUserId },
     })
 
     return user ? UserEntity.fromPrisma(user) : null

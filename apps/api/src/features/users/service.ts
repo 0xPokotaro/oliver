@@ -5,7 +5,7 @@ import { encrypt } from '@oliver/api/shared/utils/encryption'
 
 export interface CreateSmartAccountResponse {
   id: string
-  dynamicUserId: string
+  privyUserId: string
   walletAddress: string
   smartAccountAddress: string
 }
@@ -35,7 +35,7 @@ export const createSmartAccount = async (
   // 5. レスポンス形式を返却
   return {
     id: user.id,
-    dynamicUserId: user.dynamicUserId,
+    privyUserId: user.privyUserId,
     walletAddress: user.walletAddress,
     smartAccountAddress: address,
   }

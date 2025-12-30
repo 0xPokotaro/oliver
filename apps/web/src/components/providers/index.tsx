@@ -1,12 +1,12 @@
 "use client";
 
-import { DynamicProvider } from "./dynamic-provider";
 import { QueryProvider } from "./query-provider";
+import { PrivyProvider } from "./privy-provider";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <QueryProvider>
-      <DynamicProvider>{children}</DynamicProvider>
+      <PrivyProvider>{children}</PrivyProvider>
     </QueryProvider>
   );
 };

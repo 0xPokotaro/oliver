@@ -1,8 +1,8 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { isEthereumWallet } from '@dynamic-labs/ethereum'; 
-import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
+import { useWallets } from '@privy-io/react-auth';
+import { useWalletClient } from 'wagmi';
 import {
   toMultichainNexusAccount,
   getMEEVersion,
@@ -13,18 +13,16 @@ import { avalanche } from 'viem/chains';
 import { http } from 'viem';
 
 export const RegisterSection = () => {
-  const { primaryWallet } = useDynamicContext();
+  const { wallets } = useWallets();
+  const { data: walletClient } = useWalletClient();
+  const wallet = wallets[0]; // プライマリウォレット
 
   const handleRegister = async () => {
     try {
-      if (!primaryWallet) return;
-
-      if (!isEthereumWallet(primaryWallet)) {
-        console.log("Not an Ethereum wallet");
+      if (!wallet || !walletClient) {
+        console.log("Wallet or wallet client is not available");
         return;
       }
-
-      const walletClient = await primaryWallet.getWalletClient();
 
       const orchestrator = await toMultichainNexusAccount({
         signer: walletClient,

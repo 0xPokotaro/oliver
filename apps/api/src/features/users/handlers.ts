@@ -9,7 +9,7 @@ export const getProfilHandlere = async (c: Context<Env>) => {
 
   return c.json({
     id: user.id,
-    dynamicUserId: user.dynamicUserId,
+    privyUserId: user.privyUserId,
     walletAddress: user.walletAddress,
     smartAccountAddress: user.smartAccountAddress,
     createdAt: user.createdAt,

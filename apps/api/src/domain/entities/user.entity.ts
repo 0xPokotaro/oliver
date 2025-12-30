@@ -3,7 +3,7 @@ import type { User as PrismaUser } from '@oliver/database'
 export class UserEntity {
   constructor(
     public readonly id: string,
-    public readonly dynamicUserId: string,
+    public readonly privyUserId: string,
     public readonly walletAddress: string,
     public readonly smartAccountAddress: string | null,
     public readonly createdAt: Date,
@@ -13,7 +13,7 @@ export class UserEntity {
   static fromPrisma(prismaUser: PrismaUser): UserEntity {
     return new UserEntity(
       prismaUser.id,
-      prismaUser.dynamicUserId,
+      prismaUser.privyUserId,
       prismaUser.walletAddress,
       prismaUser.smartAccountAddress,
       prismaUser.createdAt,
@@ -24,7 +24,7 @@ export class UserEntity {
   toPrisma(): Omit<PrismaUser, 'payments'> {
     return {
       id: this.id,
-      dynamicUserId: this.dynamicUserId,
+      privyUserId: this.privyUserId,
       walletAddress: this.walletAddress,
       smartAccountAddress: this.smartAccountAddress,
       createdAt: this.createdAt,

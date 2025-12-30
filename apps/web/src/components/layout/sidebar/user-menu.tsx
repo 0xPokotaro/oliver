@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   SidebarMenuItem,
   SidebarMenuButton,
@@ -11,27 +12,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/animate-ui/components/radix/dropdown-menu';
-import { Button } from '@/components/ui/button';
 import { ChevronsUpDown, LogOut } from 'lucide-react';
-import { useDynamicContext } from "@dynamic-labs/sdk-react-core";
-import { useLogin } from "@/hooks/use-login";
 import { formatWalletAddress } from "@/lib/format";
-
-const walletKey = "metamask";
+import { usePrivy } from "@privy-io/react-auth"
 
 export const UserMenu = () => {
-  const { user, handleLogOut, primaryWallet } = useDynamicContext();
-  const { login, isLoading } = useLogin();
+  const router = useRouter();
+  const { user, logout } = usePrivy();
 
   const [mounted, setMounted] = useState(false);
   const [userState, setUserState] = useState(user);
-  const [walletAddressState, setWalletAddressState] = useState<string | undefined>(primaryWallet?.address);
 
   useEffect(() => {
     setMounted(true);
     setUserState(user);
-    setWalletAddressState(primaryWallet?.address);
-  }, [user, primaryWallet]);
+  }, [user]);
 
   return (
     <SidebarMenuItem>
@@ -46,9 +41,9 @@ export const UserMenu = () => {
                 <span className="truncate font-semibold">
                   Metamask
                 </span>
-                {walletAddressState && (
+                {userState && (
                   <span className="truncate text-xs text-muted-foreground">
-                    {formatWalletAddress(walletAddressState)}
+                    {formatWalletAddress(userState.wallet?.address || '')}
                   </span>
                 )}
               </div>
@@ -61,16 +56,20 @@ export const UserMenu = () => {
             align="end"
             sideOffset={4}
           >
-            <DropdownMenuItem onClick={handleLogOut}>
+            <DropdownMenuItem onClick={logout}>
               <LogOut />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
-        <Button className="w-full" onClick={() => login({ walletKey })} disabled={isLoading}>
-          <span>{isLoading ? "Logging in..." : "Login"}</span>
-        </Button>
+        <SidebarMenuButton
+          size="lg"
+          className="cursor-pointer"
+          onClick={() => router.push('/signin')}
+        >
+          <span>Login</span>
+        </SidebarMenuButton>
       )}
     </SidebarMenuItem>
   );
