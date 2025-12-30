@@ -8,6 +8,9 @@
 
 ```bash
 DATABASE_URL="postgresql://user:password@localhost:5432/oliver?schema=public"
+JWT_SECRET="your-jwt-secret-key"
+PRIVY_APP_ID="your-privy-app-id"
+PRIVY_APP_SECRET="your-privy-app-secret"
 ```
 
 データベースのセットアップ：

@@ -1,6 +1,10 @@
 packages:
-  - 'apps/web'
-  - 'apps/api'
-  - 'packages/database'
-  - 'packages/infra'
-  - 'packages/evm'
+  - apps/web
+  - apps/api
+  - packages/database
+  - packages/infra
+  - packages/evm
+ignoredBuiltDependencies:
+  - bigint-buffer
+  - keccak
+  - sharp

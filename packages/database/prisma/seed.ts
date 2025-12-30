@@ -44,7 +44,7 @@ async function main() {
   console.log("👤 Creating users...");
   const user1 = await prisma.user.create({
     data: {
-      dynamicUserId: "dyn_user_001",
+      privyUserId: "privy_user_001",
       walletAddress: "0x1234567890123456789012345678901234567890",
       smartAccountAddress: "0x1111111111111111111111111111111111111111",
     },
@@ -52,7 +52,7 @@ async function main() {
 
   const user2 = await prisma.user.create({
     data: {
-      dynamicUserId: "dyn_user_002",
+      privyUserId: "privy_user_002",
       walletAddress: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
       smartAccountAddress: "0x2222222222222222222222222222222222222222",
     },
@@ -60,7 +60,7 @@ async function main() {
 
   const user3 = await prisma.user.create({
     data: {
-      dynamicUserId: "dyn_user_003",
+      privyUserId: "privy_user_003",
       walletAddress: "0x9876543210987654321098765432109876543210",
       smartAccountAddress: "0x3333333333333333333333333333333333333333",
     },
