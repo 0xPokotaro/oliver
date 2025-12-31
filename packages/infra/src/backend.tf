@@ -2,7 +2,7 @@ terraform {
   required_version = ">= 1.0"
 
   backend "gcs" {
-    bucket = "oliver-terraform-state"
+    bucket = "oliver-api-terraform-state"
     prefix = "infra/terraform.tfstate"
   }
 
