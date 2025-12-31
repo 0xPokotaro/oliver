@@ -9,6 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
 
+    env:
+      GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      GCP_REGION: asia-northeast1
+      SERVICE_NAME: oliver-api-dev
+      TERRAFORM_DIR: packages/infra/src
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -33,27 +39,20 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Check service account
-        run: |
-          gcloud auth list
-          gcloud config get-value account
-
       - name: Enable required APIs
         run: |
-          gcloud services enable artifactregistry.googleapis.com --project=${{ secrets.GCP_PROJECT_ID }}
-          gcloud services enable containerregistry.googleapis.com --project=${{ secrets.GCP_PROJECT_ID }}
-          gcloud services enable iam.googleapis.com --project=${{ secrets.GCP_PROJECT_ID }}
-          gcloud services enable run.googleapis.com --project=${{ secrets.GCP_PROJECT_ID }}
+          gcloud services enable artifactregistry.googleapis.com --project=$GCP_PROJECT_ID
+          gcloud services enable containerregistry.googleapis.com --project=$GCP_PROJECT_ID
+          gcloud services enable iam.googleapis.com --project=$GCP_PROJECT_ID
+          gcloud services enable run.googleapis.com --project=$GCP_PROJECT_ID
 
       - name: Configure Docker for GCR
         run: gcloud auth configure-docker gcr.io
 
       - name: Build and push Docker image
-        env:
-          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
         run: |
-          docker build -f apps/api2/Dockerfile -t gcr.io/$GCP_PROJECT_ID/oliver-api-dev:latest .
-          docker push gcr.io/$GCP_PROJECT_ID/oliver-api-dev:latest
+          docker build -f apps/api2/Dockerfile -t gcr.io/$GCP_PROJECT_ID/$SERVICE_NAME:latest .
+          docker push gcr.io/$GCP_PROJECT_ID/$SERVICE_NAME:latest
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -61,19 +60,18 @@ jobs:
           terraform_version: 1.6.0
 
       - name: Create terraform.tfvars from secrets
-        working-directory: packages/infra/src
+        working-directory: ${{ env.TERRAFORM_DIR }}
         env:
-          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           cat > environments/dev.tfvars <<EOF
           # Common
           gcp_project_id = "$GCP_PROJECT_ID"
-          gcp_region     = "asia-northeast1"
+          gcp_region     = "$GCP_REGION"
 
           # Cloud Run
-          service_name    = "oliver-api-dev"
-          container_image = "gcr.io/$GCP_PROJECT_ID/oliver-api-dev:latest"
+          service_name    = "$SERVICE_NAME"
+          container_image = "gcr.io/$GCP_PROJECT_ID/$SERVICE_NAME:latest"
 
           environment = {
             DATABASE_URL = "$DATABASE_URL"
@@ -81,12 +79,12 @@ jobs:
           EOF
 
       - name: Terraform Init
-        working-directory: packages/infra/src
+        working-directory: ${{ env.TERRAFORM_DIR }}
         run: terraform init
 
       - name: Terraform Plan
         id: terraform-plan
-        working-directory: packages/infra/src
+        working-directory: ${{ env.TERRAFORM_DIR }}
         run: terraform plan -var-file=./environments/dev.tfvars -out=tfplan -no-color | tee plan.txt
         continue-on-error: false
 
@@ -94,12 +92,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: terraform-plan-output
-          path: packages/infra/src/plan.txt
+          path: ${{ env.TERRAFORM_DIR }}/plan.txt
 
       - name: Verify tfplan file exists
         id: verify-tfplan
         if: steps.terraform-plan.outcome == 'success'
-        working-directory: packages/infra/src
+        working-directory: ${{ env.TERRAFORM_DIR }}
         run: |
           if [ ! -f tfplan ]; then
             echo "Error: tfplan file not found after terraform plan"
@@ -113,13 +111,13 @@ jobs:
         if: steps.terraform-plan.outcome == 'success' && steps.verify-tfplan.outcome == 'success'
         with:
           name: terraform-plan-file
-          path: packages/infra/src/tfplan
+          path: ${{ env.TERRAFORM_DIR }}/tfplan
           retention-days: 1
         continue-on-error: false
 
       - name: Check for changes
         id: plan
-        working-directory: packages/infra/src
+        working-directory: ${{ env.TERRAFORM_DIR }}
         run: |
           if grep -q "No changes" plan.txt; then
             echo "has_changes=false" >> $GITHUB_OUTPUT
@@ -132,28 +130,15 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: terraform-plan-file
-          path: packages/infra/src
+          path: ${{ env.TERRAFORM_DIR }}
         continue-on-error: false
 
       - name: Terraform Apply
         if: steps.terraform-plan.outcome == 'success' && steps.plan.outputs.has_changes == 'true'
-        working-directory: packages/infra/src
-        env:
-          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        working-directory: ${{ env.TERRAFORM_DIR }}
         run: |
           if [ ! -f tfplan ]; then
             echo "Error: tfplan file not found"
             exit 1
           fi
           terraform apply -auto-approve tfplan
-
-      - name: Configure Cloud Run IAM for public access
-        if: steps.terraform-plan.outcome == 'success' && steps.plan.outputs.has_changes == 'true'
-        env:
-          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-        run: |
-          gcloud run services add-iam-policy-binding oliver-api-dev \
-            --region=asia-northeast1 \
-            --member=allUsers \
-            --role=roles/run.invoker \
-            --project=$GCP_PROJECT_ID
