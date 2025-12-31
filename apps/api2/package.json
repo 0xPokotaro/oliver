@@ -9,12 +9,15 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
+    "@oliver/shared": "workspace:*",
     "@types/node": "^25.0.3",
-    "typescript": "^5.9.3",
-    "tsx": "^4.19.2"
+    "tsx": "^4.19.2",
+    "typescript": "^5.9.3"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.0",
-    "hono": "^4.11.3"
+    "@hono/standard-validator": "^0.2.1",
+    "hono": "^4.11.3",
+    "zod": "^4.3.3"
   }
 }

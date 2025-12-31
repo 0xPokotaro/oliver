@@ -1,8 +1,11 @@
 import { Hono } from 'hono'
+import { logger } from 'hono/logger'
+import users from './routes/users'
 
 const app = new Hono()
-  .get('/', (c) => c.json({ message: 'Hello, World!' }))
-  .get('/hello', (c) => c.json({ message: 'Hello, World!' }))
+  .basePath('/api')
+  .use(logger())
+  .route('/users', users)
 
 // サーバー起動コード（開発環境用）
 if (import.meta.url === `file://${process.argv[1]}`) {
@@ -14,3 +17,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 }
 
 export default app
+export type AppType = typeof app

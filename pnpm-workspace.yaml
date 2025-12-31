@@ -6,6 +6,7 @@ packages:
   - packages/database
   - packages/infra
   - packages/evm
+  - packages/shared
 ignoredBuiltDependencies:
   - bigint-buffer
   - keccak
