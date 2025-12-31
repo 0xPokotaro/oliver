@@ -1,4 +1,4 @@
-name: Deploy to AWS
+name: Deploy to GCP
 
 on:
   push:
@@ -25,52 +25,24 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y pkg-config
-
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
         with:
-          toolchain: stable
+          credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
 
-      - name: Cache cargo registry
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            apps/api/target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
 
-      - name: Install Zig
-        run: |
-          wget -q https://ziglang.org/download/0.13.0/zig-linux-x86_64-0.13.0.tar.xz
-          tar -xf zig-linux-x86_64-0.13.0.tar.xz
-          sudo mv zig-linux-x86_64-0.13.0 /opt/zig
-          echo "/opt/zig" >> $GITHUB_PATH
+      - name: Configure Docker for GCR
+        run: gcloud auth configure-docker gcr.io
 
-      - name: Install cargo-lambda
-        run: cargo install cargo-lambda --force
-
-      - name: Build Lambda function
-        run: |
-          cd apps/api
-          make build-lambda
+      - name: Build and push Docker image
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-1
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        run: |
+          cd apps/api2
+          docker build -t gcr.io/$GCP_PROJECT_ID/oliver-api-dev:latest .
+          docker push gcr.io/$GCP_PROJECT_ID/oliver-api-dev:latest
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
@@ -78,45 +50,45 @@ jobs:
           terraform_version: 1.6.0
 
       - name: Create terraform.tfvars from secrets
-        working-directory: packages/infra
-        run: |
-          cat > terraform.tfvars <<EOF
-          aws_region = "ap-northeast-1"
-          env        = "dev"
-          
-          lambda_function_name = "api-dev"
-          lambda_source_path   = "../../apps/api"
-          lambda_handler       = "bootstrap"
-          lambda_runtime       = "provided.al2023"
-          
-          lambda_environment = ${{ secrets.LAMBDA_ENVIRONMENT }}
-          
-          api_name     = "api-dev"
-          cors_enabled = true
-          EOF
+        working-directory: packages/infra/src
         env:
-          LAMBDA_ENVIRONMENT: ${{ secrets.LAMBDA_ENVIRONMENT }}
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        run: |
+          cat > environments/dev.tfvars <<EOF
+          # Common
+          gcp_project_id = "$GCP_PROJECT_ID"
+          gcp_region     = "asia-northeast1"
+
+          # Cloud Run
+          service_name    = "oliver-api-dev"
+          container_image = "gcr.io/$GCP_PROJECT_ID/oliver-api-dev:latest"
+
+          environment = {
+            DATABASE_URL = "$DATABASE_URL"
+          }
+          EOF
 
       - name: Terraform Init
-        working-directory: packages/infra
+        working-directory: packages/infra/src
         run: terraform init
 
       - name: Terraform Plan
         id: terraform-plan
-        working-directory: packages/infra
-        run: terraform plan -out=tfplan -no-color | tee plan.txt
+        working-directory: packages/infra/src
+        run: terraform plan -var-file=./environments/dev.tfvars -out=tfplan -no-color | tee plan.txt
         continue-on-error: false
 
       - name: Upload plan output
         uses: actions/upload-artifact@v4
         with:
           name: terraform-plan-output
-          path: packages/infra/plan.txt
+          path: packages/infra/src/plan.txt
 
       - name: Verify tfplan file exists
         id: verify-tfplan
         if: steps.terraform-plan.outcome == 'success'
-        working-directory: packages/infra
+        working-directory: packages/infra/src
         run: |
           if [ ! -f tfplan ]; then
             echo "Error: tfplan file not found after terraform plan"
@@ -130,13 +102,13 @@ jobs:
         if: steps.terraform-plan.outcome == 'success' && steps.verify-tfplan.outcome == 'success'
         with:
           name: terraform-plan-file
-          path: packages/infra/tfplan
+          path: packages/infra/src/tfplan
           retention-days: 1
         continue-on-error: false
 
       - name: Check for changes
         id: plan
-        working-directory: packages/infra
+        working-directory: packages/infra/src
         run: |
           if grep -q "No changes" plan.txt; then
             echo "has_changes=false" >> $GITHUB_OUTPUT
@@ -149,12 +121,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: terraform-plan-file
-          path: packages/infra
+          path: packages/infra/src
         continue-on-error: false
 
       - name: Terraform Apply
         if: steps.terraform-plan.outcome == 'success' && steps.plan.outputs.has_changes == 'true'
-        working-directory: packages/infra
+        working-directory: packages/infra/src
         run: |
           if [ ! -f tfplan ]; then
             echo "Error: tfplan file not found"

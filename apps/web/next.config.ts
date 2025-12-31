@@ -9,6 +9,15 @@ const nextConfig: NextConfig = {
     "@prisma/client-runtime-utils",
     "@oliver/database",
   ],
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/dashboard",
+        permanent: false,
+      },
+    ];
+  },
   turbopack: {
     root: path.resolve(__dirname, "../.."),
     resolveAlias: {
