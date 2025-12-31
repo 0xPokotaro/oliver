@@ -7,6 +7,7 @@ export const ERROR_CODES = {
   WALLET_NOT_FOUND: 'WALLET_NOT_FOUND',
   WALLET_FETCH_FAILED: 'WALLET_FETCH_FAILED',
   USER_NOT_FOUND: 'USER_NOT_FOUND',
+  INVALID_AUDIO_FORMAT: 'INVALID_AUDIO_FORMAT',
 } as const
 
 /**
@@ -18,5 +19,6 @@ export const ERROR_MESSAGES = {
   WALLET_NOT_FOUND: 'No wallet found for user',
   WALLET_FETCH_FAILED: 'Failed to fetch wallet information from Privy',
   USER_NOT_FOUND: 'User not found. Please login first.',
+  INVALID_AUDIO_FORMAT: 'Invalid audio format: only WAV is supported',
 } as const
 

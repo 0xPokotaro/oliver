@@ -2,6 +2,7 @@ import { UserRepository } from '@oliver/api/domain/repositories/user.repository'
 import { SessionKeyRepository } from '@oliver/api/domain/repositories/session-key.repository'
 import { generateWalletKeyPair } from '@oliver/api/shared/utils/wallet'
 import { encrypt } from '@oliver/api/shared/utils/encryption'
+import OpenAI from 'openai'
 
 export interface CreateSmartAccountResponse {
   id: string
@@ -38,5 +39,39 @@ export const createSmartAccount = async (
     privyUserId: user.privyUserId,
     walletAddress: user.walletAddress,
     smartAccountAddress: address,
+  }
+}
+
+/**
+ * 音声ファイルをテキストに変換する
+ * OpenAI Whisper APIを使用して音声解析を行う
+ * @param audioFile - 音声ファイル（Fileオブジェクト）
+ * @returns 解析されたテキスト
+ * @throws Error - OpenAI API呼び出し失敗時
+ */
+export async function transcribeAudio(audioFile: File): Promise<string> {
+  const apiKey = process.env.OPENAI_API_KEY
+  if (!apiKey) {
+    throw new Error('OPENAI_API_KEY is not set')
+  }
+
+  const openai = new OpenAI({
+    apiKey: apiKey,
+  })
+
+  try {
+    const transcription = await openai.audio.transcriptions.create({
+      file: audioFile,
+      model: 'whisper-1',
+      language: 'ja',
+    })
+
+    return transcription.text
+  } catch (error) {
+    console.error('OpenAI Whisper API error:', error)
+    if (error instanceof Error) {
+      throw new Error(`Failed to transcribe audio: ${error.message}`)
+    }
+    throw new Error('Failed to transcribe audio: Unknown error')
   }
 }

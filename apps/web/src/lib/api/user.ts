@@ -41,3 +41,30 @@ export async function createSmartAccountOnServer(authToken: string) {
 
   return response.json();
 }
+
+/**
+ * 音声ファイルをアップロードして音声コマンドを実行する
+ * @param authToken - 認証トークン
+ * @param audioFile - WAV形式の音声ファイル
+ * @returns 音声コマンド実行結果（textフィールドに解析されたテキストが含まれる）
+ * @throws ApiError - APIエラー
+ */
+export async function uploadVoiceFile(authToken: string, audioFile: File): Promise<{ success: true; text: string } | { success: false; error: string; code?: string }> {
+  const formData = new FormData();
+  formData.append('audio', audioFile);
+
+  // honoクライアントのformプロパティはFormDataを正しく処理しないため、fetch APIを直接使用
+  const response = await fetch('/api/users/voice', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${authToken}`,
+    },
+    body: formData,
+  });
+
+  if (!response.ok) {
+    await handleApiError(response);
+  }
+
+  return response.json();
+}

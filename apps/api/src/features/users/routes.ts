@@ -1,5 +1,5 @@
 import { Hono } from 'hono'
-import { getProfilHandlere, createSmartAccountHandler } from '@oliver/api/features/users/handlers'
+import { getProfilHandlere, createSmartAccountHandler, voiceHandler } from '@oliver/api/features/users/handlers'
 import { zValidator } from '@hono/zod-validator'
 import { createSmartAccountRequestSchema } from '@oliver/api/features/users/schemas'
 import { requireAuthMiddleware } from '@oliver/api/infrastructure/middleware'
@@ -9,3 +9,4 @@ export const userRoutes = new Hono<Env>()
   .use('*', requireAuthMiddleware)
   .get('/profile', getProfilHandlere)
   .post('/smart-account', zValidator('json', createSmartAccountRequestSchema), createSmartAccountHandler)
+  .post('/voice', voiceHandler)

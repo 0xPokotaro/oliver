@@ -65,6 +65,12 @@ const DATA = {
       isActive: false,
     },
     {
+      title: 'AI Agent',
+      url: '/ai-agent',
+      icon: Bot,
+      isActive: false,
+    },
+    {
       title: 'Playground',
       url: '#',
       icon: SquareTerminal,

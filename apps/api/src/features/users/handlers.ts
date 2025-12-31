@@ -1,6 +1,6 @@
 import { Context } from 'hono'
 import type { Env } from '@oliver/api/infrastructure/types'
-import { createSmartAccount } from '@oliver/api/features/users/service'
+import { createSmartAccount, transcribeAudio } from '@oliver/api/features/users/service'
 import { createUserRepository, createSessionKeyRepository } from '@oliver/api/infrastructure/dependencies'
 import { generateWalletKeyPair } from '@oliver/api/shared/utils/wallet'
 import { encrypt } from '@oliver/api/shared/utils/encryption'
@@ -10,6 +10,7 @@ import { toSmartSessionsModule, toMultichainNexusAccount, getMEEVersion, MEEVers
 import { privateKeyToAccount } from 'viem/accounts'
 import { avalanche } from 'viem/chains'
 import { http, createWalletClient } from 'viem'
+import { ERROR_CODES, ERROR_MESSAGES } from '@oliver/api/shared/errors/constants'
 
 export const getProfilHandlere = async (c: Context<Env>) => {
   // ミドルウェアで取得済みのユーザー情報を取得
@@ -23,6 +24,101 @@ export const getProfilHandlere = async (c: Context<Env>) => {
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
   })
+}
+
+export const voiceHandler = async (c: Context<Env>) => {
+  const user = c.get('user')
+
+  try {
+    const body = await c.req.parseBody()
+    const audioFile = body.audio
+
+    // ファイルが存在するかチェック
+    if (!audioFile) {
+      return c.json(
+        {
+          success: false,
+          error: 'Audio file is required',
+          code: 'INVALID_AUDIO_FORMAT',
+        },
+        400
+      )
+    }
+
+    // ファイルがFileオブジェクトかチェック
+    if (!(audioFile instanceof File)) {
+      return c.json(
+        {
+          success: false,
+          error: ERROR_MESSAGES.INVALID_AUDIO_FORMAT,
+          code: ERROR_CODES.INVALID_AUDIO_FORMAT,
+        },
+        400
+      )
+    }
+
+    // WAV形式かチェック（MIMEタイプまたはファイル拡張子）
+    const contentType = audioFile.type
+    const fileName = audioFile.name.toLowerCase()
+
+    const isWav =
+      contentType === 'audio/wav' ||
+      contentType === 'audio/x-wav' ||
+      contentType === 'audio/wave' ||
+      fileName.endsWith('.wav')
+
+    if (!isWav) {
+      return c.json(
+        {
+          success: false,
+          error: ERROR_MESSAGES.INVALID_AUDIO_FORMAT,
+          code: ERROR_CODES.INVALID_AUDIO_FORMAT,
+        },
+        400
+      )
+    }
+
+    // 音声ファイルをテキストに変換
+    const text = await transcribeAudio(audioFile)
+
+    console.log(`Voice file transcribed for user ${user.id}:`, {
+      fileName: audioFile.name,
+      size: audioFile.size,
+      type: audioFile.type,
+      textLength: text.length,
+    })
+
+    return c.json({
+      success: true,
+      text: text,
+    })
+  } catch (error) {
+    console.error('Voice handler error:', error)
+    
+    // エラーメッセージを取得
+    const errorMessage = error instanceof Error ? error.message : 'Failed to process voice command'
+    
+    // OpenAI API関連のエラーの場合は詳細を返す
+    if (errorMessage.includes('OPENAI_API_KEY')) {
+      return c.json(
+        {
+          success: false,
+          error: 'OpenAI API key is not configured',
+          code: 'OPENAI_API_KEY_MISSING',
+        },
+        500
+      )
+    }
+    
+    return c.json(
+      {
+        success: false,
+        error: errorMessage,
+        code: 'INTERNAL_ERROR',
+      },
+      500
+    )
+  }
 }
 
 export const createSmartAccountHandler = async (c: Context<Env>) => {
