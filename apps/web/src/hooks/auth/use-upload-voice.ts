@@ -2,12 +2,11 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { usePrivy } from "@privy-io/react-auth";
-import { uploadVoiceFile } from "@/lib/api/user";
+import { uploadVoiceFile, type AgentResponse } from "@/lib/api/user";
 
-interface UploadVoiceResponse {
+type UploadVoiceResponse = {
   success: true;
-  text: string;
-}
+} & AgentResponse;
 
 /**
  * 音声ファイルをアップロードして音声コマンドを実行するフック

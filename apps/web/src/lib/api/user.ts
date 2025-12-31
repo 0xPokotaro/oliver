@@ -43,13 +43,31 @@ export async function createSmartAccountOnServer(authToken: string) {
 }
 
 /**
+ * AIエージェントのレスポンス型
+ */
+export interface AgentResponse {
+  context: {
+    session_id: string
+    status: 'INPUT_RECEIVED' | 'RESULT_RECEIVED'
+  }
+  thought: string
+  action: 'TALK' | 'EXECUTE'
+  tool: 'none' | 'x402_payment'
+  params: Record<string, unknown>
+  message: string
+}
+
+/**
  * 音声ファイルをアップロードして音声コマンドを実行する
  * @param authToken - 認証トークン
  * @param audioFile - WAV形式の音声ファイル
- * @returns 音声コマンド実行結果（textフィールドに解析されたテキストが含まれる）
+ * @returns 音声コマンド実行結果（AgentResponse形式）
  * @throws ApiError - APIエラー
  */
-export async function uploadVoiceFile(authToken: string, audioFile: File): Promise<{ success: true; text: string } | { success: false; error: string; code?: string }> {
+export async function uploadVoiceFile(
+  authToken: string,
+  audioFile: File
+): Promise<{ success: true } & AgentResponse | { success: false; error: string; code?: string }> {
   const formData = new FormData();
   formData.append('audio', audioFile);
 

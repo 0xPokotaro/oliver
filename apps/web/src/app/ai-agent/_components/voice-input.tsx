@@ -40,8 +40,8 @@ export const VoiceInput = () => {
 
   // hookのdataからtranscriptを更新
   useEffect(() => {
-    if (data?.text) {
-      setTranscript(data.text);
+    if (data && 'message' in data) {
+      setTranscript(data.message);
     }
   }, [data]);
 

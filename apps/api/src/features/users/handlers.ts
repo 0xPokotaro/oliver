@@ -11,6 +11,9 @@ import { privateKeyToAccount } from 'viem/accounts'
 import { avalanche } from 'viem/chains'
 import { http, createWalletClient } from 'viem'
 import { ERROR_CODES, ERROR_MESSAGES } from '@oliver/api/shared/errors/constants'
+import { askPersonality } from '@oliver/api/features/users/services/agent/personality'
+import { executeSpecialist } from '@oliver/api/features/users/services/agent/specialist'
+import type { AgentResponse } from '@oliver/api/features/users/types/agent'
 
 export const getProfilHandlere = async (c: Context<Env>) => {
   // ミドルウェアで取得済みのユーザー情報を取得
@@ -88,9 +91,32 @@ export const voiceHandler = async (c: Context<Env>) => {
       textLength: text.length,
     })
 
+    // 1. 初回：人格層へ「ユーザーがこう言っている」と伝える
+    let agentState: AgentResponse = await askPersonality({
+      user_input: text,
+      session_id: user.id,
+    })
+
+    // 2. もしAIが「実務が必要だ」と判断したら
+    if (agentState.action === 'EXECUTE') {
+      // 能力層で実務実行
+      const result = await executeSpecialist(agentState.tool, agentState.params)
+
+      // 3. 実行結果を人格層に伝え、最終的なメッセージを作ってもらう
+      agentState = await askPersonality({
+        ...agentState,
+        context: {
+          ...agentState.context,
+          status: 'RESULT_RECEIVED',
+        },
+        params: result.success ? result.data || {} : { error: result.error },
+      })
+    }
+
+    // 最終的なエージェントの状態（JSON）を返す
     return c.json({
       success: true,
-      text: text,
+      ...agentState,
     })
   } catch (error) {
     console.error('Voice handler error:', error)
