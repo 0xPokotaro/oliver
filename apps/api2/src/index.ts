@@ -1,9 +1,23 @@
-import { Hono } from 'hono'
+import { createFactory } from 'hono/factory'
 import { logger } from 'hono/logger'
 import users from './routes/users'
 
-const app = new Hono()
+type Env = {
+  Variables: {
+    myVar: string
+  }
+}
+
+const factory = createFactory<Env>()
+
+const middleware = factory.createMiddleware(async (c, next) => {
+  c.set('myVar', 'bar')
+  await next()
+})
+
+const app = factory.createApp()
   .basePath('/api')
+  .use(middleware)
   .use(logger())
   .route('/users', users)
 
