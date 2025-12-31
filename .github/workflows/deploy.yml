@@ -37,6 +37,8 @@ jobs:
         run: |
           gcloud services enable artifactregistry.googleapis.com --project=${{ secrets.GCP_PROJECT_ID }}
           gcloud services enable containerregistry.googleapis.com --project=${{ secrets.GCP_PROJECT_ID }}
+          gcloud services enable iam.googleapis.com --project=${{ secrets.GCP_PROJECT_ID }}
+          gcloud services enable run.googleapis.com --project=${{ secrets.GCP_PROJECT_ID }}
 
       - name: Configure Docker for GCR
         run: gcloud auth configure-docker gcr.io
