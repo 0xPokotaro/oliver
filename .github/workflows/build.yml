@@ -31,6 +31,9 @@ jobs:
         env:
           DATABASE_URL: postgresql://user:password@localhost:5432/db
 
+      - name: Install web dependencies
+        run: pnpm --filter web install
+
       - name: Build web app
         run: |
           pnpm --filter web prisma:gen
@@ -46,39 +49,6 @@ jobs:
         run: pnpm --filter docs build
         env:
           NODE_OPTIONS: --max-old-space-size=4096
-
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
-
-      - name: Cache cargo registry
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cargo/bin/
-            ~/.cargo/registry/index/
-            ~/.cargo/registry/cache/
-            ~/.cargo/git/db/
-            apps/api/target/
-          key: ${{ runner.os }}-cargo-${{ hashFiles('Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-
-
-      - name: Build api
-        run: cd apps/api && cargo build --release
-        env:
-          DATABASE_URL: postgresql://user:password@localhost:5432/db
-          X402_PAY_TO: 0x0000000000000000000000000000000000000000
-          X402_ASSET: 0x0000000000000000000000000000000000000000
-          X402_MAX_AMOUNT_REQUIRED: 0
-          X402_NETWORK: localhost
-          X402_MAX_TIMEOUT_SECONDS: 3600
-          X402_DESCRIPTION: Access to protected resource
-          X402_CHAIN_ID: 31337
-          FACILITATOR_URL: http://localhost:8403
-          PORT: 3001
-          SHIPPING_FEE: 500
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
