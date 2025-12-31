@@ -18,11 +18,6 @@ resource "google_cloud_run_service" "service" {
           container_port = 3001
         }
 
-        env {
-          name  = "PORT"
-          value = "3001"
-        }
-
         dynamic "env" {
           for_each = var.environment
           content {
