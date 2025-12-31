@@ -31,9 +31,6 @@ jobs:
         env:
           DATABASE_URL: postgresql://user:password@localhost:5432/db
 
-      - name: Install web dependencies
-        run: pnpm --filter web install
-
       - name: Build web app
         run: |
           pnpm --filter web prisma:gen
