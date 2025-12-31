@@ -133,6 +133,8 @@ jobs:
       - name: Terraform Apply
         if: steps.terraform-plan.outcome == 'success' && steps.plan.outputs.has_changes == 'true'
         working-directory: packages/infra/src
+        env:
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
         run: |
           if [ ! -f tfplan ]; then
             echo "Error: tfplan file not found"
@@ -140,3 +142,13 @@ jobs:
           fi
           terraform apply -auto-approve tfplan
 
+      - name: Configure Cloud Run IAM for public access
+        if: steps.terraform-plan.outcome == 'success' && steps.plan.outputs.has_changes == 'true'
+        env:
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        run: |
+          gcloud run services add-iam-policy-binding oliver-api-dev \
+            --region=asia-northeast1 \
+            --member=allUsers \
+            --role=roles/run.invoker \
+            --project=$GCP_PROJECT_ID
