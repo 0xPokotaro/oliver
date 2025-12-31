@@ -1,3 +1,17 @@
+import { getPrismaClient } from '@oliver/api/lib/prisma'
+
 export const getAllUsers = async () => {
-  return [{ id: 1, name: 'Hono User' }]
+  const prisma = getPrismaClient()
+  const users = await prisma.user.findMany({
+    select: {
+      id: true,
+      privyUserId: true,
+      walletAddress: true,
+      smartAccountAddress: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  })
+
+  return users
 }

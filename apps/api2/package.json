@@ -17,7 +17,10 @@
   "dependencies": {
     "@hono/node-server": "^1.13.0",
     "@hono/standard-validator": "^0.2.1",
+    "@oliver/database": "workspace:*",
+    "@prisma/adapter-pg": "^7.2.0",
     "hono": "^4.11.3",
+    "pg": "^8.16.3",
     "zod": "^4.3.3"
   }
 }
