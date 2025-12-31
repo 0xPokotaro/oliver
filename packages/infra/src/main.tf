@@ -34,3 +34,11 @@ resource "google_cloud_run_service" "service" {
     latest_revision = true
   }
 }
+
+# IAM: Allow unauthenticated access (公開API)
+resource "google_cloud_run_service_iam_member" "public_access" {
+  service  = google_cloud_run_service.service.name
+  location = google_cloud_run_service.service.location
+  role     = "roles/run.invoker"
+  member   = "allUsers"
+}
