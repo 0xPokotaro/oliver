@@ -38,11 +38,10 @@ import {
   BookOpen,
   Bot,
   ChevronRight,
-  GalleryVerticalEnd,
   LayoutDashboard,
   Settings2,
-  SquareTerminal,
 } from 'lucide-react';
+import { APP_DATA } from '@/lib/config/constants';
 import { UserMenu } from './user-menu';
 
 const DATA = {
@@ -51,11 +50,6 @@ const DATA = {
     email: 'skyleen@example.com',
     avatar:
       'https://pbs.twimg.com/profile_images/1909615404789506048/MTqvRsjo_400x400.jpg',
-  },
-  team: {
-    name: 'Oliver',
-    logo: GalleryVerticalEnd,
-    plan: 'Enterprise',
   },
   navMain: [
     {
@@ -71,66 +65,10 @@ const DATA = {
       isActive: false,
     },
     {
-      title: 'Playground',
-      url: '#',
-      icon: SquareTerminal,
-      isActive: false,
-      items: [
-        {
-          title: 'History',
-          url: '#',
-        },
-        {
-          title: 'Starred',
-          url: '#',
-        },
-        {
-          title: 'Settings',
-          url: '#',
-        },
-      ],
-    },
-    {
-      title: 'Models',
-      url: '#',
-      icon: Bot,
-      items: [
-        {
-          title: 'Genesis',
-          url: '#',
-        },
-        {
-          title: 'Explorer',
-          url: '#',
-        },
-        {
-          title: 'Quantum',
-          url: '#',
-        },
-      ],
-    },
-    {
-      title: 'Documentation',
-      url: '#',
+      title: 'Document',
+      url: 'https://oliver-docs-lake.vercel.app/',
       icon: BookOpen,
-      items: [
-        {
-          title: 'Introduction',
-          url: '#',
-        },
-        {
-          title: 'Get Started',
-          url: '#',
-        },
-        {
-          title: 'Tutorials',
-          url: '#',
-        },
-        {
-          title: 'Changelog',
-          url: '#',
-        },
-      ],
+      isActive: false,
     },
     {
       title: 'Settings',
@@ -139,18 +77,6 @@ const DATA = {
       items: [
         {
           title: 'General',
-          url: '#',
-        },
-        {
-          title: 'Team',
-          url: '#',
-        },
-        {
-          title: 'Billing',
-          url: '#',
-        },
-        {
-          title: 'Limits',
           url: '#',
         },
       ],
@@ -166,14 +92,14 @@ const AppSidebar = () => {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg">
               <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                <DATA.team.logo className="size-4" />
+                <APP_DATA.logo className="size-4" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
-                  {DATA.team.name}
+                  {APP_DATA.name}
                 </span>
                 <span className="truncate text-xs">
-                  {DATA.team.plan}
+                  {APP_DATA.description}
                 </span>
               </div>
             </SidebarMenuButton>

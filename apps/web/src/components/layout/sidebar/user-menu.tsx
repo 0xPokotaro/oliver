@@ -14,10 +14,13 @@ import {
 import { ChevronsUpDown, LogOut } from 'lucide-react';
 import { formatWalletAddress } from "@/lib/format";
 import { usePrivy, useLogin } from "@privy-io/react-auth"
+import { Button } from '@/components/ui/button';
 
 export const UserMenu = () => {
-  const { user, logout } = usePrivy();
+  const { ready, user, logout, authenticated } = usePrivy();
   const { login } = useLogin();
+
+  const disableLogin = !ready || (ready && authenticated)
 
   const [mounted, setMounted] = useState(false);
   const [userState, setUserState] = useState(user);
@@ -29,7 +32,7 @@ export const UserMenu = () => {
 
   return (
     <SidebarMenuItem>
-      {mounted && userState ? (
+      {mounted && disableLogin ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
@@ -42,7 +45,7 @@ export const UserMenu = () => {
                 </span>
                 {userState && (
                   <span className="truncate text-xs text-muted-foreground">
-                    {formatWalletAddress(userState.wallet?.address || '')}
+                    {formatWalletAddress(userState.wallet?.address || '', 10, 10)}
                   </span>
                 )}
               </div>
@@ -62,13 +65,7 @@ export const UserMenu = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
-        <SidebarMenuButton
-          size="lg"
-          className="cursor-pointer"
-          onClick={login}
-        >
-          <span>Login</span>
-        </SidebarMenuButton>
+        <Button className="w-full" onClick={login}>Login</Button>
       )}
     </SidebarMenuItem>
   );

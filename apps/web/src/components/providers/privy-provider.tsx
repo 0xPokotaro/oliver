@@ -21,6 +21,7 @@ export const PrivyProvider = ({ children }: { children: React.ReactNode }) => {
         defaultChain: avalanche,
         // Appearance settings
         appearance: {
+          walletChainType: 'ethereum-only',
           theme: 'light',
           accentColor: '#676FFF',
         },
