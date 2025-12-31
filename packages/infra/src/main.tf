@@ -1,57 +1,49 @@
-# Main Infrastructure Resources
-
-# Create RDS first (without Lambda security group reference)
-module "rds" {
-  source = "./modules/rds"
-
-  db_instance_identifier     = var.rds_instance_identifier
-  engine                     = var.rds_engine
-  engine_version             = var.rds_engine_version
-  instance_class             = var.rds_instance_class
-  allocated_storage          = var.rds_allocated_storage
-  db_name                    = var.rds_db_name
-  db_username                = var.rds_db_username
-  db_password                = var.rds_db_password
-  vpc_id                     = data.aws_vpc.default.id
-  subnet_ids                 = data.aws_subnets.default.ids
-  allowed_security_group_ids = []
+# Cloud Run Service Account
+resource "google_service_account" "cloud_run" {
+  account_id   = "${var.service_name}-sa"
+  display_name = "Cloud Run Service Account for ${var.service_name}"
 }
 
-# Create Lambda with RDS connection URL
-module "lambda_function" {
-  source = "./modules/lambda-function"
+# Cloud Run Service
+resource "google_cloud_run_service" "service" {
+  name     = var.service_name
+  location = var.gcp_region
 
-  function_name = var.lambda_function_name
-  source_path   = var.lambda_source_path
-  handler       = var.lambda_handler
-  runtime       = var.lambda_runtime
-  vpc_id        = data.aws_vpc.default.id
-  subnet_ids    = data.aws_subnets.default.ids
-  environment = merge(
-    var.lambda_environment,
-    {
-      DATABASE_URL = module.rds.database_url
+  template {
+    spec {
+      service_account_name = google_service_account.cloud_run.email
+      containers {
+        image = var.container_image
+        ports {
+          container_port = 3001
+        }
+
+        env {
+          name  = "PORT"
+          value = "3001"
+        }
+
+        dynamic "env" {
+          for_each = var.environment
+          content {
+            name  = env.key
+            value = env.value
+          }
+        }
+      }
     }
-  )
+  }
+
+  traffic {
+    percent         = 100
+    latest_revision = true
+  }
 }
 
-# Add Lambda security group to RDS security group
-resource "aws_security_group_rule" "rds_allow_lambda" {
-  type                     = "ingress"
-  from_port                = 5432
-  to_port                  = 5432
-  protocol                 = "tcp"
-  source_security_group_id = module.lambda_function.security_group_id
-  security_group_id        = module.rds.security_group_id
-  description              = "Allow access from Lambda"
-}
-
-module "api_gateway" {
-  source = "./modules/api-gateway"
-
-  api_name                   = var.api_name
-  lambda_function_name       = module.lambda_function.function_name
-  lambda_function_invoke_arn = module.lambda_function.function_invoke_arn
-  stage_name                 = var.env
-  cors_enabled               = var.cors_enabled
+# IAM: Allow unauthenticated access
+resource "google_cloud_run_service_iam_member" "public_access" {
+  service  = google_cloud_run_service.service.name
+  location = google_cloud_run_service.service.location
+  role     = "roles/run.invoker"
+  member   = "allUsers"
 }

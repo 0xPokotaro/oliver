@@ -1,48 +1,30 @@
-# Terraform State Backend Setup
+# Terraform State Backend Setup (GCS)
 
-This guide creates the remote state backend used by Terraform in CI/CD.
+このガイドでは、Terraformで使用するリモートstateバックエンド（GCS）を作成します。
 
-## Resources to create
-- S3 bucket (versioned) to store `terraform.tfstate`
-- DynamoDB table for state locking
+## 作成するリソース
 
-## Example (ap-northeast-1)
+- GCSバケット（バージョニング有効）: `terraform.tfstate`を保存
+
+## セットアップ手順
+
 ```bash
-AWS_REGION=ap-northeast-1
-STATE_BUCKET=oliver-terraform-state
-LOCK_TABLE=terraform-state-lock
+PROJECT_ID=your-project-id
+BUCKET_NAME=oliver-terraform-state
+REGION=asia-northeast1
 
-# Create S3 bucket (unique name required)
-aws s3api create-bucket \
-  --bucket "$STATE_BUCKET" \
-  --region "$AWS_REGION" \
-  --create-bucket-configuration LocationConstraint="$AWS_REGION"
+# GCSバケットを作成
+gsutil mb -p $PROJECT_ID -l $REGION gs://$BUCKET_NAME
 
-# Enable versioning
-aws s3api put-bucket-versioning \
-  --bucket "$STATE_BUCKET" \
-  --versioning-configuration Status=Enabled
+# バージョニングを有効化
+gsutil versioning set on gs://$BUCKET_NAME
 
-# (Optional) Enable default encryption
-aws s3api put-bucket-encryption \
-  --bucket "$STATE_BUCKET" \
-  --server-side-encryption-configuration '{
-    "Rules": [{
-      "ApplyServerSideEncryptionByDefault": { "SSEAlgorithm": "AES256" }
-    }]
-  }'
-
-# Create DynamoDB lock table
-aws dynamodb create-table \
-  --table-name "$LOCK_TABLE" \
-  --attribute-definitions AttributeName=LockID,AttributeType=S \
-  --key-schema AttributeName=LockID,KeyType=HASH \
-  --billing-mode PAY_PER_REQUEST
+# (オプション) バケットのライフサイクル管理
+gsutil lifecycle set lifecycle.json gs://$BUCKET_NAME
 ```
 
-## Notes
-- Bucket names are global; adjust `STATE_BUCKET` if already taken.
-- Keep the bucket private; CI uses IAM credentials from GitHub Secrets.
-- First run after adding the backend requires `terraform init -migrate-state`.
+## 注意事項
 
-
+- バケット名はグローバルで一意である必要があります
+- バケットはプライベートに保ってください
+- 初回実行時は`terraform init`を実行してください

@@ -4,17 +4,13 @@
   "private": true,
   "scripts": {
     "terraform:init": "cd src && terraform init",
-    "terraform:plan": "npm run build:lambda && cd src && terraform plan",
-    "terraform:apply": "npm run build:lambda && cd src && terraform apply",
+    "terraform:plan": "npm run build:docker && cd src && terraform plan",
+    "terraform:apply": "npm run build:docker && cd src && terraform apply",
     "terraform:destroy": "cd src && terraform destroy",
     "terraform:fmt": "cd src && terraform fmt",
     "terraform:validate": "cd src && terraform validate",
-    "build:lambda": "cd ../../apps/api && make build-lambda",
-    "deploy:dev": "npm run build:lambda && cd src && terraform apply -var-file=./environments/dev.tfvars",
-    "deploy:staging": "npm run build:lambda && cd src && terraform apply -var-file=./environments/staging.tfvars",
-    "deploy:prod": "npm run build:lambda && cd src && terraform apply -var-file=./environments/prod.tfvars",
-    "plan:dev": "npm run build:lambda && cd src && terraform plan -var-file=./environments/dev.tfvars",
-    "plan:staging": "npm run build:lambda && cd src && terraform plan -var-file=./environments/staging.tfvars",
-    "plan:prod": "npm run build:lambda && cd src && terraform plan -var-file=./environments/prod.tfvars"
+    "build:docker": "cd ../../apps/api2 && docker build -t gcr.io/${GCP_PROJECT_ID:-your-project-id}/oliver-api-dev:latest . && docker push gcr.io/${GCP_PROJECT_ID:-your-project-id}/oliver-api-dev:latest",
+    "deploy": "npm run build:docker && cd src && terraform apply -var-file=./environments/dev.tfvars",
+    "plan": "npm run build:docker && cd src && terraform plan -var-file=./environments/dev.tfvars"
   }
 }

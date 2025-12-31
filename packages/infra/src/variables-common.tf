@@ -1,18 +1,12 @@
 # Common Variables
 
-variable "aws_region" {
-  description = "AWS region"
+variable "gcp_project_id" {
+  description = "GCP Project ID"
   type        = string
-  default     = "ap-northeast-1"
 }
 
-variable "env" {
-  description = "Environment name (dev, staging, prod)"
+variable "gcp_region" {
+  description = "GCP region"
   type        = string
-  default     = "dev"
-
-  validation {
-    condition     = contains(["dev", "staging", "prod"], var.env)
-    error_message = "Environment must be dev, staging, or prod."
-  }
+  default     = "asia-northeast1"
 }
