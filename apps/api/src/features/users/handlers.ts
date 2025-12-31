@@ -100,7 +100,12 @@ export const voiceHandler = async (c: Context<Env>) => {
     // 2. もしAIが「実務が必要だ」と判断したら
     if (agentState.action === 'EXECUTE') {
       // 能力層で実務実行
-      const result = await executeSpecialist(agentState.tool, agentState.params)
+      const result = await executeSpecialist(
+        agentState.tool,
+        agentState.params,
+        user.id,
+        user.smartAccountAddress
+      )
 
       // 3. 実行結果を人格層に伝え、最終的なメッセージを作ってもらう
       agentState = await askPersonality({
