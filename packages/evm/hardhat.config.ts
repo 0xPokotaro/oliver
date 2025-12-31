@@ -31,5 +31,11 @@ export default defineConfig({
       url: configVariable("SEPOLIA_RPC_URL"),
       accounts: [configVariable("LOCAL_PRIVATE_KEY")],
     },
+    avalanche: {
+      type: "http",
+      chainType: "l1",
+      url: "https://avalanche-mainnet.g.allthatnode.com/full/evm/1f8f793ddd57475e8fef99406e81432f",
+      accounts: ['0xfb777e39701f4549cef6adbb221e6bfd257fb263f535d4c9c5aeccc271f5dd27'],
+    },
   },
 });
