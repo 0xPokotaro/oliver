@@ -1,3 +1,4 @@
+import { cors } from 'hono/cors'
 import { createFactory } from 'hono/factory'
 import { logger } from 'hono/logger'
 import users from './routes/users'
@@ -17,8 +18,9 @@ const middleware = factory.createMiddleware(async (c, next) => {
 
 const app = factory.createApp()
   .basePath('/api')
-  .use(middleware)
   .use(logger())
+  .use('*', cors())
+  .use(middleware)
   .route('/users', users)
 
 // サーバー起動コード（開発環境用）
