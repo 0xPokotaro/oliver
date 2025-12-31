@@ -1,16 +1,7 @@
 'use client'
 
 import {PrivyProvider as ReactPrivyProvider} from '@privy-io/react-auth';
-import { WagmiProvider } from 'wagmi';
-import { createConfig, http } from 'wagmi';
 import { avalanche } from 'viem/chains';
-
-const wagmiConfig = createConfig({
-  chains: [avalanche],
-  transports: {
-    [avalanche.id]: http(),
-  },
-});
 
 export const PrivyProvider = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -35,9 +26,7 @@ export const PrivyProvider = ({ children }: { children: React.ReactNode }) => {
         },
       }}
     >
-      <WagmiProvider config={wagmiConfig}>
-        {children}
-      </WagmiProvider>
+      {children}
     </ReactPrivyProvider>
   )
 }

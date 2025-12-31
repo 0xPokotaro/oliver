@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useWallets } from '@privy-io/react-auth';
 import { useWalletClient } from 'wagmi';
 import {
   toMultichainNexusAccount,
@@ -11,11 +10,11 @@ import {
 } from "@biconomy/abstractjs";
 import { avalanche } from 'viem/chains';
 import { http } from 'viem';
+import { usePrivyWallet } from "@/hooks/wallet";
 
 export const RegisterSection = () => {
-  const { wallets } = useWallets();
   const { data: walletClient } = useWalletClient();
-  const wallet = wallets[0]; // プライマリウォレット
+  const { wallet } = usePrivyWallet({ index: 0 }); // プライマリウォレット
 
   const handleRegister = async () => {
     try {

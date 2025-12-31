@@ -1,7 +1,7 @@
-import Container from "@/app/_components/container";
+import UserProfileContainer from "@/app/_components/user-profile";
 
 const Home = () => {
-  return <Container />
+  return <UserProfileContainer />
 };
 
 export default Home;

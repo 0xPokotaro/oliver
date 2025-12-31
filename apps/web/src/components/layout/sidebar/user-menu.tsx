@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import {
   SidebarMenuItem,
   SidebarMenuButton,
@@ -14,11 +13,11 @@ import {
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import { ChevronsUpDown, LogOut } from 'lucide-react';
 import { formatWalletAddress } from "@/lib/format";
-import { usePrivy } from "@privy-io/react-auth"
+import { usePrivy, useLogin } from "@privy-io/react-auth"
 
 export const UserMenu = () => {
-  const router = useRouter();
   const { user, logout } = usePrivy();
+  const { login } = useLogin();
 
   const [mounted, setMounted] = useState(false);
   const [userState, setUserState] = useState(user);
@@ -39,7 +38,7 @@ export const UserMenu = () => {
             >
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">
-                  Metamask
+                  Wallet
                 </span>
                 {userState && (
                   <span className="truncate text-xs text-muted-foreground">
@@ -66,7 +65,7 @@ export const UserMenu = () => {
         <SidebarMenuButton
           size="lg"
           className="cursor-pointer"
-          onClick={() => router.push('/signin')}
+          onClick={login}
         >
           <span>Login</span>
         </SidebarMenuButton>

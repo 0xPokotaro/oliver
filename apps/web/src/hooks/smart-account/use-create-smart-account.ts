@@ -73,4 +73,3 @@ export const useCreateSmartAccount = () => {
     reset: mutation.reset,
   };
 };
-
