@@ -1,13 +1,17 @@
-'use client';
+"use client";
 
-import { useMutation } from '@tanstack/react-query';
-import { usePrivyWalletClient, usePrivyWallet, useSessionSigner } from '@/hooks/wallet';
+import { useMutation } from "@tanstack/react-query";
+import {
+  usePrivyWalletClient,
+  usePrivyWallet,
+  useSessionSigner,
+} from "@/hooks/wallet";
 import {
   createMultichainOrchestrator,
   createSessionsMeeClient,
-} from '@/lib/smart-account/orchestrator';
-import { prepareSmartAccountPermissions } from '@/lib/smart-account/permissions';
-import { SMART_ACCOUNT_CONFIG } from '@/lib/config';
+} from "@/lib/smart-account/orchestrator";
+import { prepareSmartAccountPermissions } from "@/lib/smart-account/permissions";
+import { SMART_ACCOUNT_CONFIG } from "@/lib/config";
 
 /**
  * Smart Account のセットアップを実行するフック
@@ -21,13 +25,15 @@ export const useSmartAccountSetup = () => {
   const mutation = useMutation({
     mutationFn: async () => {
       if (!walletClient || !wallet || !sessionSigner) {
-        throw new Error(walletError?.message || 'Wallet or session signer not available');
+        throw new Error(
+          walletError?.message || "Wallet or session signer not available",
+        );
       }
 
       // 1. マルチチェーンオーケストレータの作成
       const orchestrator = await createMultichainOrchestrator(
         walletClient,
-        wallet.address as `0x${string}`
+        wallet.address as `0x${string}`,
       );
 
       // 2. Sessions MEE クライアントの作成
@@ -38,13 +44,13 @@ export const useSmartAccountSetup = () => {
         sessionsMeeClient,
         sessionSigner,
         SMART_ACCOUNT_CONFIG.feeToken,
-        SMART_ACCOUNT_CONFIG.trigger
+        SMART_ACCOUNT_CONFIG.trigger,
       );
 
       return { payload, sessionsMeeClient };
     },
     onError: (error) => {
-      console.error('Error setting up smart account:', error);
+      console.error("Error setting up smart account:", error);
     },
   });
 

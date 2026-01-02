@@ -9,6 +9,9 @@ const nextConfig: NextConfig = {
     "@prisma/client-runtime-utils",
     "@oliver/database",
   ],
+  images: {
+    domains: ["assets.oliver.dev"],
+  },
   async redirects() {
     return [
       {

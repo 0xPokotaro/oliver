@@ -24,7 +24,7 @@ export const useCreateSmartAccount = () => {
       }
 
       // 2. スマートアカウント作成APIを実行
-      const response = await client.api.users['smart-account'].$post({
+      const response = await client.api.users["smart-account"].$post({
         header: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -42,7 +42,9 @@ export const useCreateSmartAccount = () => {
       if ("error" in data && !("id" in data)) {
         const errorData = data as { error?: unknown };
         const errorMessage =
-          typeof errorData.error === "string" ? errorData.error : "Failed to create smart account";
+          typeof errorData.error === "string"
+            ? errorData.error
+            : "Failed to create smart account";
         throw new Error(errorMessage);
       }
 

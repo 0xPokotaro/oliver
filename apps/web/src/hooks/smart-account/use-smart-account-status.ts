@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { usePrivyWalletClient, useSessionSigner } from '@/hooks/wallet';
-import { checkSmartAccountStatus } from '@/lib/smart-account/status-checker';
+import { useState, useEffect } from "react";
+import { usePrivyWalletClient, useSessionSigner } from "@/hooks/wallet";
+import { checkSmartAccountStatus } from "@/lib/smart-account/status-checker";
 
 /**
  * Smart Account の設定状態をチェックするフック
@@ -16,7 +16,7 @@ export const useSmartAccountStatus = () => {
 
   useEffect(() => {
     const checkStatus = async () => {
-      console.log("checkStatus", walletClient, sessionSigner)
+      console.log("checkStatus", walletClient, sessionSigner);
       if (!walletClient || !sessionSigner) {
         setIsConfigured(false);
         setIsChecking(false);

@@ -1,10 +1,18 @@
 import { usePrivy } from "@privy-io/react-auth";
+import { useQuery } from "@tanstack/react-query";
 
 export const useAccount = () => {
-  const { user, ready } = usePrivy();
+  const { user, authenticated } = usePrivy();
 
-  return {
-    user,
-    ready,
-  }
-}
+  return useQuery({
+    queryKey: ["account"],
+    enabled: authenticated,
+    queryFn: () => {
+      console.log("user: ", user);
+      return {
+        user,
+        authenticated,
+      };
+    },
+  });
+};

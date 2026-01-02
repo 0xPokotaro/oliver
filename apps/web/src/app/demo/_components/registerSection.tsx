@@ -1,15 +1,15 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useWalletClient } from 'wagmi';
+import { useWalletClient } from "wagmi";
 import {
   toMultichainNexusAccount,
   getMEEVersion,
   MEEVersion,
   createNexusClient,
 } from "@biconomy/abstractjs";
-import { avalanche } from 'viem/chains';
-import { http } from 'viem';
+import { avalanche } from "viem/chains";
+import { http } from "viem";
 import { usePrivyWallet } from "@/hooks/wallet";
 
 export const RegisterSection = () => {
@@ -27,16 +27,24 @@ export const RegisterSection = () => {
         signer: walletClient,
         chainConfigurations: [
           {
-            chain: avalanche, 
-            transport: http(), 
-            version: getMEEVersion(MEEVersion.V2_2_1)
+            chain: avalanche,
+            transport: http(),
+            version: getMEEVersion(MEEVersion.V2_2_1),
           },
-        ]
+        ],
       });
 
-      const smartAccountAddress = await orchestrator.addressOn(avalanche.id, true);
+      const smartAccountAddress = await orchestrator.addressOn(
+        avalanche.id,
+        true,
+      );
 
-      console.log('smartAccountAddress: ', smartAccountAddress, 'chainId: ', avalanche.id)
+      console.log(
+        "smartAccountAddress: ",
+        smartAccountAddress,
+        "chainId: ",
+        avalanche.id,
+      );
     } catch (error) {
       console.error("Error registering smart account:", error);
     }

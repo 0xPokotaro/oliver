@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useMemo } from 'react';
-import { useWallets, type ConnectedWallet } from '@privy-io/react-auth';
+import { useMemo } from "react";
+import { useWallets, type ConnectedWallet } from "@privy-io/react-auth";
 
 interface UsePrivyWalletOptions {
   walletClientType?: string; // デフォルト: 'privy'
@@ -23,10 +23,10 @@ interface UsePrivyWalletReturn {
  * @returns ウォレット、ローディング状態、エラー
  */
 export const usePrivyWallet = (
-  options: UsePrivyWalletOptions = {}
+  options: UsePrivyWalletOptions = {},
 ): UsePrivyWalletReturn => {
   const { wallets } = useWallets();
-  const { walletClientType = 'privy', index } = options;
+  const { walletClientType = "privy", index } = options;
 
   const result = useMemo(() => {
     // ウォレットがまだ読み込まれていない場合
@@ -52,19 +52,21 @@ export const usePrivyWallet = (
     const wallet = wallets.find((w) => w.walletClientType === walletClientType);
 
     // Privyタイプが見つからない場合、フォールバックとして最初のウォレットを返す
-    if (!wallet && walletClientType === 'privy') {
+    if (!wallet && walletClientType === "privy") {
       const fallbackWallet = wallets[0] || null;
       return {
         wallet: fallbackWallet,
         isLoading: false,
-        error: fallbackWallet ? null : new Error('No wallets available'),
+        error: fallbackWallet ? null : new Error("No wallets available"),
       };
     }
 
     return {
       wallet: wallet || null,
       isLoading: false,
-      error: wallet ? null : new Error(`Wallet with type '${walletClientType}' not found`),
+      error: wallet
+        ? null
+        : new Error(`Wallet with type '${walletClientType}' not found`),
     };
   }, [wallets, walletClientType, index]);
 

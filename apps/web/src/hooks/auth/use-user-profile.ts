@@ -1,8 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
-import { usePrivy } from '@privy-io/react-auth';
-import { fetchUserProfile } from '@/lib/api/user';
-import { UserNotFoundError } from '@/lib/errors/error-types';
-import { useAutoLogin } from './use-auto-login';
+import { useQuery } from "@tanstack/react-query";
+import { usePrivy } from "@privy-io/react-auth";
+import { fetchUserProfile } from "@/lib/api/user";
+import { UserNotFoundError } from "@/lib/errors/error-types";
+import { useAutoLogin } from "./use-auto-login";
 
 /**
  * ユーザープロフィールを取得するフック
@@ -13,12 +13,12 @@ export const useUserProfile = () => {
   const { performAutoLogin } = useAutoLogin();
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['user-profile'],
+    queryKey: ["user-profile"],
     retry: false, // 自動リトライを無効化（手動でログイン処理を実行するため）
     queryFn: async () => {
       const authToken = await getAccessToken();
       if (!authToken) {
-        throw new Error('No authentication token available');
+        throw new Error("No authentication token available");
       }
 
       try {

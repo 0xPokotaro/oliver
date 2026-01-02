@@ -1,5 +1,9 @@
-import { useLogin as usePrivyLogin, useLogout, getAccessToken } from '@privy-io/react-auth';
-import { client } from '@/lib/api/client';
+import {
+  useLogin as usePrivyLogin,
+  useLogout,
+  getAccessToken,
+} from "@privy-io/react-auth";
+import { client } from "@/lib/api/client";
 
 export const useLogin = () => {
   const { logout } = useLogout();
@@ -9,13 +13,11 @@ export const useLogin = () => {
         const authToken = await getAccessToken();
         console.log("authToken: ", authToken);
 
-        const response = await client.api.auth.login.$post(
-          {
-            header: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        );
+        const response = await client.api.auth.login.$post({
+          header: {
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
 
         if (!response.ok) {
           throw new Error("Failed to login");
@@ -27,10 +29,10 @@ export const useLogin = () => {
         console.error("error: ", error);
         await logout();
       }
-    }
+    },
   });
 
   return {
-    login, 
-  }
-}
+    login,
+  };
+};

@@ -1,5 +1,5 @@
-import { client } from '@/lib/hono';
-import { handleApiError } from '@/lib/errors/api-error-handler';
+import { client } from "@/lib/hono";
+import { handleApiError } from "@/lib/errors/api-error-handler";
 
 /**
  * ユーザープロフィールを取得する
@@ -11,8 +11,8 @@ import { handleApiError } from '@/lib/errors/api-error-handler';
 export async function fetchUserProfile(authToken: string) {
   const response = await client.api.users.profile.$get({
     header: {
-      Authorization: `Bearer ${authToken}`
-    }
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 
   if (!response.ok) {
@@ -29,10 +29,10 @@ export async function fetchUserProfile(authToken: string) {
  * @throws ApiError - APIエラー
  */
 export async function createSmartAccountOnServer(authToken: string) {
-  const response = await client.api.users['smart-account'].$post({
+  const response = await client.api.users["smart-account"].$post({
     header: {
-      Authorization: `Bearer ${authToken}`
-    }
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 
   if (!response.ok) {
@@ -47,14 +47,14 @@ export async function createSmartAccountOnServer(authToken: string) {
  */
 export interface AgentResponse {
   context: {
-    session_id: string
-    status: 'INPUT_RECEIVED' | 'RESULT_RECEIVED'
-  }
-  thought: string
-  action: 'TALK' | 'EXECUTE'
-  tool: 'none' | 'x402_payment'
-  params: Record<string, unknown>
-  message: string
+    session_id: string;
+    status: "INPUT_RECEIVED" | "RESULT_RECEIVED";
+  };
+  thought: string;
+  action: "TALK" | "EXECUTE";
+  tool: "none" | "x402_payment";
+  params: Record<string, unknown>;
+  message: string;
 }
 
 /**
@@ -66,14 +66,17 @@ export interface AgentResponse {
  */
 export async function uploadVoiceFile(
   authToken: string,
-  audioFile: File
-): Promise<{ success: true } & AgentResponse | { success: false; error: string; code?: string }> {
+  audioFile: File,
+): Promise<
+  | ({ success: true } & AgentResponse)
+  | { success: false; error: string; code?: string }
+> {
   const formData = new FormData();
-  formData.append('audio', audioFile);
+  formData.append("audio", audioFile);
 
   // honoクライアントのformプロパティはFormDataを正しく処理しないため、fetch APIを直接使用
-  const response = await fetch('/api/users/voice', {
-    method: 'POST',
+  const response = await fetch("/api/users/voice", {
+    method: "POST",
     headers: {
       Authorization: `Bearer ${authToken}`,
     },

@@ -6,9 +6,7 @@ import { PrivyProvider } from "./privy-provider";
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <PrivyProvider>
-      <QueryProvider>
-        {children}
-      </QueryProvider>
+      <QueryProvider>{children}</QueryProvider>
     </PrivyProvider>
   );
 };

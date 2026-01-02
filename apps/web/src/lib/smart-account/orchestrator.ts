@@ -3,17 +3,17 @@
  * container.tsx と use-set-smart-account.ts の重複コードを統合
  */
 
-import type { PrivateKeyAccount } from 'viem/accounts';
-import type { WalletClient } from 'viem';
+import type { PrivateKeyAccount } from "viem/accounts";
+import type { WalletClient } from "viem";
 import {
   toMultichainNexusAccount,
   toSmartSessionsModule,
   createMeeClient,
   meeSessionActions,
-} from '@biconomy/abstractjs';
-import { avalanche } from 'viem/chains';
-import { http } from 'viem';
-import { getMEEVersion, MEEVersion } from '@biconomy/abstractjs';
+} from "@biconomy/abstractjs";
+import { avalanche } from "viem/chains";
+import { http } from "viem";
+import { getMEEVersion, MEEVersion } from "@biconomy/abstractjs";
 
 /**
  * Smart Sessions バリデータを作成
@@ -21,7 +21,7 @@ import { getMEEVersion, MEEVersion } from '@biconomy/abstractjs';
  */
 export function createSmartSessionsValidator(sessionSigner: PrivateKeyAccount) {
   return toSmartSessionsModule({
-    signer: sessionSigner
+    signer: sessionSigner,
   });
 }
 
@@ -32,7 +32,7 @@ export function createSmartSessionsValidator(sessionSigner: PrivateKeyAccount) {
  */
 export async function createMultichainOrchestrator(
   provider: WalletClient | any,
-  accountAddress?: `0x${string}`
+  accountAddress?: `0x${string}`,
 ) {
   const config: any = {
     chainConfigurations: [

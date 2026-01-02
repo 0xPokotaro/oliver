@@ -10,10 +10,10 @@ export class ApiError extends Error {
   constructor(
     message: string,
     public status: number,
-    public code?: string
+    public code?: string,
   ) {
     super(message);
-    this.name = 'ApiError';
+    this.name = "ApiError";
   }
 }
 
@@ -22,8 +22,8 @@ export class ApiError extends Error {
  */
 export class AuthenticationError extends ApiError {
   constructor(message: string) {
-    super(message, 401, 'AUTHENTICATION_ERROR');
-    this.name = 'AuthenticationError';
+    super(message, 401, "AUTHENTICATION_ERROR");
+    this.name = "AuthenticationError";
   }
 }
 
@@ -32,8 +32,8 @@ export class AuthenticationError extends ApiError {
  * 自動ログイン処理のトリガーとして使用
  */
 export class UserNotFoundError extends ApiError {
-  constructor(message: string = 'User not found') {
-    super(message, 401, 'USER_NOT_FOUND');
-    this.name = 'UserNotFoundError';
+  constructor(message: string = "User not found") {
+    super(message, 401, "USER_NOT_FOUND");
+    this.name = "UserNotFoundError";
   }
 }

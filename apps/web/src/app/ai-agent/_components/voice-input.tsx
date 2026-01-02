@@ -21,7 +21,12 @@ export const VoiceInput = () => {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const streamRef = useRef<MediaStream | null>(null);
-  const { uploadVoiceAsync, isLoading, error: uploadError, data } = useUploadVoice();
+  const {
+    uploadVoiceAsync,
+    isLoading,
+    error: uploadError,
+    data,
+  } = useUploadVoice();
 
   useEffect(() => {
     const isSupported = checkMediaRecorderSupport();
@@ -40,7 +45,7 @@ export const VoiceInput = () => {
 
   // hookのdataからtranscriptを更新
   useEffect(() => {
-    if (data && 'message' in data) {
+    if (data && "message" in data) {
       setTranscript(data.message);
     }
   }, [data]);
@@ -64,8 +69,12 @@ export const VoiceInput = () => {
       };
 
       mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: mediaRecorder.mimeType });
-        const audioFile = new File([audioBlob], "recording.wav", { type: "audio/wav" });
+        const audioBlob = new Blob(audioChunksRef.current, {
+          type: mediaRecorder.mimeType,
+        });
+        const audioFile = new File([audioBlob], "recording.wav", {
+          type: "audio/wav",
+        });
 
         if (streamRef.current) {
           streamRef.current.getTracks().forEach((track) => track.stop());
@@ -91,7 +100,10 @@ export const VoiceInput = () => {
       setIsListening(true);
     } catch (err) {
       console.error("Error starting recording:", err);
-      if (err instanceof Error && (err.name === "NotAllowedError" || err.name === "PermissionDeniedError")) {
+      if (
+        err instanceof Error &&
+        (err.name === "NotAllowedError" || err.name === "PermissionDeniedError")
+      ) {
         setError(MICROPHONE_PERMISSION_ERROR);
       } else {
         setError(RECORDING_START_ERROR);
@@ -170,4 +182,3 @@ export const VoiceInput = () => {
     </div>
   );
 };
-

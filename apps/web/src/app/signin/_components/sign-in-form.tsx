@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useForm } from '@tanstack/react-form';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Field, FieldLabel, FieldError } from '@/components/ui/field';
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useForm } from "@tanstack/react-form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Field, FieldLabel, FieldError } from "@/components/ui/field";
 import {
   Card,
   CardHeader,
@@ -13,8 +13,8 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from '@/components/ui/card';
-import { usePrivy, useLoginWithEmail } from '@privy-io/react-auth';
+} from "@/components/ui/card";
+import { usePrivy, useLoginWithEmail } from "@privy-io/react-auth";
 
 type LoginFormValues = {
   email: string;
@@ -22,29 +22,29 @@ type LoginFormValues = {
 };
 
 const STEP = {
-  EMAIL: 'email',
-  OTP: 'otp',
+  EMAIL: "email",
+  OTP: "otp",
 } as const;
 
 const MESSAGES = {
-  EMAIL_STEP: 'Enter your email address to receive a one-time password.',
-  OTP_STEP: 'Enter the one-time password sent to your email.',
+  EMAIL_STEP: "Enter your email address to receive a one-time password.",
+  OTP_STEP: "Enter the one-time password sent to your email.",
 } as const;
 
 const VALIDATION_MESSAGES = {
-  EMAIL_REQUIRED: 'Email is required',
-  EMAIL_INVALID: 'Please enter a valid email address',
-  OTP_REQUIRED: 'OTP is required',
+  EMAIL_REQUIRED: "Email is required",
+  EMAIL_INVALID: "Please enter a valid email address",
+  OTP_REQUIRED: "OTP is required",
 } as const;
 
 /**
  * エラー配列をFieldErrorコンポーネントが期待する形式に変換
  */
 const mapFieldErrors = (
-  errors: unknown[]
+  errors: unknown[],
 ): Array<{ message?: string } | undefined> =>
   errors.map((error) =>
-    typeof error === 'string' ? { message: error } : error
+    typeof error === "string" ? { message: error } : error,
   ) as Array<{ message?: string } | undefined>;
 
 /**
@@ -69,47 +69,46 @@ const validateOtp = (value: string): string | undefined => {
  * ログイン状態に基づいて現在のステップ（メール入力 or OTP入力）を判定
  */
 const getCurrentStep = (
-  status: string
+  status: string,
 ): typeof STEP.EMAIL | typeof STEP.OTP => {
-  return status === 'initial' || status === 'error' ? STEP.EMAIL : STEP.OTP;
+  return status === "initial" || status === "error" ? STEP.EMAIL : STEP.OTP;
 };
 
 /**
  * フォームがローディング中かどうかを判定
  */
-const isFormLoading = (
-  status: string,
-  isSubmitting: boolean
-): boolean => {
+const isFormLoading = (status: string, isSubmitting: boolean): boolean => {
   return (
-    status === 'sending-code' ||
-    status === 'submitting-code' ||
-    isSubmitting
+    status === "sending-code" || status === "submitting-code" || isSubmitting
   );
 };
 
 export const SignInForm = () => {
   const router = useRouter();
   const { ready, authenticated, user } = usePrivy();
-  
-  const { sendCode, loginWithCode, state: loginState } = useLoginWithEmail({
+
+  const {
+    sendCode,
+    loginWithCode,
+    state: loginState,
+  } = useLoginWithEmail({
     onComplete: () => {
-      router.push('/');
+      router.push("/");
     },
     onError: (error) => {
-      console.error('Login error:', error);
+      console.error("Login error:", error);
     },
   });
 
   const form = useForm({
     defaultValues: {
-      email: '',
-      otp: '',
+      email: "",
+      otp: "",
     } satisfies LoginFormValues,
     onSubmit: async ({ value }) => {
-      if (loginState.status === 'initial' || loginState.status === 'error') {
+      if (loginState.status === "initial" || loginState.status === "error") {
         await sendCode({ email: value.email });
-      } else if (loginState.status === 'awaiting-code-input') {
+      } else if (loginState.status === "awaiting-code-input") {
         await loginWithCode({ code: value.otp });
       }
     },
@@ -118,7 +117,7 @@ export const SignInForm = () => {
   // 既に認証されている場合はリダイレクト
   useEffect(() => {
     if (ready && authenticated && user) {
-      router.push('/');
+      router.push("/");
     }
   }, [ready, authenticated, user, router]);
 
@@ -142,7 +141,8 @@ export const SignInForm = () => {
 
   const currentStep = getCurrentStep(loginState.status);
   const isLoading = isFormLoading(loginState.status, form.state.isSubmitting);
-  const errorMessage = loginState.status === 'error' ? loginState.error?.message : null;
+  const errorMessage =
+    loginState.status === "error" ? loginState.error?.message : null;
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
@@ -157,7 +157,9 @@ export const SignInForm = () => {
           <CardHeader>
             <CardTitle>Login</CardTitle>
             <CardDescription>
-              {currentStep === STEP.EMAIL ? MESSAGES.EMAIL_STEP : MESSAGES.OTP_STEP}
+              {currentStep === STEP.EMAIL
+                ? MESSAGES.EMAIL_STEP
+                : MESSAGES.OTP_STEP}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -186,7 +188,9 @@ export const SignInForm = () => {
                         disabled={isLoading}
                       />
                       {field.state.meta.errors && (
-                        <FieldError errors={mapFieldErrors(field.state.meta.errors)} />
+                        <FieldError
+                          errors={mapFieldErrors(field.state.meta.errors)}
+                        />
                       )}
                     </Field>
                   )}
@@ -195,11 +199,7 @@ export const SignInForm = () => {
                 <>
                   <Field>
                     <FieldLabel>Email</FieldLabel>
-                    <Input
-                      value={form.state.values.email}
-                      readOnly
-                      disabled
-                    />
+                    <Input value={form.state.values.email} readOnly disabled />
                   </Field>
                   <form.Field
                     name="otp"
@@ -209,7 +209,9 @@ export const SignInForm = () => {
                   >
                     {(field) => (
                       <Field>
-                        <FieldLabel htmlFor={field.name}>One-Time Password</FieldLabel>
+                        <FieldLabel htmlFor={field.name}>
+                          One-Time Password
+                        </FieldLabel>
                         <Input
                           id={field.name}
                           name={field.name}
@@ -221,7 +223,9 @@ export const SignInForm = () => {
                           disabled={isLoading}
                         />
                         {field.state.meta.errors && (
-                          <FieldError errors={mapFieldErrors(field.state.meta.errors)} />
+                          <FieldError
+                            errors={mapFieldErrors(field.state.meta.errors)}
+                          />
                         )}
                       </Field>
                     )}
@@ -234,20 +238,17 @@ export const SignInForm = () => {
             <Button
               type="button"
               variant="outline"
-              onClick={() => router.push('/')}
+              onClick={() => router.push("/")}
               disabled={isLoading}
             >
               Cancel
             </Button>
-            <Button
-              type="submit"
-              disabled={isLoading}
-            >
+            <Button type="submit" disabled={isLoading}>
               {isLoading
-                ? 'Processing...'
+                ? "Processing..."
                 : currentStep === STEP.EMAIL
-                ? 'Send OTP'
-                : 'Verify'}
+                  ? "Send OTP"
+                  : "Verify"}
             </Button>
           </CardFooter>
         </form>
@@ -255,4 +256,3 @@ export const SignInForm = () => {
     </div>
   );
 };
-

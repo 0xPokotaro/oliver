@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { SmartAccountSetupButton } from '@/components/features/smart-account/smart-account-setup-button';
-import { SmartAccountConfigDisplay } from '@/components/features/smart-account/smart-account-config-display';
-import { useSmartAccountStatus } from '@/hooks/smart-account';
-import { useSessionSigner } from '@/hooks/wallet';
+import { CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { SmartAccountSetupButton } from "@/components/features/smart-account/smart-account-setup-button";
+import { SmartAccountConfigDisplay } from "@/components/features/smart-account/smart-account-config-display";
+import { useSmartAccountStatus } from "@/hooks/smart-account";
+import { useSessionSigner } from "@/hooks/wallet";
 
 interface AgentInfoTabProps {
   smartAccountAddress?: string | null;
@@ -33,7 +33,9 @@ export const AgentInfoTab = ({ smartAccountAddress }: AgentInfoTabProps) => {
               Smart Account Address
             </dt>
             <dd className="text-base font-mono break-all">
-              {isChecking ? '確認中...' : (smartAccountAddress || sessionSigner?.address || '未設定')}
+              {isChecking
+                ? "確認中..."
+                : smartAccountAddress || sessionSigner?.address || "未設定"}
             </dd>
           </div>
         </dl>

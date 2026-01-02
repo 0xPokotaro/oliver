@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import * as React from 'react';
+import * as React from "react";
 
 import {
   Breadcrumb,
@@ -9,8 +9,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { Separator } from '@/components/ui/separator';
+} from "@/components/ui/breadcrumb";
+import { Separator } from "@/components/ui/separator";
 import {
   SidebarProvider,
   SidebarInset,
@@ -28,56 +28,56 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton,
-} from '@/components/animate-ui/components/radix/sidebar';
+} from "@/components/animate-ui/components/radix/sidebar";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from '@/components/animate-ui/primitives/radix/collapsible';
+} from "@/components/animate-ui/primitives/radix/collapsible";
 import {
   BookOpen,
   Bot,
   ChevronRight,
   LayoutDashboard,
   Settings2,
-} from 'lucide-react';
-import { APP_DATA } from '@/lib/config/constants';
-import { UserMenu } from './user-menu';
+} from "lucide-react";
+import { APP_DATA } from "@/lib/config/constants";
+import { UserMenu } from "./user-menu";
 
 const DATA = {
   user: {
-    name: 'Skyleen',
-    email: 'skyleen@example.com',
+    name: "Skyleen",
+    email: "skyleen@example.com",
     avatar:
-      'https://pbs.twimg.com/profile_images/1909615404789506048/MTqvRsjo_400x400.jpg',
+      "https://pbs.twimg.com/profile_images/1909615404789506048/MTqvRsjo_400x400.jpg",
   },
   navMain: [
     {
-      title: 'Dashboard',
-      url: '/',
+      title: "Dashboard",
+      url: "/",
       icon: LayoutDashboard,
       isActive: false,
     },
     {
-      title: 'AI Agent',
-      url: '/ai-agent',
+      title: "AI Agent",
+      url: "/ai-agent",
       icon: Bot,
       isActive: false,
     },
     {
-      title: 'Document',
-      url: 'https://oliver-docs-lake.vercel.app/',
+      title: "Document",
+      url: "https://oliver-docs-lake.vercel.app/",
       icon: BookOpen,
       isActive: false,
     },
     {
-      title: 'Settings',
-      url: '#',
+      title: "Settings",
+      url: "#",
       icon: Settings2,
       items: [
         {
-          title: 'General',
-          url: '#',
+          title: "General",
+          url: "#",
         },
       ],
     },
@@ -95,12 +95,8 @@ const AppSidebar = () => {
                 <APP_DATA.logo className="size-4" />
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">
-                  {APP_DATA.name}
-                </span>
-                <span className="truncate text-xs">
-                  {APP_DATA.description}
-                </span>
+                <span className="truncate font-semibold">{APP_DATA.name}</span>
+                <span className="truncate text-xs">{APP_DATA.description}</span>
               </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -157,7 +153,6 @@ const AppSidebar = () => {
           </SidebarMenu>
         </SidebarGroup>
         {/* Nav Main */}
-
       </SidebarContent>
       <SidebarFooter>
         {/* Nav User */}
@@ -171,11 +166,7 @@ const AppSidebar = () => {
   );
 };
 
-export const AppLayout = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const AppLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -199,9 +190,7 @@ export const AppLayout = ({
             </Breadcrumb>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          {children}
-        </div>
+        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

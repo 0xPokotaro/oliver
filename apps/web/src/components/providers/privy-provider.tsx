@@ -1,7 +1,7 @@
-'use client'
+"use client";
 
-import {PrivyProvider as ReactPrivyProvider} from '@privy-io/react-auth';
-import { avalanche } from 'viem/chains';
+import { PrivyProvider as ReactPrivyProvider } from "@privy-io/react-auth";
+import { avalanche } from "viem/chains";
 
 export const PrivyProvider = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -12,8 +12,8 @@ export const PrivyProvider = ({ children }: { children: React.ReactNode }) => {
         // Create embedded wallets for users who don't have a wallet
         embeddedWallets: {
           ethereum: {
-            createOnLogin: 'users-without-wallets'
-          }
+            createOnLogin: "users-without-wallets",
+          },
         },
         // Supported chains
         supportedChains: [avalanche],
@@ -21,13 +21,13 @@ export const PrivyProvider = ({ children }: { children: React.ReactNode }) => {
         defaultChain: avalanche,
         // Appearance settings
         appearance: {
-          walletChainType: 'ethereum-only',
-          theme: 'light',
-          accentColor: '#676FFF',
+          walletChainType: "ethereum-only",
+          theme: "light",
+          accentColor: "#676FFF",
         },
       }}
     >
       {children}
     </ReactPrivyProvider>
-  )
-}
+  );
+};

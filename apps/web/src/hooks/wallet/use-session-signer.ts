@@ -1,11 +1,13 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { privateKeyToAccount, type PrivateKeyAccount } from 'viem/accounts';
-import { getSessionSignerPrivateKey } from '@/lib/config/smart-account';
+import { useEffect, useState } from "react";
+import { privateKeyToAccount, type PrivateKeyAccount } from "viem/accounts";
+import { getSessionSignerPrivateKey } from "@/lib/config/smart-account";
 
 export const useSessionSigner = () => {
-  const [smartAccount, setSmartAccount] = useState<PrivateKeyAccount | null>(null);
+  const [smartAccount, setSmartAccount] = useState<PrivateKeyAccount | null>(
+    null,
+  );
 
   useEffect(() => {
     try {
@@ -13,7 +15,7 @@ export const useSessionSigner = () => {
       const sessionSigner = privateKeyToAccount(privateKey);
       setSmartAccount(sessionSigner);
     } catch (error) {
-      console.error('Failed to initialize session signer:', error);
+      console.error("Failed to initialize session signer:", error);
       setSmartAccount(null);
     }
   }, []);

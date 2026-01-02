@@ -16,7 +16,9 @@ export const AuthSection = () => {
   useEffect(() => {
     if (authenticated && user) {
       console.log("User authenticated:", user);
-      const walletAddress = user.wallet?.address || user.linkedAccounts?.find(acc => acc.type === 'wallet')?.address;
+      const walletAddress =
+        user.wallet?.address ||
+        user.linkedAccounts?.find((acc) => acc.type === "wallet")?.address;
       if (walletAddress) {
         toast.success("Login successful", {
           description: `Wallet address: ${formatWalletAddress(walletAddress)}`,

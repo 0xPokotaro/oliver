@@ -1,27 +1,27 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import {
   SidebarMenuItem,
   SidebarMenuButton,
-} from '@/components/animate-ui/components/radix/sidebar';
+} from "@/components/animate-ui/components/radix/sidebar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/animate-ui/components/radix/dropdown-menu';
-import { ChevronsUpDown, LogOut } from 'lucide-react';
+} from "@/components/animate-ui/components/radix/dropdown-menu";
+import { ChevronsUpDown, LogOut } from "lucide-react";
 import { formatWalletAddress } from "@/lib/format";
-import { usePrivy } from "@privy-io/react-auth"
-import { Button } from '@/components/ui/button';
-import { useLogin } from '@/hooks/use-login';
+import { usePrivy } from "@privy-io/react-auth";
+import { Button } from "@/components/ui/button";
+import { useLogin } from "@/hooks/use-login";
 
 export const UserMenu = () => {
   const { ready, user, logout, authenticated } = usePrivy();
   const { login } = useLogin();
 
-  const disableLogin = !ready || (ready && authenticated)
+  const disableLogin = !ready || (ready && authenticated);
 
   const [mounted, setMounted] = useState(false);
   const [userState, setUserState] = useState(user);
@@ -41,12 +41,14 @@ export const UserMenu = () => {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">
-                  Wallet
-                </span>
+                <span className="truncate font-semibold">Wallet</span>
                 {userState && (
                   <span className="truncate text-xs text-muted-foreground">
-                    {formatWalletAddress(userState.wallet?.address || '', 10, 10)}
+                    {formatWalletAddress(
+                      userState.wallet?.address || "",
+                      10,
+                      10,
+                    )}
                   </span>
                 )}
               </div>
@@ -66,7 +68,9 @@ export const UserMenu = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
-        <Button className="w-full" onClick={login}>Login</Button>
+        <Button className="w-full" onClick={login}>
+          Login
+        </Button>
       )}
     </SidebarMenuItem>
   );

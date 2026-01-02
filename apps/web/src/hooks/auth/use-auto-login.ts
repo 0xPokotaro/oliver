@@ -1,6 +1,6 @@
-import { usePrivy, useWallets } from '@privy-io/react-auth';
-import { loginUser } from '@/lib/api/auth';
-import { fetchUserProfile } from '@/lib/api/user';
+import { usePrivy, useWallets } from "@privy-io/react-auth";
+import { loginUser } from "@/lib/api/auth";
+import { fetchUserProfile } from "@/lib/api/user";
 
 /**
  * 自動ログイン処理を実行するフック
@@ -16,17 +16,19 @@ export const useAutoLogin = () => {
    */
   const performAutoLogin = async () => {
     if (!ready || !authenticated) {
-      throw new Error('User is not authenticated. Please sign in first.');
+      throw new Error("User is not authenticated. Please sign in first.");
     }
 
     const walletAddress = wallets[0]?.address;
     if (!walletAddress) {
-      throw new Error('Wallet address not found. Please connect a wallet first.');
+      throw new Error(
+        "Wallet address not found. Please connect a wallet first.",
+      );
     }
 
     const authToken = await getAccessToken();
     if (!authToken) {
-      throw new Error('No authentication token available');
+      throw new Error("No authentication token available");
     }
 
     // ログイン実行

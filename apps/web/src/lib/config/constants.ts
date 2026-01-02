@@ -1,18 +1,18 @@
-import { Store } from 'lucide-react';
+import { Store } from "lucide-react";
 
 // グローバル定数の定義
 export const TOKEN_ADDRESSES = {
-  JPYC: '0xE7C3D8C9a439feDe00D2600032D5dB0Be71C3c29',
-  USDC: '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
-  MOCK_ERC20: '0x129D75c7D6217F07638f10F59325D268cC26162C',
+  JPYC: "0xE7C3D8C9a439feDe00D2600032D5dB0Be71C3c29",
+  USDC: "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E",
+  MOCK_ERC20: "0x129D75c7D6217F07638f10F59325D268cC26162C",
 } as const;
 
 export const CONTRACT_ADDRESSES = {
-  MEE: '0x0000000020fe2F30453074aD916eDeB653eC7E9D',
+  MEE: "0x0000000020fe2F30453074aD916eDeB653eC7E9D",
 } as const;
 
 export const APP_DATA = {
-  name: 'Oliver',
+  name: "Oliver",
   logo: Store,
-  description: 'AI-Commerce',
+  description: "AI-Commerce",
 } as const;

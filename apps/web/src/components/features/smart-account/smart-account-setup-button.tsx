@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { useSmartAccountSetup } from '@/hooks/smart-account';
+import { Button } from "@/components/ui/button";
+import { useSmartAccountSetup } from "@/hooks/smart-account";
 
 interface SmartAccountSetupButtonProps {
   isConfigured: boolean;
@@ -14,7 +14,7 @@ interface SmartAccountSetupButtonProps {
  */
 export const SmartAccountSetupButton = ({
   isConfigured,
-  onSetupComplete
+  onSetupComplete,
 }: SmartAccountSetupButtonProps) => {
   const { setupSmartAccount, isLoading } = useSmartAccountSetup();
 
@@ -23,16 +23,17 @@ export const SmartAccountSetupButton = ({
       await setupSmartAccount();
       onSetupComplete?.();
     } catch (error) {
-      console.error('Setup failed:', error);
+      console.error("Setup failed:", error);
     }
   };
 
   return (
-    <Button
-      onClick={handleSetup}
-      disabled={isLoading || isConfigured}
-    >
-      {isConfigured ? '設定済み' : isLoading ? '設定中...' : 'エージェントを設定'}
+    <Button onClick={handleSetup} disabled={isLoading || isConfigured}>
+      {isConfigured
+        ? "設定済み"
+        : isLoading
+          ? "設定中..."
+          : "エージェントを設定"}
     </Button>
   );
 };

@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useWallets } from '@privy-io/react-auth';
-import { createWalletClient, custom } from 'viem';
-import { avalanche } from 'viem/chains';
-import type { WalletClient } from 'viem';
+import { useState, useEffect } from "react";
+import { useWallets } from "@privy-io/react-auth";
+import { createWalletClient, custom } from "viem";
+import { avalanche } from "viem/chains";
+import type { WalletClient } from "viem";
 
 /**
  * Privy のウォレットから viem の WalletClient を作成するフック
@@ -18,7 +18,7 @@ export const usePrivyWalletClient = () => {
     const initWalletClient = async () => {
       // Privy の Embedded Wallet を取得
       const embeddedWallet = wallets.find(
-        (wallet) => wallet.walletClientType === 'privy'
+        (wallet) => wallet.walletClientType === "privy",
       );
 
       if (!embeddedWallet) {
@@ -38,7 +38,7 @@ export const usePrivyWalletClient = () => {
 
         setWalletClient(client);
       } catch (error) {
-        console.error('Failed to create wallet client:', error);
+        console.error("Failed to create wallet client:", error);
         setWalletClient(null);
       }
     };

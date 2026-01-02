@@ -42,4 +42,3 @@ export const MICROPHONE_PERMISSION_ERROR =
 export const RECORDING_START_ERROR = "録音を開始できませんでした。";
 
 export const RECORDING_ERROR = "録音中にエラーが発生しました。";
-

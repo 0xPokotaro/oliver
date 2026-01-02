@@ -2,13 +2,13 @@
  * Smart Account のデプロイ状態とモジュールインストール状態をチェック
  */
 
-import type { PrivateKeyAccount } from 'viem/accounts';
-import type { WalletClient } from 'viem';
-import { isModuleInstalled } from '@biconomy/abstractjs';
+import type { PrivateKeyAccount } from "viem/accounts";
+import type { WalletClient } from "viem";
+import { isModuleInstalled } from "@biconomy/abstractjs";
 import {
   createSmartSessionsValidator,
   createMultichainOrchestrator,
-} from './orchestrator';
+} from "./orchestrator";
 
 /**
  * Smart Account の設定状態をチェック
@@ -19,7 +19,7 @@ import {
  */
 export async function checkSmartAccountStatus(
   provider: WalletClient | any,
-  sessionSigner: PrivateKeyAccount
+  sessionSigner: PrivateKeyAccount,
 ): Promise<boolean> {
   try {
     const ssValidator = createSmartSessionsValidator(sessionSigner);
@@ -33,8 +33,8 @@ export async function checkSmartAccountStatus(
         module: {
           address: ssValidator.address,
           initData: "0x",
-          type: ssValidator.type
-        }
+          type: ssValidator.type,
+        },
       });
 
       if (!isDeployed || !isSsInstalled) {
@@ -44,7 +44,7 @@ export async function checkSmartAccountStatus(
 
     return true;
   } catch (error) {
-    console.error('Error checking smart account status:', error);
+    console.error("Error checking smart account status:", error);
     return false;
   }
 }

@@ -26,7 +26,9 @@ export const useUploadVoice = () => {
       if (result.success) {
         return result;
       } else {
-        throw new Error(result.error || "音声ファイルのアップロードに失敗しました。");
+        throw new Error(
+          result.error || "音声ファイルのアップロードに失敗しました。",
+        );
       }
     },
   });

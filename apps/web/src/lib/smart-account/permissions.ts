@@ -2,8 +2,8 @@
  * Smart Account のパーミッション設定
  */
 
-import type { PrivateKeyAccount } from 'viem/accounts';
-import { createSmartSessionsValidator } from './orchestrator';
+import type { PrivateKeyAccount } from "viem/accounts";
+import { createSmartSessionsValidator } from "./orchestrator";
 
 /**
  * Smart Account のパーミッションを準備
@@ -16,7 +16,7 @@ export async function prepareSmartAccountPermissions(
   sessionsMeeClient: any,
   sessionSigner: PrivateKeyAccount,
   feeToken: { address: `0x${string}`; chainId: number },
-  trigger: { tokenAddress: `0x${string}`; chainId: number; amount: bigint }
+  trigger: { tokenAddress: `0x${string}`; chainId: number; amount: bigint },
 ) {
   const ssValidator = createSmartSessionsValidator(sessionSigner);
 

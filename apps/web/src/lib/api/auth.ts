@@ -1,5 +1,5 @@
-import { client } from '@/lib/hono';
-import { handleApiError } from '@/lib/errors/api-error-handler';
+import { client } from "@/lib/hono";
+import { handleApiError } from "@/lib/errors/api-error-handler";
 
 /**
  * ユーザーログインを実行する
@@ -14,7 +14,7 @@ export async function loginUser(authToken: string, walletAddress: string) {
     json: {
       authToken,
       walletAddress,
-    }
+    },
   });
 
   if (!response.ok) {
