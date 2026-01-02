@@ -29,35 +29,46 @@ export function getPrismaClient(): PrismaClient {
       process.env.DATABASE_URL ||
       "postgresql://postgres:postgres@127.0.0.1:54322/postgres";
 
-    // Cloud Runで動作している場合（PORT環境変数が設定されている）は常にSSLを有効化
-    // または、NODE_ENVがproductionの場合もSSLを有効化
-    const isProduction =
-      process.env.PORT !== undefined || process.env.NODE_ENV === "production";
+    // 接続文字列の正規化: postgres:// を postgresql:// に変換
+    connectionString = connectionString.replace(/^postgres:\/\//, "postgresql://");
 
-    // 本番環境の場合、接続文字列にsslmodeパラメータを追加（既に含まれていない場合）
-    if (isProduction && !connectionString.includes("sslmode=")) {
-      const separator = connectionString.includes("?") ? "&" : "?";
-      connectionString = `${connectionString}${separator}sslmode=require`;
-      console.log("Added sslmode=require to connection string");
+    // Supabase の接続文字列を検出
+    const isSupabase = connectionString.includes("supabase.com");
+    
+    // Cloud Runで動作している場合（PORT環境変数が設定されている）は常にSSLを有効化
+    // または、NODE_ENVがproductionの場合、またはSupabase接続の場合もSSLを有効化
+    const isProduction =
+      process.env.PORT !== undefined || 
+      process.env.NODE_ENV === "production" || 
+      isSupabase;
+
+    // 接続文字列から sslmode パラメータを削除（Pool の設定を優先）
+    if (connectionString.includes("sslmode=")) {
+      connectionString = connectionString.replace(/[?&]sslmode=[^&]*/, "");
+      // クエリパラメータが空になった場合は ? を削除
+      connectionString = connectionString.replace(/\?$/, "");
+      console.log("Removed sslmode parameter from connection string (using Pool SSL config instead)");
     }
 
     console.log("isProduction:", isProduction);
+    console.log("isSupabase:", isSupabase);
     console.log("Final connection string (masked):", connectionString.replace(/:[^:@]+@/, ":****@"));
-    console.log("SSL will be:", isProduction ? "enabled (rejectUnauthorized: false)" : "disabled");
+    console.log("SSL will be:", isProduction || isSupabase ? "enabled (rejectUnauthorized: false)" : "disabled");
     console.log("=".repeat(50));
 
     // SSL設定を追加（本番環境では必須）
     // PrismaPgはPoolインスタンスまたはconnectionStringオブジェクトを受け取れる
     const poolConfig: {
       connectionString: string;
-      ssl?: { rejectUnauthorized: boolean };
+      ssl?: boolean | { rejectUnauthorized: boolean };
     } = {
       connectionString,
     };
 
-    // 本番環境ではSSLを有効化
+    // 本番環境またはSupabase接続ではSSLを有効化
     // rejectUnauthorized: false は自己署名証明書を使用する場合に必要
-    if (isProduction) {
+    // Supabaseの公式ドキュメントでは、rejectUnauthorized: false の使用が推奨されています
+    if (isProduction || isSupabase) {
       poolConfig.ssl = {
         rejectUnauthorized: false,
       };
