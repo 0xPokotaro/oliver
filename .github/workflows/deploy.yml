@@ -67,6 +67,10 @@ jobs:
         working-directory: ${{ env.TERRAFORM_DIR }}
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          MERCHANT_ADDRESS: ${{ secrets.MERCHANT_ADDRESS }}
+          FACILITATOR_BASE_URL: ${{ secrets.FACILITATOR_BASE_URL }}
+          DEFAULT_CURRENCY: ${{ secrets.DEFAULT_CURRENCY }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
           IMAGE_TAG_SHORT=${IMAGE_TAG:0:7}
@@ -80,8 +84,12 @@ jobs:
           container_image = "gcr.io/$GCP_PROJECT_ID/$SERVICE_NAME:$IMAGE_TAG_SHORT"
 
           environment = {
-            DATABASE_URL = "$DATABASE_URL"
-            NODE_ENV     = "production"
+            DATABASE_URL       = "$DATABASE_URL"
+            NODE_ENV           = "production"
+            OPENAI_API_KEY     = "$OPENAI_API_KEY"
+            MERCHANT_ADDRESS   = "$MERCHANT_ADDRESS"
+            FACILITATOR_BASE_URL = "$FACILITATOR_BASE_URL"
+            DEFAULT_CURRENCY   = "$DEFAULT_CURRENCY"
           }
           EOF
 

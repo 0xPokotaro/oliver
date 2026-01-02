@@ -18,9 +18,6 @@ import { getAppConfig } from "@oliver/api/config";
 import type { PaymentPayload } from "@x402/core/types";
 import { createRepositories } from "../repositories";
 
-// Create Repositories
-const repositories = createRepositories();
-
 // 遅延初期化: 実際に使用される時まで初期化を遅延
 let paymentManager: PaymentManager | null = null;
 let agent: AiAgent | null = null;
@@ -28,6 +25,7 @@ let agent: AiAgent | null = null;
 async function getPaymentManager(): Promise<PaymentManager> {
   if (!paymentManager) {
     const config = getAppConfig();
+    const repositories = createRepositories();
     paymentManager = new PaymentManager({
       baseURL: config.facilitatorBaseURL,
       merchantAddress: config.merchantAddress,
