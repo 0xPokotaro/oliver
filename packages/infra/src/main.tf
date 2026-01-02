@@ -22,6 +22,29 @@ resource "google_cloud_run_service" "service" {
         # PORT環境変数はCloud Runが自動的に設定するため、手動設定は不要
         # container_portで指定したポート番号が自動的にPORT環境変数に設定される
 
+        # 起動プローブの設定（コンテナの起動を待つ時間を延長）
+        startup_probe {
+          http_get {
+            path = "/api/health"
+            port = 3001
+          }
+          initial_delay_seconds = 0
+          timeout_seconds       = 10
+          period_seconds        = 3
+          failure_threshold     = 10 # 最大30秒待つ（3秒 × 10回）
+        }
+
+        # ヘルスチェック（起動後の生存確認）
+        liveness_probe {
+          http_get {
+            path = "/api/health"
+            port = 3001
+          }
+          timeout_seconds   = 10
+          period_seconds    = 10
+          failure_threshold = 3
+        }
+
         dynamic "env" {
           for_each = var.environment
           content {
