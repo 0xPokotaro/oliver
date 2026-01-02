@@ -25,7 +25,7 @@ export function getPrismaClient(): PrismaClient {
     }
 
     // 環境変数DATABASE_URLを明示的に読み込む
-    const connectionString =
+    let connectionString =
       process.env.DATABASE_URL ||
       "postgresql://postgres:postgres@127.0.0.1:54322/postgres";
 
@@ -33,6 +33,13 @@ export function getPrismaClient(): PrismaClient {
     // または、NODE_ENVがproductionの場合もSSLを有効化
     const isProduction =
       process.env.PORT !== undefined || process.env.NODE_ENV === "production";
+
+    // 本番環境の場合、接続文字列にsslmodeパラメータを追加（既に含まれていない場合）
+    if (isProduction && !connectionString.includes("sslmode=")) {
+      const separator = connectionString.includes("?") ? "&" : "?";
+      connectionString = `${connectionString}${separator}sslmode=require`;
+      console.log("Added sslmode=require to connection string");
+    }
 
     console.log("isProduction:", isProduction);
     console.log("SSL will be:", isProduction ? "enabled (rejectUnauthorized: false)" : "disabled");
@@ -44,8 +51,13 @@ export function getPrismaClient(): PrismaClient {
       connectionString,
       // 本番環境ではSSLを有効化
       // rejectUnauthorized: false は自己署名証明書を使用する場合に必要
+      // pg v8では、sslオブジェクトを明示的に設定する必要がある
       ssl: isProduction
-        ? { rejectUnauthorized: false }
+        ? {
+            rejectUnauthorized: false,
+            // 追加のSSL設定
+            require: true,
+          }
         : undefined, // 開発環境ではSSLを無効化
     });
 
