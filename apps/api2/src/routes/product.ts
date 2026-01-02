@@ -7,6 +7,7 @@ const app = new Hono();
 
 app.get("/", async (c) => {
   const products = await repositories.product.findAll();
+  console.log(products);
   return c.json(products);
 });
 
