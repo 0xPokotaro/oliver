@@ -27,8 +27,6 @@ export const useAccount = () => {
 
       const data = await response.json();
 
-      console.log("data: ", user?.wallet?.address);
-
       return {
         ...data,
         address: user?.wallet?.address,

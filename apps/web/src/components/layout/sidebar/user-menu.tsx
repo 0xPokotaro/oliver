@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   SidebarMenuItem,
   SidebarMenuButton,
@@ -20,6 +21,7 @@ import { useLogin } from "@/hooks/use-login";
 export const UserMenu = () => {
   const { ready, user, logout, authenticated } = usePrivy();
   const { login } = useLogin();
+  const router = useRouter();
 
   const disableLogin = !ready || (ready && authenticated);
 
@@ -30,6 +32,11 @@ export const UserMenu = () => {
     setMounted(true);
     setUserState(user);
   }, [user]);
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/");
+  };
 
   return (
     <SidebarMenuItem>
@@ -61,7 +68,7 @@ export const UserMenu = () => {
             align="end"
             sideOffset={4}
           >
-            <DropdownMenuItem onClick={logout}>
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
               Log out
             </DropdownMenuItem>
