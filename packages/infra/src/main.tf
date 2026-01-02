@@ -29,7 +29,7 @@ resource "google_cloud_run_service" "service" {
             port = 3001
           }
           initial_delay_seconds = 10 # 10秒待ってからチェック開始
-          timeout_seconds       = 2 # period_secondsより小さくする必要がある
+          timeout_seconds       = 2  # period_secondsより小さくする必要がある
           period_seconds        = 3
           failure_threshold     = 20 # 最大60秒待つ（3秒 × 20回）
         }
