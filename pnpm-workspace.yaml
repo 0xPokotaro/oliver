@@ -8,6 +8,7 @@ packages:
   - packages/evm
   - packages/shared
 ignoredBuiltDependencies:
+  - '@reown/appkit'
   - bigint-buffer
   - keccak
   - sharp

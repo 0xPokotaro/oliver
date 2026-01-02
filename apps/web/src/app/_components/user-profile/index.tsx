@@ -1,5 +1,6 @@
 'use client';
 
+import { usePrivy } from '@privy-io/react-auth';
 import { useUserProfile } from '@/hooks/auth';
 import { Card } from '@/components/ui/card';
 import {
@@ -12,11 +13,8 @@ import {
 import { UserInfoTab } from './user-info-tab';
 import { AgentInfoTab } from './agent-info-tab';
 
-/**
- * ユーザープロフィールページのメインコンテナ
- * ユーザー情報とエージェント情報をタブで切り替え表示
- */
 export const UserProfileContainer = () => {
+  const { authenticated, ready } = usePrivy();
   const { data, isLoading, error } = useUserProfile();
 
   if (isLoading) return <div className="p-8">Loading...</div>;
