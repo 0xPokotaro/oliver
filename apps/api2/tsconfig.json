@@ -17,5 +17,6 @@
       "@oliver/database/*": ["../../packages/database/*"]
     },
     "resolveJsonModule": true
-  }
+  },
+  "exclude": ["src/**/*.test.ts"]
 }

@@ -19,7 +19,7 @@ describe("POST /confirm", () => {
   it("should return 402 when payment signature is missing", async () => {
     const client = testClient(app);
 
-    const res = await client.api.order.confirm.$post({
+    const res = await client.api.orders.confirm.$post({
       json: {
         items: [
           {
@@ -36,7 +36,7 @@ describe("POST /confirm", () => {
   it("should return 200 when payment signature is present", async () => {
     const client = testClient(app);
 
-    const res = await client.api.order.confirm.$post({
+    const res = await client.api.orders.confirm.$post({
       header: {
         "PAYMENT-SIGNATURE": "123",
       },

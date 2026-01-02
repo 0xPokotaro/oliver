@@ -7,7 +7,7 @@ describe("POST /", () => {
   it("should return 402 Payment Required when payment is missing", async () => {
     const client = testClient(app);
 
-    const res = await client.index.$post({
+    const res = await (client as any).index.$post({
       json: {
         message: {
           messageId: "123",
