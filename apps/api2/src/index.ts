@@ -29,17 +29,15 @@ const app = f
   .route("/orders", order)
   .route("/products", product);
 
-// サーバー起動コード（開発環境用）
-if (import.meta.url === `file://${process.argv[1]}`) {
-  const port = Number(process.env.PORT) || 3003;
-  const { serve } = await import("@hono/node-server");
-  serve(
-    { fetch: app.fetch, port },
-    (info: { address: string; port: number }) => {
-      console.log(`Server is running on http://localhost:${info.port}`);
-    },
-  );
-}
+// サーバー起動コード（Cloud Runと開発環境の両方で動作）
+const port = Number(process.env.PORT) || 3001;
+const { serve } = await import("@hono/node-server");
+serve(
+  { fetch: app.fetch, port },
+  (info: { address: string; port: number }) => {
+    console.log(`Server is running on http://localhost:${info.port}`);
+  },
+);
 
 export default app;
 export type AppType = typeof app;
