@@ -12,10 +12,17 @@ resource "google_cloud_run_service" "service" {
   template {
     spec {
       service_account_name = google_service_account.cloud_run.email
+      timeout_seconds      = 300 # 5分（デフォルトは300秒）
       containers {
         image = var.container_image
         ports {
           container_port = 3001
+        }
+
+        # PORT環境変数を明示的に設定（Cloud Runが自動設定するが、明示的に指定）
+        env {
+          name  = "PORT"
+          value = "3001"
         }
 
         dynamic "env" {
