@@ -32,12 +32,13 @@ const app = f
 // サーバー起動コード（Cloud Runと開発環境の両方で動作）
 const port = Number(process.env.PORT) || 3001;
 const { serve } = await import("@hono/node-server");
-serve({
+const server = serve({
   fetch: app.fetch,
   port,
   hostname: "0.0.0.0", // Cloud Run環境で確実にリッスンするため
 });
 console.log(`Server is running on port ${port}`);
+// サーバーオブジェクトへの参照を保持してプロセスが終了しないようにする
 
 export default app;
 export type AppType = typeof app;
