@@ -28,10 +28,10 @@ resource "google_cloud_run_service" "service" {
             path = "/api/health"
             port = 3001
           }
-          initial_delay_seconds = 0
+          initial_delay_seconds = 10 # 10秒待ってからチェック開始
           timeout_seconds       = 2 # period_secondsより小さくする必要がある
           period_seconds        = 3
-          failure_threshold     = 10 # 最大30秒待つ（3秒 × 10回）
+          failure_threshold     = 20 # 最大60秒待つ（3秒 × 20回）
         }
 
         # ヘルスチェック（起動後の生存確認）
