@@ -42,28 +42,35 @@ export function getPrismaClient(): PrismaClient {
     }
 
     console.log("isProduction:", isProduction);
+    console.log("Final connection string (masked):", connectionString.replace(/:[^:@]+@/, ":****@"));
     console.log("SSL will be:", isProduction ? "enabled (rejectUnauthorized: false)" : "disabled");
     console.log("=".repeat(50));
 
     // SSL設定を追加（本番環境では必須）
     // PrismaPgはPoolインスタンスまたはconnectionStringオブジェクトを受け取れる
-    const pool = new Pool({
+    const poolConfig: {
+      connectionString: string;
+      ssl?: { rejectUnauthorized: boolean };
+    } = {
       connectionString,
-      // 本番環境ではSSLを有効化
-      // rejectUnauthorized: false は自己署名証明書を使用する場合に必要
-      // pg v8では、sslオブジェクトを明示的に設定する必要がある
-      ssl: isProduction
-        ? {
-            rejectUnauthorized: false,
-            // 追加のSSL設定
-            require: true,
-          }
-        : undefined, // 開発環境ではSSLを無効化
-    });
+    };
+
+    // 本番環境ではSSLを有効化
+    // rejectUnauthorized: false は自己署名証明書を使用する場合に必要
+    if (isProduction) {
+      poolConfig.ssl = {
+        rejectUnauthorized: false,
+      };
+      console.log("Pool SSL config:", JSON.stringify(poolConfig.ssl));
+    }
+
+    const pool = new Pool(poolConfig);
 
     // PrismaPgアダプターを使用してPrismaClientを初期化
     const adapter = new PrismaPg(pool);
     prismaInstance = new PrismaClient({ adapter });
+    
+    console.log("PrismaClient initialized with adapter");
   }
   return prismaInstance;
 }
