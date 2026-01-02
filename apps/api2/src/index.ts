@@ -23,12 +23,12 @@ const app = f
   .use(logger())
   .use("*", cors())
   .use("/order/confirm", paymentMw)
+  .route("/products", product)
   .use("*", requireAuth)
   .route("/auth", auth)
   .route("/users", users)
   .route("/payments", payment)
   .route("/orders", order)
-  .route("/products", product);
 
 // サーバー起動コード（Cloud Runと開発環境の両方で動作）
 import { serve } from "@hono/node-server";

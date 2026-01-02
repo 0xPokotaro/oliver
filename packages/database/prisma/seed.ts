@@ -89,79 +89,14 @@ async function main() {
   const products = await prisma.product.createMany({
     data: [
       {
-        name: "Nutro Natural Choice Adult Cat Chicken",
+        name: "Royal Canin Indoor Adult Cat Food",
         description:
-          "High-quality chicken-based dry food for adult cats with balanced nutrition. Contains natural antioxidants and supports healthy coat and skin.",
-        price: BigInt(2980000000), // 2980 USD (6桁小数点想定: 2980 * 1000000)
+          "Specifically designed for indoor adult cats aged 1 to 7 years. Uses highly digestible proteins to reduce stool volume and odor. Supports healthy weight maintenance with moderate fat content and specific fibers that aid in hairball elimination.",
+        price: BigInt(3200000000), // 3200 USD (6桁小数点想定: 3200 * 1000000)
         stockStatus: "in_stock",
-        imageUrl: "https://assets.oliver.dev/products/nutro-natural-choice-chicken.png",
+        imageUrl: "https://assets.oliver.dev/products/royal-canin-indoor-adult.png",
         category: "cat_food",
         merchantId: merchant1.id,
-        attributes: defineAttributes(ProductCategories.CAT_FOOD, {
-          brand: "Nutro",
-          flavor: "Chicken",
-          targetAge: "adult",
-          shape: "Dry Food",
-          usage: "Cat Food",
-          specialIngredients:
-            "Chicken (meat), Chicken Meal, Pea Protein, Peas, Chicken Fat*, Tapioca, Beet Pulp, Potato Protein, Fish Meal, Salmon Meal, Alfalfa Meal, Protein Hydrolysate, Flaxseed, Yucca Extract, Vitamins (A, B1, B2, B6, B12, C, D3, E, Choline, Niacin, Pantothenic Acid, Biotin, Folic Acid), Minerals (Potassium, Chloride, Selenium, Sodium, Manganese, Iodine, Zinc, Iron, Copper), Amino Acids (Taurine, Methionine), Antioxidants (Mixed Tocopherols, Rosemary Extract, Citric Acid)",
-          unit: "2000.0 grams",
-          quantity: "1",
-          packageInfo: "Bag",
-          weight: "2 kilograms",
-        }) as Prisma.InputJsonValue,
-      },
-      {
-        name: "Nutro Ultra Adult Cat Salmon",
-        description:
-          "Premium dry food made primarily with salmon. Rich in omega-3 fatty acids, supports joint health and immune system.",
-        price: BigInt(3480000000), // 3480 USD
-        stockStatus: "in_stock",
-        imageUrl: "https://assets.oliver.dev/products/nutro-ultra-salmon.png",
-        category: "cat_food",
-        merchantId: merchant1.id,
-        attributes: defineAttributes(ProductCategories.CAT_FOOD, {
-          brand: "Nutro",
-          flavor: "Salmon",
-          targetAge: "adult",
-          shape: "Dry Food",
-          usage: "Cat Food",
-          unit: "2000.0 grams",
-          quantity: "1",
-          packageInfo: "Bag",
-          weight: "2 kilograms",
-        }) as Prisma.InputJsonValue,
-      },
-      {
-        name: "Nutro Natural Choice Kitten Chicken & Rice",
-        description:
-          "Balanced nutrition for growing kittens. Rich in DHA, supports brain and eye development.",
-        price: BigInt(3280000000), // 3280 USD
-        stockStatus: "in_stock",
-        imageUrl: "https://assets.oliver.dev/products/nutro-kitten-chicken-rice.png",
-        category: "cat_food",
-        merchantId: merchant1.id,
-        attributes: defineAttributes(ProductCategories.CAT_FOOD, {
-          brand: "Nutro",
-          flavor: "Chicken & Rice",
-          targetAge: "kitten",
-          shape: "Dry Food",
-          usage: "Cat Food",
-          unit: "1500.0 grams",
-          quantity: "1",
-          packageInfo: "Bag",
-          weight: "1.5 kilograms",
-        }) as Prisma.InputJsonValue,
-      },
-      {
-        name: "Royal Canin Indoor Cat 2kg",
-        description:
-          "Dry food specially developed for indoor cats. High digestibility and reduces stool odor.",
-        price: BigInt(3200000000), // 3200 USD
-        stockStatus: "in_stock",
-        imageUrl: "https://assets.oliver.dev/products/rc-2kg.png",
-        category: "cat_food",
-        merchantId: merchant2.id,
         attributes: defineAttributes(ProductCategories.CAT_FOOD, {
           brand: "Royal Canin",
           flavor: "Chicken",
@@ -175,16 +110,37 @@ async function main() {
         }) as Prisma.InputJsonValue,
       },
       {
-        name: "Hills Science Diet Adult Cat Chicken",
+        name: "CIAO Churu Tuna Recipe",
         description:
-          "Premium dry food recommended by veterinarians. Supports healthy weight maintenance and digestive health.",
-        price: BigInt(3500000000), // 3500 USD
-        stockStatus: "low_stock",
-        imageUrl: "https://assets.oliver.dev/products/hills-science-diet-chicken.png",
+          "Creamy paste-style cat treat made with fresh tuna. Free of grains, artificial colors, and preservatives. Convenient for giving medication to cats.",
+        price: BigInt(1500000000), // 1500 USD
+        stockStatus: "in_stock",
+        imageUrl: "https://assets.oliver.dev/products/ciao-churu-tuna.png",
         category: "cat_food",
-        merchantId: merchant2.id,
+        merchantId: merchant1.id,
         attributes: defineAttributes(ProductCategories.CAT_FOOD, {
-          brand: "Hills",
+          brand: "CIAO",
+          flavor: "Tuna",
+          targetAge: "adult",
+          shape: "Tube",
+          usage: "Cat Food",
+          unit: "420.0 grams",
+          quantity: "14",
+          packageInfo: "Box",
+          weight: "0.5 kilograms",
+        }) as Prisma.InputJsonValue,
+      },
+      {
+        name: "Purina ONE Indoor Advantage",
+        description:
+          "Dry food designed for indoor cat health maintenance. Supports weight management and hairball care. Contains high-quality proteins and fiber to promote digestive health.",
+        price: BigInt(2980000000), // 2980 USD
+        stockStatus: "in_stock",
+        imageUrl: "https://assets.oliver.dev/products/purina-one-indoor.png",
+        category: "cat_food",
+        merchantId: merchant1.id,
+        attributes: defineAttributes(ProductCategories.CAT_FOOD, {
+          brand: "Purina ONE",
           flavor: "Chicken",
           targetAge: "adult",
           shape: "Dry Food",
@@ -196,41 +152,45 @@ async function main() {
         }) as Prisma.InputJsonValue,
       },
       {
-        name: "Mineral Water 2L × 6 bottles",
+        name: "Hill's Science Diet Adult Indoor",
         description:
-          "Delicious mineral water rich in natural minerals. Set of 6 bottles.",
-        price: BigInt(800000000), // 800 USD
+          "Specially formulated dry food for indoor adult cats. Low-calorie design supports healthy weight maintenance. High-quality proteins and natural fibers aid digestion and reduce stool odor.",
+        price: BigInt(3500000000), // 3500 USD
         stockStatus: "in_stock",
-        imageUrl: "https://assets.oliver.dev/products/water-2l-box.png",
-        category: "beverage",
-        merchantId: merchant3.id,
-        attributes: defineAttributes(ProductCategories.BEVERAGE, {
-          brand: "Natural Water",
-          shape: "PET Bottle",
-          usage: "Beverage",
-          unit: "12000.0 milliliters",
-          quantity: "6",
-          packageInfo: "Cardboard",
-          weight: "12 kilograms",
+        imageUrl: "https://assets.oliver.dev/products/hills-science-diet-indoor.png",
+        category: "cat_food",
+        merchantId: merchant2.id,
+        attributes: defineAttributes(ProductCategories.CAT_FOOD, {
+          brand: "Hill's",
+          flavor: "Chicken",
+          targetAge: "adult",
+          shape: "Dry Food",
+          usage: "Cat Food",
+          unit: "2000.0 grams",
+          quantity: "1",
+          packageInfo: "Bag",
+          weight: "2 kilograms",
         }) as Prisma.InputJsonValue,
       },
       {
-        name: "Toilet Paper 12 rolls",
+        name: "Orijen Original Cat",
         description:
-          "Soft and durable toilet paper. 12 rolls.",
-        price: BigInt(1200000000), // 1200 USD
+          "High-protein dry food using fresh chicken, turkey, fish, and eggs. Grain-free formula that replicates a cat's natural diet.",
+        price: BigInt(4200000000), // 4200 USD
         stockStatus: "in_stock",
-        imageUrl: "https://assets.oliver.dev/products/toilet-paper-12roll.png",
-        category: "daily_goods",
-        merchantId: merchant3.id,
-        attributes: defineAttributes(ProductCategories.DAILY_GOODS, {
-          brand: "Eco",
-          shape: "Roll",
-          usage: "Toilet Paper",
-          unit: "12 rolls",
+        imageUrl: "https://assets.oliver.dev/products/orijen-original-cat.png",
+        category: "cat_food",
+        merchantId: merchant2.id,
+        attributes: defineAttributes(ProductCategories.CAT_FOOD, {
+          brand: "Orijen",
+          flavor: "Chicken",
+          targetAge: "adult",
+          shape: "Dry Food",
+          usage: "Cat Food",
+          unit: "2000.0 grams",
           quantity: "1",
-          packageInfo: "Plastic Wrap",
-          weight: "1.2 kilograms",
+          packageInfo: "Bag",
+          weight: "2 kilograms",
         }) as Prisma.InputJsonValue,
       },
     ],
