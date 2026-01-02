@@ -81,6 +81,7 @@ jobs:
 
           environment = {
             DATABASE_URL = "$DATABASE_URL"
+            NODE_ENV     = "production"
           }
           EOF
 
