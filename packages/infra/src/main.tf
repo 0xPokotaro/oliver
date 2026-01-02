@@ -29,7 +29,7 @@ resource "google_cloud_run_service" "service" {
             port = 3001
           }
           initial_delay_seconds = 0
-          timeout_seconds       = 10
+          timeout_seconds       = 2  # period_secondsより小さくする必要がある
           period_seconds        = 3
           failure_threshold     = 10 # 最大30秒待つ（3秒 × 10回）
         }
@@ -40,7 +40,7 @@ resource "google_cloud_run_service" "service" {
             path = "/api/health"
             port = 3001
           }
-          timeout_seconds   = 10
+          timeout_seconds   = 9  # period_secondsより小さくする（念のため）
           period_seconds    = 10
           failure_threshold = 3
         }
