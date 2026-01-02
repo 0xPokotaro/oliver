@@ -4,18 +4,21 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { usePrivy } from "@privy-io/react-auth";
 import { client } from "@/lib/api/client";
 
-interface CreateSmartAccountResponse {
-  id: string;
-  privyUserId: string;
-  walletAddress: string;
-  smartAccountAddress: string;
+interface RegisterBiconomySessionKeyResponse {
+  success: boolean;
+  sessionKeyAddress: string;
+  message?: string;
 }
 
-export const useCreateSmartAccount = () => {
+export const useRegisterSessionKey = () => {
   const queryClient = useQueryClient();
   const { getAccessToken } = usePrivy();
 
-  const mutation = useMutation<CreateSmartAccountResponse, Error, void>({
+  const mutation = useMutation<
+    RegisterBiconomySessionKeyResponse,
+    Error,
+    void
+  >({
     mutationFn: async () => {
       // 1. authTokenを取得
       const authToken = await getAccessToken();
@@ -23,8 +26,8 @@ export const useCreateSmartAccount = () => {
         throw new Error("No authentication token available");
       }
 
-      // 2. スマートアカウント作成APIを実行
-      const response = await client.api.users["smart-account"].$post({
+      // 2. Biconomy SessionKey登録APIを実行
+      const response = await client.api.users["session-key"].$post({
         header: {
           Authorization: `Bearer ${authToken}`,
         },
@@ -39,23 +42,22 @@ export const useCreateSmartAccount = () => {
       }
 
       // 5. エラーレスポンスの場合は例外を投げる
-      if ("error" in data && !("id" in data)) {
+      if ("error" in data && !("success" in data)) {
         const errorData = data as { error?: unknown };
         const errorMessage =
           typeof errorData.error === "string"
             ? errorData.error
-            : "Failed to create smart account";
+            : "Failed to register Biconomy session key";
         throw new Error(errorMessage);
       }
 
       // 6. 成功レスポンスを返す
       if (
-        "id" in data &&
-        "privyUserId" in data &&
-        "walletAddress" in data &&
-        "smartAccountAddress" in data
+        "success" in data &&
+        "sessionKeyAddress" in data &&
+        typeof data.success === "boolean"
       ) {
-        return data as CreateSmartAccountResponse;
+        return data as RegisterBiconomySessionKeyResponse;
       }
 
       throw new Error("Invalid response format");
@@ -68,11 +70,12 @@ export const useCreateSmartAccount = () => {
   });
 
   return {
-    createSmartAccount: mutation.mutate,
-    createSmartAccountAsync: mutation.mutateAsync,
+    registerSessionKey: mutation.mutate,
+    registerSessionKeyAsync: mutation.mutateAsync,
     isLoading: mutation.isPending,
     error: mutation.error,
     data: mutation.data,
     reset: mutation.reset,
   };
 };
+

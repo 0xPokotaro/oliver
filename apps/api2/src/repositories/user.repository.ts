@@ -16,4 +16,17 @@ export class UserRepository {
       },
     });
   }
+
+  async updateSmartAccountAddress(
+    id: string,
+    smartAccountAddress: string,
+  ): Promise<User> {
+    return await this.prisma.user.update({
+      where: { id },
+      data: {
+        smartAccountAddress,
+        updatedAt: new Date(),
+      },
+    });
+  }
 }

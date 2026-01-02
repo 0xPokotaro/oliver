@@ -26,6 +26,8 @@ const nextConfig: NextConfig = {
     resolveAlias: {
       "@oliver/api": "../api/src/index.ts",
       "@oliver/api/*": "../api/src/*",
+      "@oliver/api2": "../api2/src/index.ts",
+      "@oliver/api2/*": "../api2/src/*",
     },
     resolveExtensions: [".js", ".jsx", ".ts", ".tsx"],
   },

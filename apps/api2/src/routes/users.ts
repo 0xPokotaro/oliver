@@ -62,6 +62,62 @@ const app = new Hono<Env>()
         500,
       );
     }
+  })
+  .post("/smart-account", async (c) => {
+    try {
+      const user = c.get("user");
+      if (!user || !user.id) {
+        return c.json(
+          {
+            error: "Unauthorized",
+            code: "UNAUTHORIZED",
+            message: "User not found in context",
+          },
+          401,
+        );
+      }
+
+      const result = await userService.createSmartAccount(user.id);
+      return c.json(result);
+    } catch (error) {
+      console.error("Error in create smart account route:", error);
+      return c.json(
+        {
+          error: "Internal server error",
+          code: "INTERNAL_ERROR",
+          message: error instanceof Error ? error.message : String(error),
+        },
+        500,
+      );
+    }
+  })
+  .post("/session-key", async (c) => {
+    try {
+      const user = c.get("user");
+      if (!user || !user.id) {
+        return c.json(
+          {
+            error: "Unauthorized",
+            code: "UNAUTHORIZED",
+            message: "User not found in context",
+          },
+          401,
+        );
+      }
+
+      const result = await userService.registerBiconomySessionKey(user.id);
+      return c.json(result);
+    } catch (error) {
+      console.error("Error in register Biconomy session key route:", error);
+      return c.json(
+        {
+          error: "Internal server error",
+          code: "INTERNAL_ERROR",
+          message: error instanceof Error ? error.message : String(error),
+        },
+        500,
+      );
+    }
   });
 
 export default app;

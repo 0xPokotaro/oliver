@@ -9,7 +9,11 @@ import product from "./routes/product";
 import order from "./routes/order";
 import { paymentMiddleware } from "./middlewares/payment";
 import { requireAuthMiddleware } from "./middlewares/auth";
+import { generateSecretKey } from "./lib/encryption";
 import type { Env } from "./types";
+
+// 暗号化機能を初期化
+generateSecretKey();
 
 // Create factory
 const f = createFactory<Env>();
