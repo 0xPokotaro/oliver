@@ -84,7 +84,14 @@ export const getAllUsers = async () => {
     },
   });
 
-  return users.map((user) => ({
+  return users.map((user: {
+    id: string;
+    privyUserId: string;
+    wallet: { address: string | null } | null;
+    smartAccountAddress: string | null;
+    createdAt: Date;
+    updatedAt: Date;
+  }) => ({
     id: user.id,
     privyUserId: user.privyUserId,
     walletAddress: user.wallet?.address ?? "",
