@@ -27,7 +27,7 @@ function getPaymentManager(): PaymentManager {
   return paymentManager;
 }
 
-export const paymentMiddlewareHandler: MiddlewareHandler = async (c, next) => {
+export const paymentMiddleware: MiddlewareHandler = async (c, next) => {
   try {
     const body = await c.req.json();
     const validatedBody = OrderConfirmRequest.safeParse(body);
@@ -56,3 +56,4 @@ export const paymentMiddlewareHandler: MiddlewareHandler = async (c, next) => {
     return c.json({ error: "Internal server error" }, 500);
   }
 };
+

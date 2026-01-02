@@ -17,6 +17,7 @@
     "@oliver/database": "workspace:*",
     "@oliver/shared": "workspace:*",
     "@prisma/adapter-pg": "^7.2.0",
+    "@privy-io/node": "^0.6.2",
     "@x402/core": "^2.1.0",
     "dotenv": "^17.2.3",
     "hono": "^4.11.3",

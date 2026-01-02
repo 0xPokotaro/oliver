@@ -13,8 +13,9 @@ import {
 } from '@/components/animate-ui/components/radix/dropdown-menu';
 import { ChevronsUpDown, LogOut } from 'lucide-react';
 import { formatWalletAddress } from "@/lib/format";
-import { usePrivy, useLogin } from "@privy-io/react-auth"
+import { usePrivy } from "@privy-io/react-auth"
 import { Button } from '@/components/ui/button';
+import { useLogin } from '@/hooks/use-login';
 
 export const UserMenu = () => {
   const { ready, user, logout, authenticated } = usePrivy();

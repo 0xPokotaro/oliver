@@ -71,6 +71,8 @@ jobs:
           MERCHANT_ADDRESS: ${{ secrets.MERCHANT_ADDRESS }}
           FACILITATOR_BASE_URL: ${{ secrets.FACILITATOR_BASE_URL }}
           DEFAULT_CURRENCY: ${{ secrets.DEFAULT_CURRENCY }}
+          PRIVY_APP_ID: ${{ secrets.PRIVY_APP_ID }}
+          PRIVY_APP_SECRET: ${{ secrets.PRIVY_APP_SECRET }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
           IMAGE_TAG_SHORT=${IMAGE_TAG:0:7}
@@ -90,6 +92,8 @@ jobs:
             MERCHANT_ADDRESS   = "$MERCHANT_ADDRESS"
             FACILITATOR_BASE_URL = "$FACILITATOR_BASE_URL"
             DEFAULT_CURRENCY   = "$DEFAULT_CURRENCY"
+            PRIVY_APP_ID       = "$PRIVY_APP_ID"
+            PRIVY_APP_SECRET   = "$PRIVY_APP_SECRET"
           }
           EOF
 

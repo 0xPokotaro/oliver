@@ -37,8 +37,6 @@ export const requireAuthMiddleware: MiddlewareHandler<Env> = async (c, next) => 
     let user = await userRepository.findByPrivyUserId(privyUserId)
 
     if (user === null) {
-      // 新規ユーザーの場合、エラーを返す
-      // フロントエンドはログインエンドポイントを呼び出す必要がある
       throw new Error('USER_NOT_FOUND: User not found. Please login first.')
     }
 

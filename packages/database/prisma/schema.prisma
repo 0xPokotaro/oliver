@@ -14,19 +14,32 @@ datasource db {
 }
 
 model User {
-  id                String   @id @default(uuid())
-  privyUserId       String   @unique
-  walletAddress     String   @unique
-  smartAccountAddress String? @unique
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id                  String   @id @default(uuid())
+  privyUserId         String   @unique
+  smartAccountAddress String?  @unique
+  walletId            String?
+  wallet              Wallet?  @relation(fields: [walletId], references: [id], onDelete: SetNull)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
-  sessionKeys       SessionKey[]
-  payments          PaymentHistory[]
+  sessionKeys SessionKey[]
+  payments    PaymentHistory[]
 
-  @@index([walletAddress])
   @@index([smartAccountAddress])
+  @@index([walletId])
   @@map("users")
+}
+
+model Wallet {
+  id        String   @id @default(uuid())
+  address   String   @unique
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+
+  users User[]
+
+  @@index([address])
+  @@map("wallets")
 }
 
 model Merchant {
@@ -88,19 +101,19 @@ model PaymentHistory {
 }
 
 model SessionKey {
-  id                String   @id @default(uuid())
-  userId            String
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  // 暗号化された秘密鍵情報
-  encryptedPrivateKeyIv      String   // 暗号化のIV
-  encryptedPrivateKeyContent String   // 暗号化された秘密鍵
-  
-  // セッションキーのアドレス（公開情報）
-  sessionKeyAddress String   @unique
+  id     String @id @default(uuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
+  // 暗号化された秘密鍵情報
+  encryptedPrivateKeyIv      String // 暗号化のIV
+  encryptedPrivateKeyContent String // 暗号化された秘密鍵
+
+  // セッションキーのアドレス（公開情報）
+  sessionKeyAddress String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([userId])
   @@index([sessionKeyAddress])

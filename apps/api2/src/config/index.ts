@@ -11,6 +11,11 @@ export interface DatabaseConfig {
   isSupabase: boolean;
 }
 
+export interface PrivyConfig {
+  appId: string;
+  appSecret: string;
+}
+
 export function getDatabaseConfig(): DatabaseConfig {
   let connectionString =
     process.env.DATABASE_URL ||
@@ -55,5 +60,22 @@ export function getAppConfig(): AppConfig {
     merchantAddress,
     facilitatorBaseURL,
     defaultCurrency,
+  };
+}
+
+export function getPrivyConfig(): PrivyConfig {
+  const appId = process.env.PRIVY_APP_ID;
+  if (!appId) {
+    throw new Error("PRIVY_APP_ID environment variable is not set");
+  }
+
+  const appSecret = process.env.PRIVY_APP_SECRET;
+  if (!appSecret) {
+    throw new Error("PRIVY_APP_SECRET environment variable is not set");
+  }
+
+  return {
+    appId,
+    appSecret,
   };
 }

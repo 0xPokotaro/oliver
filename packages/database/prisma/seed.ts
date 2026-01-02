@@ -17,6 +17,7 @@ async function main() {
   await prisma.product.deleteMany();
   await prisma.merchant.deleteMany();
   await prisma.user.deleteMany();
+  await prisma.wallet.deleteMany();
 
   // 加盟店データを作成
   console.log("📦 Creating merchants...");
@@ -32,12 +33,34 @@ async function main() {
 
   console.log(`✅ Created ${merchants.length} merchants`);
 
+  // ウォレットデータを作成
+  console.log("💼 Creating wallets...");
+  const wallet1 = await prisma.wallet.create({
+    data: {
+      address: "0x1234567890123456789012345678901234567890",
+    },
+  });
+
+  const wallet2 = await prisma.wallet.create({
+    data: {
+      address: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+    },
+  });
+
+  const wallet3 = await prisma.wallet.create({
+    data: {
+      address: "0x9876543210987654321098765432109876543210",
+    },
+  });
+
+  console.log(`✅ Created 3 wallets`);
+
   // ユーザーデータを作成
   console.log("👤 Creating users...");
   const user1 = await prisma.user.create({
     data: {
       privyUserId: "privy_user_001",
-      walletAddress: "0x1234567890123456789012345678901234567890",
+      walletId: wallet1.id,
       smartAccountAddress: "0x1111111111111111111111111111111111111111",
     },
   });
@@ -45,7 +68,7 @@ async function main() {
   const user2 = await prisma.user.create({
     data: {
       privyUserId: "privy_user_002",
-      walletAddress: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+      walletId: wallet2.id,
       smartAccountAddress: "0x2222222222222222222222222222222222222222",
     },
   });
@@ -53,7 +76,7 @@ async function main() {
   const user3 = await prisma.user.create({
     data: {
       privyUserId: "privy_user_003",
-      walletAddress: "0x9876543210987654321098765432109876543210",
+      walletId: wallet3.id,
       smartAccountAddress: "0x3333333333333333333333333333333333333333",
     },
   });

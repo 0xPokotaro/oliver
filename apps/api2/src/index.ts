@@ -1,38 +1,35 @@
+import 'dotenv/config';
 import { cors } from "hono/cors";
 import { createFactory } from "hono/factory";
 import { logger } from "hono/logger";
+import auth from "./routes/auth";
 import users from "./routes/users";
 import payment from "./routes/payment";
 import product from "./routes/product";
 import order from "./routes/order";
-import { paymentMiddlewareHandler } from "./middlewares/paymentMiddleware";
+import { paymentMiddleware } from "./middlewares/payment";
+import { requireAuthMiddleware, type AuthUser } from "./middlewares/auth";
 
 type Env = {
   Variables: {
-    myVar: string;
+    user: AuthUser;
   };
 };
 
 // Create factory
 const f = createFactory<Env>();
-const paymentMiddleware = f.createMiddleware(paymentMiddlewareHandler);
+const requireAuth = f.createMiddleware(requireAuthMiddleware);
+const paymentMw = f.createMiddleware(paymentMiddleware);
 
 // Create app
 const app = f
   .createApp()
   .basePath("/api")
-  .get("/health", (c) => {
-    // データベース接続をテストしない（起動プローブ用）
-    return c.json({
-      status: "ok",
-      timestamp: new Date().toISOString(),
-      uptime: process.uptime(),
-      port: Number(process.env.PORT) || 3001,
-    });
-  })
   .use(logger())
   .use("*", cors())
-  .use("/order/confirm", paymentMiddleware)
+  .use("/order/confirm", paymentMw)
+  .use("*", requireAuth)
+  .route("/auth", auth)
   .route("/users", users)
   .route("/payments", payment)
   .route("/orders", order)
@@ -43,20 +40,6 @@ import { serve } from "@hono/node-server";
 
 const port = Number(process.env.PORT) || 3001;
 
-// 詳細な起動ログ
-console.log("=".repeat(50));
-console.log("Application Startup Log");
-console.log("=".repeat(50));
-console.log(`Starting server on port ${port}...`);
-console.log(`Environment variables:`, {
-  PORT: process.env.PORT,
-  NODE_ENV: process.env.NODE_ENV,
-  DATABASE_URL_SET: !!process.env.DATABASE_URL,
-  DATABASE_URL_LENGTH: process.env.DATABASE_URL?.length || 0,
-});
-console.log(`DATABASE_URL is ${process.env.DATABASE_URL ? "set" : "not set"}`);
-console.log("Initializing application...");
-
 try {
   serve(
     {
@@ -65,50 +48,21 @@ try {
       hostname: "0.0.0.0",
     },
     (info) => {
-      console.log("=".repeat(50));
-      console.log("Server Started Successfully");
-      console.log("=".repeat(50));
       console.log(`Server is running on http://${info.address}:${info.port}`);
-      console.log(
-        `Health check endpoint: http://${info.address}:${info.port}/api/health`,
-      );
-      console.log(`Uptime: ${process.uptime()} seconds`);
-      console.log("=".repeat(50));
     },
   );
 } catch (error) {
-  console.error("=".repeat(50));
-  console.error("Failed to start server");
-  console.error("=".repeat(50));
-  console.error("Error details:", error);
-  if (error instanceof Error) {
-    console.error("Error message:", error.message);
-    console.error("Error stack:", error.stack);
-  }
+  console.error("Failed to start server:", error);
   process.exit(1);
 }
 
-// 未処理エラーのハンドリング
 process.on("uncaughtException", (error) => {
-  console.error("=".repeat(50));
-  console.error("Uncaught Exception");
-  console.error("=".repeat(50));
-  console.error("Error:", error);
-  console.error("Error message:", error.message);
-  console.error("Error stack:", error.stack);
+  console.error("Uncaught Exception:", error);
   process.exit(1);
 });
 
-process.on("unhandledRejection", (reason, promise) => {
-  console.error("=".repeat(50));
-  console.error("Unhandled Rejection");
-  console.error("=".repeat(50));
-  console.error("Promise:", promise);
-  console.error("Reason:", reason);
-  if (reason instanceof Error) {
-    console.error("Error message:", reason.message);
-    console.error("Error stack:", reason.stack);
-  }
+process.on("unhandledRejection", (reason) => {
+  console.error("Unhandled Rejection:", reason);
   process.exit(1);
 });
 
