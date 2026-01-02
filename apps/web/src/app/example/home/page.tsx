@@ -4,11 +4,11 @@ import { useEffect } from "react";
 import { useAccount } from "@/hooks/use-account";
 
 const HomePage = () => {
-  const { user } = useAccount();
+  const { data } = useAccount();
 
   useEffect(() => {
-    console.log("user: ", user);
-  }, [user]);
+    console.log("data: ", data);
+  }, [data]);
 
   return <div>HomePage</div>;
 };

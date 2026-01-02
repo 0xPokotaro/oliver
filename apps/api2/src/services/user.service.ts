@@ -1,4 +1,4 @@
-import { getPrismaClient } from "@oliver/api/lib/prisma";
+import { getPrismaClient } from "../lib/prisma";
 
 export const getAllUsers = async () => {
   const prisma = getPrismaClient();
@@ -6,12 +6,55 @@ export const getAllUsers = async () => {
     select: {
       id: true,
       privyUserId: true,
-      walletAddress: true,
+      wallet: {
+        select: {
+          address: true,
+        },
+      },
       smartAccountAddress: true,
       createdAt: true,
       updatedAt: true,
     },
   });
 
-  return users;
+  return users.map((user) => ({
+    id: user.id,
+    privyUserId: user.privyUserId,
+    walletAddress: user.wallet?.address ?? "",
+    smartAccountAddress: user.smartAccountAddress,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  }));
+};
+
+export const getUserProfile = async (userId: string) => {
+  const prisma = getPrismaClient();
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      id: true,
+      privyUserId: true,
+      wallet: {
+        select: {
+          address: true,
+        },
+      },
+      smartAccountAddress: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  if (!user) {
+    return null;
+  }
+
+  return {
+    id: user.id,
+    privyUserId: user.privyUserId,
+    walletAddress: user.wallet?.address ?? "",
+    smartAccountAddress: user.smartAccountAddress,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+  };
 };

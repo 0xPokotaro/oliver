@@ -13,3 +13,12 @@ export const userListResponse = z.object({
   createdAt: z.date(),
   updatedAt: z.date(),
 })
+
+export const userProfileResponse = z.object({
+  id: z.string(),
+  privyUserId: z.string(),
+  walletAddress: z.string(),
+  smartAccountAddress: z.string().nullable(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+})
