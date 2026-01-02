@@ -12,7 +12,8 @@
     "db:reset": "pnpm --filter @oliver/database prisma:reset",
     "db:seed": "pnpm --filter @oliver/database prisma:seed",
     "web:dev": "pnpm --filter web dev",
-    "all:dev": "concurrently \"pnpm web:dev\" \"pnpm docs:start\"",
+    "api2:dev": "pnpm --filter api2 dev",
+    "all:dev": "concurrently \"pnpm web:dev\" \"pnpm docs:start\" \"pnpm api2:dev\"",
     "docs:start": "pnpm --filter docs start",
     "evm:node": "pnpm --filter evm node",
     "evm:deploy:erc20": "pnpm --filter evm deploy:erc20"

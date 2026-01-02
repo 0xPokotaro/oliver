@@ -11,6 +11,13 @@ DATABASE_URL="postgresql://user:password@localhost:5432/oliver?schema=public"
 JWT_SECRET="your-jwt-secret-key"
 PRIVY_APP_ID="your-privy-app-id"
 PRIVY_APP_SECRET="your-privy-app-secret"
+
+# API2用の環境変数
+OPENAI_API_KEY="your_openai_api_key_here"
+MERCHANT_ADDRESS="0x0000000000000000000000000000000000000000"
+FACILITATOR_BASE_URL="http://localhost:3000"
+DEFAULT_CURRENCY="0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E"  # オプション: デフォルトはAvalanche C-Chain USDC
+PORT=3001  # オプション: デフォルトは3001
 ```
 
 データベースのセットアップ：
