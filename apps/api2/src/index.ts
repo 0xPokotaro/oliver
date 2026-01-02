@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import "dotenv/config";
 import { cors } from "hono/cors";
 import { createFactory } from "hono/factory";
 import { logger } from "hono/logger";
@@ -8,13 +8,8 @@ import payment from "./routes/payment";
 import product from "./routes/product";
 import order from "./routes/order";
 import { paymentMiddleware } from "./middlewares/payment";
-import { requireAuthMiddleware, type AuthUser } from "./middlewares/auth";
-
-type Env = {
-  Variables: {
-    user: AuthUser;
-  };
-};
+import { requireAuthMiddleware } from "./middlewares/auth";
+import type { Env } from "./types";
 
 // Create factory
 const f = createFactory<Env>();

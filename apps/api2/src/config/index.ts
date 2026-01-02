@@ -21,7 +21,10 @@ export function getDatabaseConfig(): DatabaseConfig {
     process.env.DATABASE_URL ||
     "postgresql://postgres:postgres@127.0.0.1:54322/postgres";
 
-  connectionString = connectionString.replace(/^postgres:\/\//, "postgresql://");
+  connectionString = connectionString.replace(
+    /^postgres:\/\//,
+    "postgresql://",
+  );
   const isSupabase = connectionString.includes("supabase.com");
   const isProduction =
     process.env.PORT !== undefined ||

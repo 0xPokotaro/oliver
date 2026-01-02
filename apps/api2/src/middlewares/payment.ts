@@ -56,4 +56,3 @@ export const paymentMiddleware: MiddlewareHandler = async (c, next) => {
     return c.json({ error: "Internal server error" }, 500);
   }
 };
-

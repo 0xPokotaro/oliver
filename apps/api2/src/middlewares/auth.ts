@@ -1,47 +1,37 @@
 import type { MiddlewareHandler } from "hono";
-import { PrivyClient } from '@privy-io/node';
-import { getPrismaClient } from '../lib/prisma';
-import { getPrivyConfig } from '../config';
-
-const privyConfig = getPrivyConfig();
-const privy = new PrivyClient({
-  appId: privyConfig.appId,
-  appSecret: privyConfig.appSecret,
-});
-
-export type AuthUser = {
-  id: string;
-};
+import { createRepositories } from "../repositories";
+import { getPrivyClient } from "../lib/privy";
+import type { AuthUser } from "../types";
 
 export const requireAuthMiddleware: MiddlewareHandler = async (c, next) => {
   try {
-    const authHeader = c.req.header('Authorization')
+    const authHeader = c.req.header("Authorization");
 
     if (!authHeader) {
       return c.json({ error: "Unauthorized" }, 401);
     }
 
-    const authToken = authHeader.startsWith('Bearer ')
+    const authToken = authHeader.startsWith("Bearer ")
       ? authHeader.substring(7)
-      : authHeader
+      : authHeader;
 
     // verify privy token
-    const verifiedClaims = await privy.utils().auth().verifyAuthToken(authToken);
-    console.log("verifiedClaims: ", verifiedClaims.user_id);
+    const verifiedClaims = await getPrivyClient()
+      .utils()
+      .auth()
+      .verifyAuthToken(authToken);
     const userId = verifiedClaims.user_id;
 
     // get or create user
-    const prisma = getPrismaClient();
-    const user = await prisma.user.upsert({
-      where: { privyUserId: userId },
-      update: {},
-      create: {
-        privyUserId: userId,
-      },
-    });
+    const repositories = createRepositories();
+    let user = await repositories.user.findByPrivyUserId(userId);
+
+    if (!user) {
+      user = await repositories.user.create(userId);
+    }
 
     // set user to context
-    c.set('user', {
+    c.set("user", {
       id: user.id,
     } as AuthUser);
 
@@ -50,5 +40,4 @@ export const requireAuthMiddleware: MiddlewareHandler = async (c, next) => {
     console.error("error: ", error);
     return c.json({ error: "Unauthorized" }, 401);
   }
-}
-
+};
