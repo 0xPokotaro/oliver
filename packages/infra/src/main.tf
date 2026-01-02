@@ -19,11 +19,8 @@ resource "google_cloud_run_service" "service" {
           container_port = 3001
         }
 
-        # PORT環境変数を明示的に設定（Cloud Runが自動設定するが、明示的に指定）
-        env {
-          name  = "PORT"
-          value = "3001"
-        }
+        # PORT環境変数はCloud Runが自動的に設定するため、手動設定は不要
+        # container_portで指定したポート番号が自動的にPORT環境変数に設定される
 
         dynamic "env" {
           for_each = var.environment
