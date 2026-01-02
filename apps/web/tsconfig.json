@@ -33,5 +33,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules", "../api", "../api2"]
+  "exclude": ["node_modules"]
 }
