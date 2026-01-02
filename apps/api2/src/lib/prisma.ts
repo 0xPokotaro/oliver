@@ -10,6 +10,20 @@ let prismaInstance: PrismaClient | null = null;
  */
 export function getPrismaClient(): PrismaClient {
   if (!prismaInstance) {
+    // 環境変数のデバッグログ
+    console.log("=".repeat(50));
+    console.log("Prisma Client Initialization - Environment Variables");
+    console.log("=".repeat(50));
+    console.log("PORT:", process.env.PORT);
+    console.log("NODE_ENV:", process.env.NODE_ENV);
+    console.log("DATABASE_URL is set:", !!process.env.DATABASE_URL);
+    console.log("DATABASE_URL length:", process.env.DATABASE_URL?.length || 0);
+    // セキュリティのため、DATABASE_URLの最初の部分のみ表示（postgresql://...@host:port/dbname）
+    if (process.env.DATABASE_URL) {
+      const url = new URL(process.env.DATABASE_URL);
+      console.log("DATABASE_URL preview:", `${url.protocol}//${url.hostname}:${url.port}${url.pathname}`);
+    }
+
     // 環境変数DATABASE_URLを明示的に読み込む
     const connectionString =
       process.env.DATABASE_URL ||
@@ -19,6 +33,10 @@ export function getPrismaClient(): PrismaClient {
     // または、NODE_ENVがproductionの場合もSSLを有効化
     const isProduction =
       process.env.PORT !== undefined || process.env.NODE_ENV === "production";
+
+    console.log("isProduction:", isProduction);
+    console.log("SSL will be:", isProduction ? "enabled (rejectUnauthorized: false)" : "disabled");
+    console.log("=".repeat(50));
 
     // SSL設定を追加（本番環境では必須）
     // PrismaPgはPoolインスタンスまたはconnectionStringオブジェクトを受け取れる
