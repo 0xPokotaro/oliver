@@ -20,25 +20,17 @@ async function main() {
 
   // 加盟店データを作成
   console.log("📦 Creating merchants...");
-  const merchant1 = await prisma.merchant.create({
-    data: {
-      name: "ペットフード専門店 にゃんこ堂",
-    },
-  });
+  const merchantCount = 10;
+  const merchants = await Promise.all(
+    Array.from({ length: merchantCount }, (_, i) =>
+      prisma.merchant.create({
+        data: { name: `Shop ${i + 1}` },
+      })
+    )
+  );
+  const [merchant1, merchant2, merchant3] = merchants;
 
-  const merchant2 = await prisma.merchant.create({
-    data: {
-      name: "プレミアムペット用品 わんわんストア",
-    },
-  });
-
-  const merchant3 = await prisma.merchant.create({
-    data: {
-      name: "日用品マート くらしの便利屋",
-    },
-  });
-
-  console.log(`✅ Created 3 merchants`);
+  console.log(`✅ Created ${merchants.length} merchants`);
 
   // ユーザーデータを作成
   console.log("👤 Creating users...");
@@ -70,7 +62,6 @@ async function main() {
 
   // 商品データを作成
   console.log("🛍️ Creating products...");
-  const defaultCurrency = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913"; // USDC on Base
   
   const products = await prisma.product.createMany({
     data: [
@@ -79,7 +70,6 @@ async function main() {
         description:
           "High-quality chicken-based dry food for adult cats with balanced nutrition. Contains natural antioxidants and supports healthy coat and skin.",
         price: BigInt(2980000000), // 2980 USD (6桁小数点想定: 2980 * 1000000)
-        currency: defaultCurrency,
         stockStatus: "in_stock",
         imageUrl: "https://assets.oliver.dev/products/nutro-natural-choice-chicken.png",
         category: "cat_food",
@@ -103,7 +93,6 @@ async function main() {
         description:
           "Premium dry food made primarily with salmon. Rich in omega-3 fatty acids, supports joint health and immune system.",
         price: BigInt(3480000000), // 3480 USD
-        currency: defaultCurrency,
         stockStatus: "in_stock",
         imageUrl: "https://assets.oliver.dev/products/nutro-ultra-salmon.png",
         category: "cat_food",
@@ -125,7 +114,6 @@ async function main() {
         description:
           "Balanced nutrition for growing kittens. Rich in DHA, supports brain and eye development.",
         price: BigInt(3280000000), // 3280 USD
-        currency: defaultCurrency,
         stockStatus: "in_stock",
         imageUrl: "https://assets.oliver.dev/products/nutro-kitten-chicken-rice.png",
         category: "cat_food",
@@ -147,7 +135,6 @@ async function main() {
         description:
           "Dry food specially developed for indoor cats. High digestibility and reduces stool odor.",
         price: BigInt(3200000000), // 3200 USD
-        currency: defaultCurrency,
         stockStatus: "in_stock",
         imageUrl: "https://assets.oliver.dev/products/rc-2kg.png",
         category: "cat_food",
@@ -169,7 +156,6 @@ async function main() {
         description:
           "Premium dry food recommended by veterinarians. Supports healthy weight maintenance and digestive health.",
         price: BigInt(3500000000), // 3500 USD
-        currency: defaultCurrency,
         stockStatus: "low_stock",
         imageUrl: "https://assets.oliver.dev/products/hills-science-diet-chicken.png",
         category: "cat_food",
@@ -191,7 +177,6 @@ async function main() {
         description:
           "Delicious mineral water rich in natural minerals. Set of 6 bottles.",
         price: BigInt(800000000), // 800 USD
-        currency: defaultCurrency,
         stockStatus: "in_stock",
         imageUrl: "https://assets.oliver.dev/products/water-2l-box.png",
         category: "beverage",
@@ -211,7 +196,6 @@ async function main() {
         description:
           "Soft and durable toilet paper. 12 rolls.",
         price: BigInt(1200000000), // 1200 USD
-        currency: defaultCurrency,
         stockStatus: "in_stock",
         imageUrl: "https://assets.oliver.dev/products/toilet-paper-12roll.png",
         category: "daily_goods",

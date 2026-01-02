@@ -14,7 +14,6 @@ export interface Product {
 	sku: string;
 	name: string;
 	price: string;
-	currency: string;
 	stockStatus: StockStatus;
 	imageUrl: string;
 }

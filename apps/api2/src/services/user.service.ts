@@ -1,7 +1,7 @@
-import { getPrismaClient } from '@oliver/api/lib/prisma'
+import { getPrismaClient } from "@oliver/api/lib/prisma";
 
 export const getAllUsers = async () => {
-  const prisma = getPrismaClient()
+  const prisma = getPrismaClient();
   const users = await prisma.user.findMany({
     select: {
       id: true,
@@ -11,7 +11,7 @@ export const getAllUsers = async () => {
       createdAt: true,
       updatedAt: true,
     },
-  })
+  });
 
-  return users
-}
+  return users;
+};

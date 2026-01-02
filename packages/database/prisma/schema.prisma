@@ -43,8 +43,7 @@ model Product {
   id          String           @id @default(uuid())
   name        String
   description String
-  price       BigInt // wei単位の価格（6桁小数点想定）
-  currency    String           @default("0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913") // トークンコントラクトアドレス
+  price       BigInt // USDC単位の価格（wei単位、6桁小数点想定）
   stockStatus String           @default("in_stock") // 在庫ステータス（"in_stock" | "low_stock" | "out_of_stock"）
   imageUrl    String? // 商品画像URL
   category    String? // カテゴリ（例: "cat_food", "dog_food"など）
