@@ -10,6 +10,9 @@ COPY apps/api2/package.json ./apps/api2/
 COPY packages/shared/package.json ./packages/shared/
 COPY packages/database/package.json ./packages/database/
 
+# Prismaファイルを先にコピー（postinstallスクリプトでprisma generateが実行されるため）
+COPY packages/database/prisma ./packages/database/prisma
+
 # Install pnpm and dependencies
 # --filter @oliver/api2... で依存関係も含めてインストール
 RUN npm install -g pnpm && \
@@ -22,7 +25,6 @@ COPY packages/shared/src ./packages/shared/src
 COPY packages/shared/tsconfig.json ./packages/shared/
 COPY packages/database/src ./packages/database/src
 COPY packages/database/tsconfig.json ./packages/database/
-COPY packages/database/prisma ./packages/database/prisma
 
 WORKDIR /app/apps/api2
 
