@@ -1,8 +1,26 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { usePrivy } from "@privy-io/react-auth";
+import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { client } from "@/lib/api/client";
+import { createMultichainOrchestrator } from "@/lib/smart-account/orchestrator";
+// Biconomy
+import {
+  toMultichainNexusAccount,
+  getMEEVersion,
+  toSmartSessionsModule,
+  MEEVersion,
+  createMeeClient,
+  meeSessionActions,
+} from "@biconomy/abstractjs";
+import { http, parseUnits, zeroAddress } from "viem";
+import { baseSepolia } from "viem/chains";
+import { privateKeyToAccount } from "viem/accounts";
+import { toast } from "sonner";
+
+const PRIVATE_KEY = process.env.NEXT_PUBLIC_PRIVY_PRIVATE_KEY as `0x${string}`;
+const BASE_SEPOLIA_USDC_ADDRESS = '0x036CbD53842c5426634e7929541eC2318f3dCF7e';
+const BASE_SEPOLIA_JPYC_ADDRESS = '0x47f47FfabA94759Ef08824B74beeE4dF34DF2415';
 
 interface RegisterBiconomySessionKeyResponse {
   success: boolean;
@@ -13,59 +31,73 @@ interface RegisterBiconomySessionKeyResponse {
 export const useRegisterSessionKey = () => {
   const queryClient = useQueryClient();
   const { getAccessToken } = usePrivy();
+  const { wallets } = useWallets();
 
-  const mutation = useMutation<
-    RegisterBiconomySessionKeyResponse,
-    Error,
-    void
-  >({
+  const mutation = useMutation<any, Error, void>({
     mutationFn: async () => {
-      // 1. authTokenを取得
-      const authToken = await getAccessToken();
-      if (!authToken) {
-        throw new Error("No authentication token available");
+      try {
+        console.log("[START] registerSessionKey");
+
+        const wallet = wallets.find((wallet) => wallet.address);
+        console.log("desiredWallet: ", wallet);
+
+        if (!wallet) {
+          throw new Error("Wallet not found");
+        }
+
+        const sessionSigner = privateKeyToAccount(PRIVATE_KEY);
+
+        const ssValidator = toSmartSessionsModule({ signer: sessionSigner });
+
+        const orchestrator = await toMultichainNexusAccount({
+          signer: await wallet.getEthereumProvider(),
+          chainConfigurations: [
+            {
+              chain: baseSepolia,
+              transport: http(),
+              version: getMEEVersion(MEEVersion.V2_2_1),
+            },
+          ],
+        });
+
+        const meeClient = await createMeeClient({ account: orchestrator });
+        const sessionsMeeClient = meeClient.extend(meeSessionActions);
+
+        const payload = await sessionsMeeClient.prepareForPermissions({
+          smartSessionsValidator: ssValidator,
+          feeToken: {
+            address: BASE_SEPOLIA_USDC_ADDRESS,
+            chainId: baseSepolia.id
+          },
+          trigger: {
+            tokenAddress: BASE_SEPOLIA_USDC_ADDRESS,
+            chainId: baseSepolia.id,
+            amount: parseUnits('50', 6)
+          }
+        })
+        console.log("payload: ", payload);
+
+        if (payload) {
+          console.log("payload.hash: ", payload);
+          const receipt = await meeClient.waitForSupertransactionReceipt({ hash: payload.hash })
+          console.log("receipt: ", receipt);
+        }
+
+        return true;
+      } catch (error) {
+        console.error("Error registering session key: ", error);
+        throw error;
       }
-
-      // 2. Biconomy SessionKey登録APIを実行
-      const response = await client.api.users["session-key"].$post({
-        header: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
-
-      // 3. レスポンスを取得
-      const data = (await response.json()) as unknown;
-
-      // 4. レスポンスの型チェック
-      if (!data || typeof data !== "object") {
-        throw new Error("Invalid response format");
-      }
-
-      // 5. エラーレスポンスの場合は例外を投げる
-      if ("error" in data && !("success" in data)) {
-        const errorData = data as { error?: unknown };
-        const errorMessage =
-          typeof errorData.error === "string"
-            ? errorData.error
-            : "Failed to register Biconomy session key";
-        throw new Error(errorMessage);
-      }
-
-      // 6. 成功レスポンスを返す
-      if (
-        "success" in data &&
-        "sessionKeyAddress" in data &&
-        typeof data.success === "boolean"
-      ) {
-        return data as RegisterBiconomySessionKeyResponse;
-      }
-
-      throw new Error("Invalid response format");
     },
     onSuccess: () => {
-      // 7. 成功時にuser-profileとaccountクエリを無効化して再取得をトリガー
       queryClient.invalidateQueries({ queryKey: ["user-profile"] });
       queryClient.invalidateQueries({ queryKey: ["account"] });
+      toast.success("Session Key registration completed");
+    },
+    onError: (error) => {
+      toast.error("Session Key registration failed", {
+        description: error.message,
+      });
     },
   });
 
@@ -78,4 +110,3 @@ export const useRegisterSessionKey = () => {
     reset: mutation.reset,
   };
 };
-

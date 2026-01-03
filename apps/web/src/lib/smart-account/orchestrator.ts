@@ -11,7 +11,7 @@ import {
   createMeeClient,
   meeSessionActions,
 } from "@biconomy/abstractjs";
-import { avalanche } from "viem/chains";
+import { baseSepolia } from "viem/chains";
 import { http } from "viem";
 import { getMEEVersion, MEEVersion } from "@biconomy/abstractjs";
 
@@ -30,27 +30,20 @@ export function createSmartSessionsValidator(sessionSigner: PrivateKeyAccount) {
  * @param provider - Ethereum Provider（Wallet Client）
  * @param accountAddress - （オプション）既存のアカウントアドレス
  */
-export async function createMultichainOrchestrator(
-  provider: WalletClient | any,
-  accountAddress?: `0x${string}`,
-) {
-  const config: any = {
+export async function createMultichainOrchestrator(wallet: any) {
+  const config = {
     chainConfigurations: [
       {
-        chain: avalanche,
+        chain: baseSepolia,
         transport: http(),
         version: getMEEVersion(MEEVersion.V2_2_1),
       },
     ],
-    signer: provider,
+    signer: wallet.getEthereumProvider(),
   };
 
-  // accountAddressが指定されている場合は追加
-  if (accountAddress) {
-    config.chainConfigurations[0].accountAddress = accountAddress;
-  }
-
-  return toMultichainNexusAccount(config);
+  console.log("config: ", config);
+  return await toMultichainNexusAccount(config);
 }
 
 /**

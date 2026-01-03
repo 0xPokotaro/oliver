@@ -1,5 +1,5 @@
 import { parseUnits, http } from "viem";
-import { avalanche } from "viem/chains";
+import { baseSepolia } from "viem/chains";
 import { TOKEN_ADDRESSES } from "./constants";
 import { getMEEVersion, MEEVersion } from "@biconomy/abstractjs";
 
@@ -8,11 +8,11 @@ export const SMART_ACCOUNT_CONFIG = {
   transport: http(),
   feeToken: {
     address: TOKEN_ADDRESSES.JPYC,
-    chainId: avalanche.id,
+    chainId: baseSepolia.id,
   },
   trigger: {
     tokenAddress: TOKEN_ADDRESSES.JPYC,
-    chainId: avalanche.id,
+    chainId: baseSepolia.id,
     amount: parseUnits("10", 6),
   },
 } as const;

@@ -23,7 +23,7 @@
       "@oliver/api": ["../api2/src/index.ts"],
       "@oliver/api/*": ["../api2/src/*"],
       "@oliver/database": ["../../packages/database"],
-      "@oliver/shared": ["../../packages/shared"],
+      "@oliver/shared": ["../../packages/shared"]
     }
   },
   "include": [

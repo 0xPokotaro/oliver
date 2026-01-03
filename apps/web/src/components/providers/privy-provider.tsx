@@ -1,7 +1,7 @@
 "use client";
 
 import { PrivyProvider as ReactPrivyProvider } from "@privy-io/react-auth";
-import { avalanche } from "viem/chains";
+import { baseSepolia } from "viem/chains";
 
 export const PrivyProvider = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -16,9 +16,9 @@ export const PrivyProvider = ({ children }: { children: React.ReactNode }) => {
           },
         },
         // Supported chains
-        supportedChains: [avalanche],
+        supportedChains: [baseSepolia],
         // Default chain
-        defaultChain: avalanche,
+        defaultChain: baseSepolia,
         // Appearance settings
         appearance: {
           walletChainType: "ethereum-only",

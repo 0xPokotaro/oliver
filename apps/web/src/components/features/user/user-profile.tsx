@@ -12,14 +12,13 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 
 export function UserProfile() {
   const { data } = useAccount();
   const { createSmartAccount, isLoading } = useCreateSmartAccount();
-  const {
-    registerSessionKey,
-    isLoading: isRegisteringSessionKey,
-  } = useRegisterSessionKey();
+  const { registerSessionKey, isLoading: isRegisteringSessionKey } =
+    useRegisterSessionKey();
 
   const handleCreateSmartAccount = () => {
     createSmartAccount();
@@ -81,6 +80,7 @@ export function UserProfile() {
                     size="sm"
                     variant="outline"
                   >
+                    {isRegisteringSessionKey && <Spinner />}
                     {isRegisteringSessionKey
                       ? "登録中..."
                       : "Session Keyを登録"}
@@ -99,4 +99,3 @@ export function UserProfile() {
     </div>
   );
 }
-

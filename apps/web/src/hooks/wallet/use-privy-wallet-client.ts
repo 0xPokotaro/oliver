@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useWallets } from "@privy-io/react-auth";
 import { createWalletClient, custom } from "viem";
-import { avalanche } from "viem/chains";
+import { baseSepolia } from "viem/chains";
 import type { WalletClient } from "viem";
 
 /**
@@ -32,7 +32,7 @@ export const usePrivyWalletClient = () => {
 
         // viem の WalletClient を作成
         const client = createWalletClient({
-          chain: avalanche,
+          chain: baseSepolia,
           transport: custom(provider),
         });
 
