@@ -11,6 +11,11 @@ export const CONTRACT_ADDRESSES = {
   MEE: "0x0000000020fe2F30453074aD916eDeB653eC7E9D",
 } as const;
 
+export const BASE_SEPOLIA_TOKEN_ADDRESSES = {
+  USDC: "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+  JPYC: "0x47f47FfabA94759Ef08824B74beeE4dF34DF2415",
+} as const;
+
 export const APP_DATA = {
   name: "Oliver",
   logo: Store,

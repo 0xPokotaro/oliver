@@ -1,9 +1,7 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { usePrivy, useWallets } from "@privy-io/react-auth";
-import { client } from "@/lib/api/client";
-import { createMultichainOrchestrator } from "@/lib/smart-account/orchestrator";
+import { useWallets } from "@privy-io/react-auth";
 // Biconomy
 import {
   toMultichainNexusAccount,
@@ -13,14 +11,12 @@ import {
   createMeeClient,
   meeSessionActions,
 } from "@biconomy/abstractjs";
-import { http, parseUnits, zeroAddress } from "viem";
+import { http, parseUnits } from "viem";
 import { baseSepolia } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
 import { toast } from "sonner";
-
-const PRIVATE_KEY = process.env.NEXT_PUBLIC_PRIVY_PRIVATE_KEY as `0x${string}`;
-const BASE_SEPOLIA_USDC_ADDRESS = '0x036CbD53842c5426634e7929541eC2318f3dCF7e';
-const BASE_SEPOLIA_JPYC_ADDRESS = '0x47f47FfabA94759Ef08824B74beeE4dF34DF2415';
+import { BASE_SEPOLIA_TOKEN_ADDRESSES } from "@/lib/config";
+import { getSessionSignerPrivateKey } from "@/lib/config";
 
 interface RegisterBiconomySessionKeyResponse {
   success: boolean;
@@ -30,7 +26,6 @@ interface RegisterBiconomySessionKeyResponse {
 
 export const useRegisterSessionKey = () => {
   const queryClient = useQueryClient();
-  const { getAccessToken } = usePrivy();
   const { wallets } = useWallets();
 
   const mutation = useMutation<any, Error, void>({
@@ -45,7 +40,7 @@ export const useRegisterSessionKey = () => {
           throw new Error("Wallet not found");
         }
 
-        const sessionSigner = privateKeyToAccount(PRIVATE_KEY);
+        const sessionSigner = privateKeyToAccount(getSessionSignerPrivateKey());
 
         const ssValidator = toSmartSessionsModule({ signer: sessionSigner });
 
@@ -66,16 +61,15 @@ export const useRegisterSessionKey = () => {
         const payload = await sessionsMeeClient.prepareForPermissions({
           smartSessionsValidator: ssValidator,
           feeToken: {
-            address: BASE_SEPOLIA_USDC_ADDRESS,
+            address: BASE_SEPOLIA_TOKEN_ADDRESSES.USDC,
             chainId: baseSepolia.id
           },
           trigger: {
-            tokenAddress: BASE_SEPOLIA_USDC_ADDRESS,
+            tokenAddress: BASE_SEPOLIA_TOKEN_ADDRESSES.USDC,
             chainId: baseSepolia.id,
             amount: parseUnits('50', 6)
           }
         })
-        console.log("payload: ", payload);
 
         if (payload) {
           console.log("payload.hash: ", payload);
