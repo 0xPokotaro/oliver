@@ -76,7 +76,7 @@ export class PaymentManager implements IPaymentManager {
     );
 
     // 合計金額を計算（priceは文字列型、wei単位）
-    let totalAmount = 0n;
+    let totalAmount = BigInt(0);
 
     for (const { product, quantity } of products) {
       // 価格 × 数量で合計を計算（priceは文字列なのでBigIntに変換）

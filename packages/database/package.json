@@ -8,6 +8,10 @@
     ".": {
       "types": "./src/index.ts",
       "default": "./src/index.ts"
+    },
+    "./generated/client": {
+      "types": "./generated/client/index.d.ts",
+      "default": "./generated/client/index.js"
     }
   },
   "scripts": {

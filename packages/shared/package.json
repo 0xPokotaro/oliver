@@ -4,8 +4,38 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./*": "./src/*"
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./enums": {
+      "types": "./src/enums.ts",
+      "default": "./src/enums.ts"
+    },
+    "./schemas/api": {
+      "types": "./src/schemas/api/index.ts",
+      "default": "./src/schemas/api/index.ts"
+    },
+    "./schemas/a2a": {
+      "types": "./src/schemas/a2a/index.ts",
+      "default": "./src/schemas/a2a/index.ts"
+    },
+    "./schemas/a2a/message.schema": {
+      "types": "./src/schemas/a2a/message.schema.ts",
+      "default": "./src/schemas/a2a/message.schema.ts"
+    },
+    "./schemas/a2a/artifact.schema": {
+      "types": "./src/schemas/a2a/artifact.schema.ts",
+      "default": "./src/schemas/a2a/artifact.schema.ts"
+    },
+    "./schemas/a2a/part.schema": {
+      "types": "./src/schemas/a2a/part.schema.ts",
+      "default": "./src/schemas/a2a/part.schema.ts"
+    },
+    "./utils": {
+      "types": "./src/utils/index.ts",
+      "default": "./src/utils/index.ts"
+    }
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

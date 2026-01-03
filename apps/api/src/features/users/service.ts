@@ -2,6 +2,7 @@ import { UserRepository } from '@oliver/api/domain/repositories/user.repository'
 import { SessionKeyRepository } from '@oliver/api/domain/repositories/session-key.repository'
 import { generateWalletKeyPair } from '@oliver/api/shared/utils/wallet'
 import { encrypt } from '@oliver/api/shared/utils/encryption'
+import { getPrismaClient } from '@oliver/api/infrastructure/dependencies'
 import OpenAI from 'openai'
 
 export interface CreateSmartAccountResponse {
@@ -33,11 +34,21 @@ export const createSmartAccount = async (
   // 4. UserテーブルのsmartAccountAddressを更新
   const user = await userRepository.updateSmartAccountAddress(userId, address)
 
-  // 5. レスポンス形式を返却
+  // 5. Walletを取得
+  let walletAddress: string = ''
+  if (user.walletId) {
+    const prisma = getPrismaClient()
+    const wallet = await prisma.wallet.findUnique({
+      where: { id: user.walletId },
+    })
+    walletAddress = wallet?.address ?? ''
+  }
+
+  // 6. レスポンス形式を返却
   return {
     id: user.id,
     privyUserId: user.privyUserId,
-    walletAddress: user.walletAddress,
+    walletAddress,
     smartAccountAddress: address,
   }
 }

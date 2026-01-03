@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
     "@prisma/client",
     "@prisma/client-runtime-utils",
     "@oliver/database",
+    "@oliver/shared",
+    "@oliver/api",
   ],
   images: {
     domains: ["assets.oliver.dev"],
@@ -24,10 +26,10 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname, "../.."),
     resolveAlias: {
-      "@oliver/api": "../api/src/index.ts",
-      "@oliver/api/*": "../api/src/*",
-      "@oliver/api2": "../api2/src/index.ts",
-      "@oliver/api2/*": "../api2/src/*",
+      "@oliver/api": "../api2/src/index.ts",
+      "@oliver/api/*": "../api2/src/*",
+      "@oliver/database": "../packages/database",
+      "@oliver/shared": "../packages/shared",
     },
     resolveExtensions: [".js", ".jsx", ".ts", ".tsx"],
   },
@@ -38,6 +40,7 @@ const nextConfig: NextConfig = {
         "@prisma/client": "commonjs @prisma/client",
         "@prisma/client-runtime-utils": "commonjs @prisma/client-runtime-utils",
         "@oliver/database": "commonjs @oliver/database",
+        "@oliver/shared": "commonjs @oliver/shared",
       });
     }
     return config;

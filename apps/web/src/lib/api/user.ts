@@ -1,4 +1,4 @@
-import { client } from "@/lib/hono";
+import { client } from "@/lib/api/client";
 import { handleApiError } from "@/lib/errors/api-error-handler";
 
 /**

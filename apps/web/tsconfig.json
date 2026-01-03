@@ -20,9 +20,10 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@oliver/api/*": ["../api/src/*"],
-      "@oliver/api2": ["../api2/src/index.ts"],
-      "@oliver/api2/*": ["../api2/src/*"]
+      "@oliver/api": ["../api2/src/index.ts"],
+      "@oliver/api/*": ["../api2/src/*"],
+      "@oliver/database": ["../../packages/database"],
+      "@oliver/shared": ["../../packages/shared"],
     }
   },
   "include": [

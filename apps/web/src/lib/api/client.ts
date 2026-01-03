@@ -1,5 +1,5 @@
 import { hc } from "hono/client";
-import type { AppType } from "@oliver/api2";
+import type { AppType } from "@oliver/api";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
