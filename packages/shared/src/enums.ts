@@ -62,3 +62,7 @@ export enum Model {
 export enum MineType {
   APPLICATION_JSON = 'application/json',
 }
+
+export enum TransactionType {
+  SESSION_KEY_REGISTER = 'SESSION_KEY_REGISTER',
+}

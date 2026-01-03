@@ -7,6 +7,7 @@ import users from "./routes/users";
 import payment from "./routes/payment";
 import product from "./routes/product";
 import order from "./routes/order";
+import transaction from "./routes/transaction";
 import { paymentMiddleware } from "./middlewares/payment";
 import { requireAuthMiddleware } from "./middlewares/auth";
 import { generateSecretKey } from "./lib/encryption";
@@ -33,8 +34,9 @@ const app = f
   .route("/users", users)
   .route("/payments", payment)
   .route("/orders", order)
+  .route("/transactions", transaction)
 
-// サーバー起動コード（Cloud Runと開発環境の両方で動作）
+  // サーバー起動コード（Cloud Runと開発環境の両方で動作）
 import { serve } from "@hono/node-server";
 
 const port = Number(process.env.PORT) || 3001;
