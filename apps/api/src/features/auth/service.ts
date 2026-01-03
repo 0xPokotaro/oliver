@@ -117,7 +117,7 @@ export class AuthService {
     const sessionToken = await this.createSessionToken({
       userId: user.id,
       privyUserId: user.privyUserId,
-      walletAddress: user.walletAddress,
+      walletAddress,
     })
 
     // 6. セッションキーの確認と生成
@@ -139,7 +139,7 @@ export class AuthService {
     // 7. レスポンス形式を決定
     const response: LoginResponse = {
       userId: user.id,
-      walletAddress: user.walletAddress,
+      walletAddress,
     }
 
     return {

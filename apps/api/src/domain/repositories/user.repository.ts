@@ -5,15 +5,24 @@ export class UserRepository {
   constructor(private readonly prisma: PrismaClient) {}
 
   async upsert(privyUserId: string, walletAddress: string): Promise<UserEntity> {
+    // まずWalletを取得または作成
+    const wallet = await this.prisma.wallet.upsert({
+      where: { address: walletAddress },
+      update: {},
+      create: {
+        address: walletAddress,
+      },
+    })
+
     const user = await this.prisma.user.upsert({
       where: { privyUserId },
       update: {
-        walletAddress,
+        walletId: wallet.id,
         updatedAt: new Date(),
       },
       create: {
         privyUserId,
-        walletAddress,
+        walletId: wallet.id,
       },
     })
 

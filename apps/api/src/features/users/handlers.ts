@@ -1,7 +1,7 @@
 import { Context } from 'hono'
 import type { Env } from '@oliver/api/infrastructure/types'
 import { createSmartAccount, transcribeAudio } from '@oliver/api/features/users/service'
-import { createUserRepository, createSessionKeyRepository } from '@oliver/api/infrastructure/dependencies'
+import { createUserRepository, createSessionKeyRepository, getPrismaClient } from '@oliver/api/infrastructure/dependencies'
 import { generateWalletKeyPair } from '@oliver/api/shared/utils/wallet'
 import { encrypt } from '@oliver/api/shared/utils/encryption'
 import { createSmartAccountRequestSchema } from '@oliver/api/features/users/schemas'
@@ -19,10 +19,20 @@ export const getProfilHandlere = async (c: Context<Env>) => {
   // ミドルウェアで取得済みのユーザー情報を取得
   const user = c.get('user')
 
+  // Walletを取得
+  let walletAddress: string | null = null
+  if (user.walletId) {
+    const prisma = getPrismaClient()
+    const wallet = await prisma.wallet.findUnique({
+      where: { id: user.walletId },
+    })
+    walletAddress = wallet?.address ?? null
+  }
+
   return c.json({
     id: user.id,
     privyUserId: user.privyUserId,
-    walletAddress: user.walletAddress,
+    walletAddress,
     smartAccountAddress: user.smartAccountAddress,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
@@ -160,8 +170,20 @@ export const createSmartAccountHandler = async (c: Context<Env>) => {
   const body = await c.req.valid('json') as z.infer<typeof createSmartAccountRequestSchema>
   console.log("body: ", body)
 
+  // Walletを取得
+  if (!user.walletId) {
+    return c.json({ error: 'Wallet not found' }, 400)
+  }
+  const prisma = getPrismaClient()
+  const wallet = await prisma.wallet.findUnique({
+    where: { id: user.walletId },
+  })
+  if (!wallet) {
+    return c.json({ error: 'Wallet not found' }, 400)
+  }
+
   const walletClient = createWalletClient({
-    account: user.walletAddress as `0x${string}`,
+    account: wallet.address as `0x${string}`,
     chain: avalanche,
     transport: http(),
   })
@@ -193,7 +215,7 @@ export const createSmartAccountHandler = async (c: Context<Env>) => {
         chain: avalanche,
         transport: http(), // 必要ならRPC指定
         version: getMEEVersion(MEEVersion.V2_2_1),
-        accountAddress: user.walletAddress as `0x${string}`,
+        accountAddress: wallet.address as `0x${string}`,
       },
     ],
     signer: walletClient,
