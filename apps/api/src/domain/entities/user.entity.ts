@@ -4,7 +4,7 @@ export class UserEntity {
   constructor(
     public readonly id: string,
     public readonly privyUserId: string,
-    public readonly walletAddress: string,
+    public readonly walletId: string | null,
     public readonly smartAccountAddress: string | null,
     public readonly createdAt: Date,
     public readonly updatedAt: Date
@@ -14,7 +14,7 @@ export class UserEntity {
     return new UserEntity(
       prismaUser.id,
       prismaUser.privyUserId,
-      prismaUser.walletAddress,
+      prismaUser.walletId,
       prismaUser.smartAccountAddress,
       prismaUser.createdAt,
       prismaUser.updatedAt
@@ -25,7 +25,7 @@ export class UserEntity {
     return {
       id: this.id,
       privyUserId: this.privyUserId,
-      walletAddress: this.walletAddress,
+      walletId: this.walletId,
       smartAccountAddress: this.smartAccountAddress,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
