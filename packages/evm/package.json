@@ -7,7 +7,7 @@
     "compile": "hardhat compile",
     "test": "hardhat test",
     "node": "hardhat node",
-    "deploy:erc20": "hardhat ignition deploy ignition/modules/MockERC20.ts --network avalanche",
+    "deploy:erc20": "hardhat ignition deploy ignition/modules/MockERC20.ts --network baseSepolia",
     "clean": "hardhat clean"
   },
   "devDependencies": {
