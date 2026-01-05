@@ -29,7 +29,8 @@ export const createTransaction = async (
   const repositories = createRepositories();
 
   // 1. Transactionを検索または作成
-  const transaction = await repositories.transaction.findOrCreateTransaction(hash);
+  const transaction =
+    await repositories.transaction.findOrCreateTransaction(hash);
 
   // 2. UserTransactionを作成
   const userTransaction = await repositories.transaction.createUserTransaction({
@@ -39,8 +40,14 @@ export const createTransaction = async (
   });
 
   // 3. SESSION_KEY_GRANT_PERMISSIONSの場合、sessionDetailsを保存
-  if (type === TransactionType.SESSION_KEY_GRANT_PERMISSIONS && sessionDetails) {
-    await repositories.transaction.upsertSessionDetails(userId, sessionDetails as any);
+  if (
+    type === TransactionType.SESSION_KEY_GRANT_PERMISSIONS &&
+    sessionDetails
+  ) {
+    await repositories.transaction.upsertSessionDetails(
+      userId,
+      sessionDetails as any,
+    );
   }
 
   // 4. walletAddressが提供されている場合、Walletを登録
@@ -84,14 +91,17 @@ export const getSessionDetails = async (
 ): Promise<{ sessionDetails: unknown }> => {
   const repositories = createRepositories();
 
-  const sessionDetails = await repositories.transaction.getSessionDetailsByUserId(userId);
+  const sessionDetails =
+    await repositories.transaction.getSessionDetailsByUserId(userId);
 
   if (!sessionDetails) {
-    throw new NotFoundError("Session details not found", "SESSION_DETAILS_NOT_FOUND");
+    throw new NotFoundError(
+      "Session details not found",
+      "SESSION_DETAILS_NOT_FOUND",
+    );
   }
 
   return {
     sessionDetails: sessionDetails.sessionDetails,
   };
 };
-

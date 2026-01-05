@@ -1,4 +1,10 @@
-import { PrismaClient, type Transaction, type UserTransaction, type SessionDetails, Prisma } from "@oliver/database/generated/client";
+import {
+  PrismaClient,
+  type Transaction,
+  type UserTransaction,
+  type SessionDetails,
+  Prisma,
+} from "@oliver/database/generated/client";
 
 export class TransactionRepository {
   constructor(private readonly prisma: PrismaClient) {}
@@ -73,10 +79,11 @@ export class TransactionRepository {
   /**
    * ユーザーIDでSessionDetailsを取得
    */
-  async getSessionDetailsByUserId(userId: string): Promise<SessionDetails | null> {
+  async getSessionDetailsByUserId(
+    userId: string,
+  ): Promise<SessionDetails | null> {
     return await this.prisma.sessionDetails.findUnique({
       where: { userId },
     });
   }
 }
-

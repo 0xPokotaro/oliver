@@ -32,6 +32,6 @@ const app = new Hono<Env>()
     );
 
     return c.json(result);
-  })
+  });
 
 export default app;

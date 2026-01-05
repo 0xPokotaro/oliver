@@ -11,4 +11,3 @@ export const getSessionSignerPrivateKey = (): `0x${string}` => {
 
   return key as `0x${string}`;
 };
-

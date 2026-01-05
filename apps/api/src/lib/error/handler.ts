@@ -46,4 +46,3 @@ export function createErrorHandler(): ErrorHandler<Env> {
     );
   };
 }
-

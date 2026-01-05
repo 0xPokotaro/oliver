@@ -1,6 +1,9 @@
 import { Hono } from "hono";
 import * as userService from "../services/user.service";
-import { userListResponse, userProfileResponse } from "@oliver/shared/schemas/api";
+import {
+  userListResponse,
+  userProfileResponse,
+} from "@oliver/shared/schemas/api";
 import { z } from "zod";
 import type { Env } from "../types";
 

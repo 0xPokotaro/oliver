@@ -17,7 +17,10 @@ export class AppError extends Error {
  * 404 Not Found エラー
  */
 export class NotFoundError extends AppError {
-  constructor(message: string = "Resource not found", code: string = "NOT_FOUND") {
+  constructor(
+    message: string = "Resource not found",
+    code: string = "NOT_FOUND",
+  ) {
     super(404, code, message);
   }
 }
@@ -44,8 +47,10 @@ export class BadRequestError extends AppError {
  * 500 Internal Server Error
  */
 export class InternalServerError extends AppError {
-  constructor(message: string = "Internal server error", code: string = "INTERNAL_ERROR") {
+  constructor(
+    message: string = "Internal server error",
+    code: string = "INTERNAL_ERROR",
+  ) {
     super(500, code, message);
   }
 }
-

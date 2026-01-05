@@ -1,4 +1,7 @@
-import { PrismaClient, type SessionKey } from "@oliver/database/generated/client";
+import {
+  PrismaClient,
+  type SessionKey,
+} from "@oliver/database/generated/client";
 
 export class SessionKeyRepository {
   constructor(private readonly prisma: PrismaClient) {}

@@ -1,4 +1,4 @@
-import crypto from 'node:crypto'
+import crypto from "node:crypto";
 
 /**
  * 暗号化ユーティリティ
@@ -11,14 +11,14 @@ import crypto from 'node:crypto'
  * - 初期化: アプリケーション起動時に一度だけgenerateSecretKey()を呼び出す
  */
 
-const ALGORITHM = 'aes-256-cbc'
-const KEY_LENGTH = 32 // 256 bits
-const IV_LENGTH = 16  // 128 bits
+const ALGORITHM = "aes-256-cbc";
+const KEY_LENGTH = 32; // 256 bits
+const IV_LENGTH = 16; // 128 bits
 
 /**
  * 暗号化に使用する秘密鍵（アプリケーションのライフサイクル中は同一の鍵を使用）
  */
-let secretKey: Buffer | null = null
+let secretKey: Buffer | null = null;
 
 /**
  * 暗号化用の秘密鍵を生成する
@@ -31,9 +31,9 @@ let secretKey: Buffer | null = null
  */
 export function generateSecretKey(): Buffer {
   if (!secretKey) {
-    secretKey = crypto.randomBytes(KEY_LENGTH)
+    secretKey = crypto.randomBytes(KEY_LENGTH);
   }
-  return secretKey
+  return secretKey;
 }
 
 /**
@@ -47,9 +47,9 @@ export function generateSecretKey(): Buffer {
  */
 export function setSecretKey(key: Buffer): void {
   if (key.length !== KEY_LENGTH) {
-    throw new Error(`Secret key must be ${KEY_LENGTH} bytes`)
+    throw new Error(`Secret key must be ${KEY_LENGTH} bytes`);
   }
-  secretKey = key
+  secretKey = key;
 }
 
 /**
@@ -61,20 +61,22 @@ export function setSecretKey(key: Buffer): void {
  */
 export function encrypt(text: string): { iv: string; content: string } {
   if (!secretKey) {
-    throw new Error('Secret key not initialized. Call generateSecretKey() first.')
+    throw new Error(
+      "Secret key not initialized. Call generateSecretKey() first.",
+    );
   }
 
   // セキュリティのため、暗号化ごとにランダムなIV（初期化ベクトル）を生成
-  const iv = crypto.randomBytes(IV_LENGTH)
-  const cipher = crypto.createCipheriv(ALGORITHM, secretKey, iv)
+  const iv = crypto.randomBytes(IV_LENGTH);
+  const cipher = crypto.createCipheriv(ALGORITHM, secretKey, iv);
 
-  let encrypted = cipher.update(text)
-  encrypted = Buffer.concat([encrypted, cipher.final()])
+  let encrypted = cipher.update(text);
+  encrypted = Buffer.concat([encrypted, cipher.final()]);
 
   return {
-    iv: iv.toString('hex'),
-    content: encrypted.toString('hex'),
-  }
+    iv: iv.toString("hex"),
+    content: encrypted.toString("hex"),
+  };
 }
 
 /**
@@ -87,16 +89,18 @@ export function encrypt(text: string): { iv: string; content: string } {
  */
 export function decrypt(ivHex: string, contentHex: string): string {
   if (!secretKey) {
-    throw new Error('Secret key not initialized. Call generateSecretKey() first.')
+    throw new Error(
+      "Secret key not initialized. Call generateSecretKey() first.",
+    );
   }
 
-  const iv = Buffer.from(ivHex, 'hex')
-  const encryptedText = Buffer.from(contentHex, 'hex')
+  const iv = Buffer.from(ivHex, "hex");
+  const encryptedText = Buffer.from(contentHex, "hex");
 
-  const decipher = crypto.createDecipheriv(ALGORITHM, secretKey, iv)
+  const decipher = crypto.createDecipheriv(ALGORITHM, secretKey, iv);
 
-  let decrypted = decipher.update(encryptedText)
-  decrypted = Buffer.concat([decrypted, decipher.final()])
+  let decrypted = decipher.update(encryptedText);
+  decrypted = Buffer.concat([decrypted, decipher.final()]);
 
-  return decrypted.toString()
+  return decrypted.toString();
 }

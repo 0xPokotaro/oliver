@@ -1,7 +1,7 @@
 import { getPrismaClient } from "../lib/prisma";
 import { createRepositories } from "../repositories";
-import { generateWalletKeyPair } from "../lib/wallet";
-import { encrypt } from "../lib/encryption";
+import { generateWalletKeyPair } from "../utils/wallet";
+import { encrypt } from "../utils/encryption";
 import { NotFoundError } from "../lib/error/classes";
 import {
   toSmartSessionsModule,
@@ -14,7 +14,7 @@ import {
 import { privateKeyToAccount } from "viem/accounts";
 import { avalanche } from "viem/chains";
 import { http, createWalletClient } from "viem";
-import { getSessionSignerPrivateKey } from "../lib/config";
+import { getSessionSignerPrivateKey } from "../utils/config";
 
 export interface CreateSmartAccountResponse {
   id: string;
@@ -79,20 +79,22 @@ export const getAllUsers = async () => {
   const sessionSigner = privateKeyToAccount(getSessionSignerPrivateKey());
   const smartAccountAddress = sessionSigner.address;
 
-  return users.map((user: {
-    id: string;
-    privyUserId: string;
-    wallet: { address: string | null } | null;
-    createdAt: Date;
-    updatedAt: Date;
-  }) => ({
-    id: user.id,
-    privyUserId: user.privyUserId,
-    walletAddress: user.wallet?.address ?? "",
-    smartAccountAddress,
-    createdAt: user.createdAt,
-    updatedAt: user.updatedAt,
-  }));
+  return users.map(
+    (user: {
+      id: string;
+      privyUserId: string;
+      wallet: { address: string | null } | null;
+      createdAt: Date;
+      updatedAt: Date;
+    }) => ({
+      id: user.id,
+      privyUserId: user.privyUserId,
+      walletAddress: user.wallet?.address ?? "",
+      smartAccountAddress,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    }),
+  );
 };
 
 export const getUserProfile = async (userId: string) => {

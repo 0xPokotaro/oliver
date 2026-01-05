@@ -1,15 +1,19 @@
-import { generatePrivateKey, privateKeyToAccount, type PrivateKeyAccount } from 'viem/accounts'
+import {
+  generatePrivateKey,
+  privateKeyToAccount,
+  type PrivateKeyAccount,
+} from "viem/accounts";
 
 /**
  * ウォレットキーペアの情報
  */
 export interface WalletKeyPair {
   /** 秘密鍵（hex形式） */
-  privateKey: string
+  privateKey: string;
   /** viemのアカウントオブジェクト */
-  account: PrivateKeyAccount
+  account: PrivateKeyAccount;
   /** ウォレットアドレス */
-  address: string
+  address: string;
 }
 
 /**
@@ -31,12 +35,12 @@ export interface WalletKeyPair {
  * ```
  */
 export function generateWalletKeyPair(): WalletKeyPair {
-  const privateKey = generatePrivateKey()
-  const account = privateKeyToAccount(privateKey)
+  const privateKey = generatePrivateKey();
+  const account = privateKeyToAccount(privateKey);
 
   return {
     privateKey,
     account,
     address: account.address,
-  }
+  };
 }
