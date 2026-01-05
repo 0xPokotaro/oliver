@@ -3,28 +3,33 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "exports": {
-    ".": "./src/index.ts",
-    "./*": "./src/*"
-  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc --noEmit",
+    "start": "tsx src/index.ts",
+    "test": "vitest --run",
+    "lint": "biome check",
+    "format": "biome format --write"
   },
   "dependencies": {
     "@biconomy/abstractjs": "^1.1.19",
-    "@hono/zod-validator": "^0.4.1",
+    "@hono/node-server": "^1.13.0",
+    "@hono/standard-validator": "^0.2.1",
     "@oliver/database": "workspace:*",
+    "@oliver/shared": "workspace:*",
     "@prisma/adapter-pg": "^7.2.0",
+    "@privy-io/node": "^0.6.2",
+    "@x402/core": "^2.1.0",
+    "dotenv": "^17.2.3",
     "hono": "^4.11.3",
-    "hpke-js": "^1.0.0",
-    "jose": "^5.0.0",
     "openai": "^4.0.0",
+    "pg": "^8.16.3",
     "viem": "^2.43.2",
-    "zod": "^3.24.1"
+    "zod": "^4.3.4"
   },
-  "license": "MIT",
-  "packageManager": "pnpm@10.7.0",
   "devDependencies": {
-    "@types/node": "^25.0.3"
+    "@types/pg": "^8.16.0",
+    "tsx": "^4.19.2",
+    "vitest": "^4.0.16"
   }
 }

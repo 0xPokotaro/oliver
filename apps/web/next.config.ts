@@ -26,8 +26,8 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.resolve(__dirname, "../.."),
     resolveAlias: {
-      "@oliver/api": "../api2/src/index.ts",
-      "@oliver/api/*": "../api2/src/*",
+      "@oliver/api": "../api/src/index.ts",
+      "@oliver/api/*": "../api/src/*",
       "@oliver/database": "../packages/database",
       "@oliver/shared": "../packages/shared",
     },

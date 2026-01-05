@@ -9,10 +9,14 @@
     "skipLibCheck": true,
     "noImplicitAny": true,
 
-    "moduleResolution": "Node",
+    "moduleResolution": "bundler",
     "baseUrl": ".",
     "paths": {
-      "@oliver/api/*": ["./src/*"]
-    }
-  }
+      "@oliver/api/*": ["./src/*"],
+      "@oliver/shared/*": ["../../packages/shared/src/*"],
+      "@oliver/database/*": ["../../packages/database/*"]
+    },
+    "resolveJsonModule": true
+  },
+  "exclude": ["src/**/*.test.ts"]
 }

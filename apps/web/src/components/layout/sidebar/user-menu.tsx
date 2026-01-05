@@ -16,7 +16,7 @@ import { ChevronsUpDown, LogOut } from "lucide-react";
 import { formatWalletAddress } from "@/lib/format";
 import { usePrivy } from "@privy-io/react-auth";
 import { Button } from "@/components/ui/button";
-import { useLogin } from "@/hooks/use-login";
+import { useLogin } from "@/hooks/use-auth-login";
 
 export const UserMenu = () => {
   const { ready, user, logout, authenticated } = usePrivy();

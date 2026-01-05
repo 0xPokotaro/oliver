@@ -4,26 +4,28 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useWallets, getAccessToken } from "@privy-io/react-auth";
 import {
   toMultichainNexusAccount,
-  getMEEVersion,
   toSmartSessionsModule,
-  MEEVersion,
   createMeeClient,
   meeSessionActions,
 } from "@biconomy/abstractjs";
-import { http, parseUnits } from "viem";
+import { parseUnits } from "viem";
 import { baseSepolia } from "viem/chains";
 import { privateKeyToAccount } from "viem/accounts";
 import { toast } from "sonner";
-import { BASE_SEPOLIA_TOKEN_ADDRESSES, getSessionSignerPrivateKey } from "@/lib/config";
+import { getSessionSignerPrivateKey } from "@/lib/config";
 import { client } from "@/lib/api/client";
 import { TransactionType } from "@oliver/shared/enums";
+import { NEXUS_ACCOUNT_CONFIG } from "@oliver/shared/configs/smart-account";
+import { CONTRACT_ADDRESSES } from "@oliver/shared/configs/blockchain";
 
-const TRIGGER_AMOUNT = "50";
+const TRIGGER_AMOUNT = "5";
 const TOKEN_DECIMALS = 6;
 const CHAIN_ID = baseSepolia.id;
-const TOKEN_ADDRESS = BASE_SEPOLIA_TOKEN_ADDRESSES.USDC;
+const TOKEN_ADDRESS = CONTRACT_ADDRESSES.BASE_SEPOLIA.USDC;
 
-const registerSessionKey = async (wallets: ReturnType<typeof useWallets>["wallets"]) => {
+const registerSessionKey = async (
+  wallets: ReturnType<typeof useWallets>["wallets"],
+) => {
   const wallet = wallets.find((wallet) => wallet.address);
 
   if (!wallet) {
@@ -31,24 +33,18 @@ const registerSessionKey = async (wallets: ReturnType<typeof useWallets>["wallet
   }
 
   const sessionSigner = privateKeyToAccount(getSessionSignerPrivateKey());
-  const smartSessionsValidator = toSmartSessionsModule({ signer: sessionSigner });
+  const ssValidator = toSmartSessionsModule({ signer: sessionSigner });
 
   const orchestrator = await toMultichainNexusAccount({
     signer: await wallet.getEthereumProvider(),
-    chainConfigurations: [
-      {
-        chain: baseSepolia,
-        transport: http(),
-        version: getMEEVersion(MEEVersion.V2_2_1),
-      },
-    ],
+    chainConfigurations: [NEXUS_ACCOUNT_CONFIG.BASE_SEPOLIA],
   });
 
   const meeClient = await createMeeClient({ account: orchestrator });
   const sessionsMeeClient = meeClient.extend(meeSessionActions);
 
   const payload = await sessionsMeeClient.prepareForPermissions({
-    smartSessionsValidator,
+    smartSessionsValidator: ssValidator,
     feeToken: {
       address: TOKEN_ADDRESS,
       chainId: CHAIN_ID,
@@ -69,11 +65,15 @@ const registerSessionKey = async (wallets: ReturnType<typeof useWallets>["wallet
       },
       json: {
         hash: payload.hash,
-        type: TransactionType.SESSION_KEY_REGISTER,
+        type: TransactionType.SESSION_KEY_ACTIVATE,
+        walletAddress: wallet.address,
+        aiWalletAddress: orchestrator.addressOn(baseSepolia.id)!,
       },
-    })
+    });
 
-    const receipt = await meeClient.waitForSupertransactionReceipt({ hash: payload.hash });
+    const receipt = await meeClient.waitForSupertransactionReceipt({
+      hash: payload.hash,
+    });
     console.log("response: ", receipt);
   }
 
@@ -97,7 +97,7 @@ export const useRegisterSessionKey = () => {
       queryClient.invalidateQueries({ queryKey: ["user-profile"] });
       queryClient.invalidateQueries({ queryKey: ["account"] });
       queryClient.invalidateQueries({ queryKey: ["transaction-list"] });
-      toast.success("Session Key registration completed");
+      toast.success("AI Account has been activated");
     },
     onError: (error) => {
       toast.error("Session Key registration failed", {
@@ -115,4 +115,3 @@ export const useRegisterSessionKey = () => {
     reset: mutation.reset,
   };
 };
-

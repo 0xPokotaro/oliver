@@ -1,20 +1,71 @@
-import { Hono } from 'hono'
-import { authRoutes } from '@oliver/api/features/auth/routes'
-import { userRoutes } from '@oliver/api/features/users/routes'
-import { errorHandler } from '@oliver/api/shared/middleware/errorHandler'
-import { injectDependencies } from '@oliver/api/infrastructure/middleware'
-import { initializeEncryption } from '@oliver/api/infrastructure/dependencies'
-import type { Env } from '@oliver/api/infrastructure/types'
+import "dotenv/config";
+import { cors } from "hono/cors";
+import { createFactory } from "hono/factory";
+import { logger } from "hono/logger";
+import auth from "./routes/auth";
+import users from "./routes/users";
+import payment from "./routes/payment";
+import product from "./routes/product";
+import order from "./routes/order";
+import transaction from "./routes/transaction";
+import { paymentMiddleware } from "./middlewares/payment";
+import { requireAuthMiddleware } from "./middlewares/auth";
+import { generateSecretKey } from "./lib/encryption";
+import type { Env } from "./types";
 
-// アプリケーション起動時に暗号化機能を初期化
-initializeEncryption()
+// 暗号化機能を初期化
+generateSecretKey();
 
-const app = new Hono<Env>()
-  .basePath('/api')
-  .use('*', injectDependencies)
-  .route('/auth', authRoutes)
-  .route('/users', userRoutes)
-  .onError(errorHandler)
+// Create factory
+const f = createFactory<Env>();
+const requireAuth = f.createMiddleware(requireAuthMiddleware);
+const paymentMw = f.createMiddleware(paymentMiddleware);
 
-export type AppType = typeof app;
+// Create app
+const app = f
+  .createApp()
+  .basePath("/api")
+  .use(logger())
+  .use("*", cors())
+  .use("/order/confirm", paymentMw)
+  .route("/products", product)
+  .use("*", requireAuth)
+  .route("/auth", auth)
+  .route("/users", users)
+  .route("/payments", payment)
+  .route("/orders", order)
+  .route("/transactions", transaction)
+
+  // サーバー起動コード（Cloud Runと開発環境の両方で動作）
+import { serve } from "@hono/node-server";
+
+const port = Number(process.env.PORT) || 3001;
+
+try {
+  serve(
+    {
+      fetch: app.fetch,
+      port,
+      hostname: "0.0.0.0",
+    },
+    (info) => {
+      console.log(`Server is running on http://${info.address}:${info.port}`);
+    },
+  );
+} catch (error) {
+  console.error("Failed to start server:", error);
+  process.exit(1);
+}
+
+process.on("uncaughtException", (error) => {
+  console.error("Uncaught Exception:", error);
+  process.exit(1);
+});
+
+process.on("unhandledRejection", (reason) => {
+  console.error("Unhandled Rejection:", reason);
+  process.exit(1);
+});
+
 export default app;
+export type AppType = typeof app;

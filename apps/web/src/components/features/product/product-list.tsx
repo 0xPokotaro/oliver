@@ -1,4 +1,4 @@
-import { useProductList } from "@/hooks/use-product-list";
+import { useProductList } from "@/hooks/use-product-list-fetch";
 import { Spinner } from "@/components/ui/spinner";
 import { ProductCard } from "./product-card";
 

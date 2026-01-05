@@ -5,7 +5,7 @@ import { Collapsible as CollapsiblePrimitive } from "radix-ui";
 import { AnimatePresence, motion, type HTMLMotionProps } from "motion/react";
 
 import { getStrictContext } from "@/lib/get-strict-context";
-import { useControlledState } from "@/hooks/use-controlled-state";
+import { useControlledState } from "@/hooks/use-state-controlled";
 
 type CollapsibleContextType = {
   isOpen: boolean;

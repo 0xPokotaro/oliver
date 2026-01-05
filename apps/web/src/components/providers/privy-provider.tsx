@@ -6,6 +6,7 @@ import { baseSepolia } from "viem/chains";
 export const PrivyProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <ReactPrivyProvider
+      key="privy-provider"
       appId="cmjs6bu1o00nnl10deie6wnie"
       clientId="client-WY6UH1jTQC1e8QEkoKnm9EQR7dMsWGHuEbnHDrDJBs9yB"
       config={{

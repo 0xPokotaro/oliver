@@ -39,7 +39,8 @@ import {
   Bot,
   ChevronRight,
   LayoutDashboard,
-  Settings2,
+  User,
+  Wallet,
 } from "lucide-react";
 import { APP_DATA } from "@/lib/config/constants";
 import { UserMenu } from "./user-menu";
@@ -59,9 +60,33 @@ const DATA = {
       isActive: false,
     },
     {
+      title: "Account",
+      icon: User,
+      items: [
+        {
+          title: "General",
+          url: "/account/general",
+        },
+        {
+          title: "AI Agent",
+          url: "/account/ai-agent",
+        },
+        {
+          title: "History",
+          url: "/account/history",
+        },
+      ],
+    },
+    {
       title: "AI Agent",
       url: "/ai-agent",
       icon: Bot,
+      isActive: false,
+    },
+    {
+      title: "Faucet",
+      url: "/faucet",
+      icon: Wallet,
       isActive: false,
     },
     {
@@ -69,17 +94,6 @@ const DATA = {
       url: "https://oliver-docs-lake.vercel.app/",
       icon: BookOpen,
       isActive: false,
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-      ],
     },
   ],
 };
