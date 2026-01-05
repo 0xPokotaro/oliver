@@ -40,12 +40,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "devDependencies": {
-    "typescript": "^5.9.3"
-  },
   "dependencies": {
+    "@biconomy/abstractjs": "^1.1.19",
     "@x402/core": "^2.1.0",
     "uuid": "^13.0.0",
+    "viem": "^2.43.2",
     "zod": "^4.3.4"
   }
 }

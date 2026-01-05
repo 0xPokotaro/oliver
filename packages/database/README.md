@@ -184,7 +184,7 @@ supabase db dump -f backup_$(date +%Y%m%d_%H%M%S).sql
 このパッケージからPrismaClientをインポートして、各アプリケーションで初期化します。
 
 ```typescript
-// apps/api2/src/lib/prisma.ts など
+// apps/api/src/lib/prisma.ts など
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@oliver/database";
 

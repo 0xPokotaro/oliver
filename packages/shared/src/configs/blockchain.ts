@@ -1,0 +1,7 @@
+export const CONTRACT_ADDRESSES = {
+  BASE_SEPOLIA: {
+    USDC: "0x036CbD53842c5426634e7929541eC2318f3dCF7e" as `0x${string}`,
+    JPYC: "0x47f47FfabA94759Ef08824B74beeE4dF34DF2415" as `0x${string}`,
+    WETH: "0x4200000000000000000000000000000000000006" as `0x${string}`,
+  }
+} as const;

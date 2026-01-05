@@ -97,6 +97,6 @@ terraform destroy -var-file=./environments/dev.tfvars
 
 ## アーキテクチャ
 
-- **Cloud Run**: `apps/api2`をデプロイ（複数のAPIエンドポイントを1つのサービスで処理）
+- **Cloud Run**: `apps/api`をデプロイ（複数のAPIエンドポイントを1つのサービスで処理）
 - **Supabase**: データベース（Terraform外で管理）
 - **GCS**: Terraform state管理

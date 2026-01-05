@@ -9,7 +9,7 @@
     "terraform:destroy": "cd src && terraform destroy",
     "terraform:fmt": "cd src && terraform fmt",
     "terraform:validate": "cd src && terraform validate",
-    "build:docker": "cd ../../apps/api2 && docker build -t gcr.io/${GCP_PROJECT_ID:-your-project-id}/oliver-api-dev:latest . && docker push gcr.io/${GCP_PROJECT_ID:-your-project-id}/oliver-api-dev:latest",
+    "build:docker": "cd ../../apps/api && docker build -t gcr.io/${GCP_PROJECT_ID:-your-project-id}/oliver-api-dev:latest . && docker push gcr.io/${GCP_PROJECT_ID:-your-project-id}/oliver-api-dev:latest",
     "deploy": "npm run build:docker && cd src && terraform apply -var-file=./environments/dev.tfvars",
     "plan": "npm run build:docker && cd src && terraform plan -var-file=./environments/dev.tfvars"
   }

@@ -12,7 +12,7 @@ JWT_SECRET="your-jwt-secret-key"
 PRIVY_APP_ID="your-privy-app-id"
 PRIVY_APP_SECRET="your-privy-app-secret"
 
-# API2用の環境変数
+# API用の環境変数
 OPENAI_API_KEY="your_openai_api_key_here"
 MERCHANT_ADDRESS="0x0000000000000000000000000000000000000000"
 FACILITATOR_BASE_URL="http://localhost:3000"

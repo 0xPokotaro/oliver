@@ -12,14 +12,17 @@
     "db:reset": "pnpm --filter @oliver/database prisma:reset",
     "db:seed": "pnpm --filter @oliver/database prisma:seed",
     "web:dev": "pnpm --filter web dev",
-    "api2:dev": "pnpm --filter api2 dev",
-    "all:dev": "concurrently \"pnpm web:dev\" \"pnpm docs:start\" \"pnpm api2:dev\"",
+    "api:dev": "pnpm --filter api dev",
+    "all:dev": "concurrently \"pnpm web:dev\" \"pnpm api:dev\"",
     "docs:start": "pnpm --filter docs start",
     "evm:node": "pnpm --filter evm node",
     "evm:deploy:erc20": "pnpm --filter evm deploy:erc20"
   },
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "@biomejs/biome": "2.2.0",
+    "@types/node": "^25.0.3",
+    "concurrently": "^9.2.1",
+    "typescript": "^5.9.3"
   },
   "packageManager": "pnpm@10.7.0+sha512.6b865ad4b62a1d9842b61d674a393903b871d9244954f652b8842c2b553c72176b278f64c463e52d40fff8aba385c235c8c9ecf5cc7de4fd78b8bb6d49633ab6"
 }

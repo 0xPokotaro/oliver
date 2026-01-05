@@ -13,6 +13,8 @@ async function main() {
   console.log("🌱 Seeding database...");
 
   // 既存のデータをクリア（外部キー制約のため順序に注意）
+  await prisma.userTransaction.deleteMany();
+  await prisma.transaction.deleteMany();
   await prisma.paymentHistory.deleteMany();
   await prisma.product.deleteMany();
   await prisma.merchant.deleteMany();
@@ -61,7 +63,6 @@ async function main() {
     data: {
       privyUserId: "privy_user_001",
       walletId: wallet1.id,
-      smartAccountAddress: "0x1111111111111111111111111111111111111111",
     },
   });
 
@@ -69,7 +70,6 @@ async function main() {
     data: {
       privyUserId: "privy_user_002",
       walletId: wallet2.id,
-      smartAccountAddress: "0x2222222222222222222222222222222222222222",
     },
   });
 
@@ -77,11 +77,17 @@ async function main() {
     data: {
       privyUserId: "privy_user_003",
       walletId: wallet3.id,
-      smartAccountAddress: "0x3333333333333333333333333333333333333333",
     },
   });
 
-  console.log(`✅ Created 3 users`);
+  const user4 = await prisma.user.create({
+    data: {
+      privyUserId: "did:privy:cmju07bqh03xti60caidby3zh",
+      walletId: null,
+    },
+  });
+
+  console.log(`✅ Created 4 users`);
 
   // 商品データを作成
   console.log("🛍️ Creating products...");
@@ -197,6 +203,41 @@ async function main() {
   });
 
   console.log(`✅ Created ${products.count} products`);
+
+  // トランザクションデータを作成
+  console.log("💳 Creating transactions...");
+  const transaction1 = await prisma.transaction.create({
+    data: {
+      hash: "0x0a3bfb651bed850cd871ecedc74aadf6dfc1e73d48eed47691f6bfd4cdbe3f88",
+    },
+  });
+
+  const transaction2 = await prisma.transaction.create({
+    data: {
+      hash: "0x4653cd3ae3105d47b58bcca8aa4d1eabca385222a70899cd628f6b2e7c74a979",
+    },
+  });
+
+  console.log(`✅ Created 2 transactions`);
+
+  // UserTransactionデータを作成
+  console.log("🔗 Creating user transactions...");
+  await prisma.userTransaction.createMany({
+    data: [
+      {
+        userId: user4.id,
+        transactionId: transaction1.id,
+        type: "SESSION_KEY_ACTIVATE",
+      },
+      {
+        userId: user4.id,
+        transactionId: transaction2.id,
+        type: "SESSION_KEY_ACTIVATE",
+      },
+    ],
+  });
+
+  console.log(`✅ Created 2 user transactions`);
   console.log("🎉 Seeding completed!");
 }
 

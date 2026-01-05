@@ -2,7 +2,6 @@ packages:
   - apps/docs
   - apps/web
   - apps/api
-  - apps/api2
   - packages/database
   - packages/infra
   - packages/evm
