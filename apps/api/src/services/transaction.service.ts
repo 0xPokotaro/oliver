@@ -1,5 +1,6 @@
 import { createRepositories } from "../repositories";
 import { TransactionType } from "@oliver/shared/enums";
+import { NotFoundError } from "../lib/error/classes";
 
 export interface CreateTransactionResponse {
   id: string;
@@ -80,13 +81,13 @@ export const getUserTransactions = async (
 
 export const getSessionDetails = async (
   userId: string,
-): Promise<{ sessionDetails: unknown } | null> => {
+): Promise<{ sessionDetails: unknown }> => {
   const repositories = createRepositories();
 
   const sessionDetails = await repositories.transaction.getSessionDetailsByUserId(userId);
 
   if (!sessionDetails) {
-    return null;
+    throw new NotFoundError("Session details not found", "SESSION_DETAILS_NOT_FOUND");
   }
 
   return {

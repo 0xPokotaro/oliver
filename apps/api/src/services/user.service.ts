@@ -2,6 +2,7 @@ import { getPrismaClient } from "../lib/prisma";
 import { createRepositories } from "../repositories";
 import { generateWalletKeyPair } from "../lib/wallet";
 import { encrypt } from "../lib/encryption";
+import { NotFoundError } from "../lib/error/classes";
 import {
   toSmartSessionsModule,
   toMultichainNexusAccount,
@@ -112,7 +113,7 @@ export const getUserProfile = async (userId: string) => {
   });
 
   if (!user) {
-    return null;
+    throw new NotFoundError("User profile not found", "USER_NOT_FOUND");
   }
 
   // アプリケーション全体で共有されるSmartAccountアドレスを計算

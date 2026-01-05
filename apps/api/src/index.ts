@@ -4,13 +4,11 @@ import { createFactory } from "hono/factory";
 import { logger } from "hono/logger";
 import auth from "./routes/auth";
 import users from "./routes/users";
-import payment from "./routes/payment";
 import product from "./routes/product";
-import order from "./routes/order";
 import transaction from "./routes/transaction";
-import { paymentMiddleware } from "./middlewares/payment";
 import { requireAuthMiddleware } from "./middlewares/auth";
 import { generateSecretKey } from "./lib/encryption";
+import { createErrorHandler } from "./lib/error/handler";
 import type { Env } from "./types";
 
 // 暗号化機能を初期化
@@ -19,21 +17,18 @@ generateSecretKey();
 // Create factory
 const f = createFactory<Env>();
 const requireAuth = f.createMiddleware(requireAuthMiddleware);
-const paymentMw = f.createMiddleware(paymentMiddleware);
 
 // Create app
 const app = f
   .createApp()
   .basePath("/api")
+  .onError(createErrorHandler())
   .use(logger())
   .use("*", cors())
-  .use("/order/confirm", paymentMw)
   .route("/products", product)
   .use("*", requireAuth)
   .route("/auth", auth)
   .route("/users", users)
-  .route("/payments", payment)
-  .route("/orders", order)
   .route("/transactions", transaction)
 
   // サーバー起動コード（Cloud Runと開発環境の両方で動作）
