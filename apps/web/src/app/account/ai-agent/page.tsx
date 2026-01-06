@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+
 import { useEffect } from "react";
 import { useWallets } from "@privy-io/react-auth";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
