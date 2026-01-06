@@ -2,7 +2,7 @@
 
 export const dynamic = "force-dynamic";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useWallets } from "@privy-io/react-auth";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -14,15 +14,21 @@ import { useExecuteSessionKeyTest } from "@/hooks/smart-account/use-session-key-
 import { useSmartAccountCheck } from "@/hooks/smart-account/use-smart-account-check";
 
 const AccountAIAgentPage = () => {
+  const [isMounted, setIsMounted] = useState(false);
   const { wallets } = useWallets();
   const { data: isSmartAccountChecked, refetch } = useSmartAccountCheck();
 
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
     const wallet = wallets.find((wallet) => wallet.address);
     if (wallet) {
       refetch();
     }
-  }, [wallets, refetch]);
+  }, [isMounted, wallets, refetch]);
 
   const {
     registerSessionKey,
@@ -49,6 +55,11 @@ const AccountAIAgentPage = () => {
   const handleExecuteTest = () => {
     executeSessionKeyTest();
   };
+
+  if (!isMounted) {
+    return null;
+  }
+
   return (
     <div className="space-y-4">
       <h1 className="mb-4 text-2xl font-bold">Account AI Agent</h1>
