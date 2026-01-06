@@ -33,10 +33,10 @@ jobs:
 
       - name: Verify Prisma Client generated
         run: |
-          if [ ! -f "packages/database/src/generated/client/index.d.ts" ]; then
+          if [ ! -f "packages/database/generated/client/index.d.ts" ]; then
             echo "Error: Prisma Client was not generated"
-            echo "Expected file: packages/database/src/generated/client/index.d.ts"
-            ls -la packages/database/src/generated/client/ 2>/dev/null || echo "Directory does not exist"
+            echo "Expected file: packages/database/generated/client/index.d.ts"
+            ls -la packages/database/generated/client/ 2>/dev/null || echo "Directory does not exist"
             exit 1
           fi
           echo "Prisma Client generated successfully"
