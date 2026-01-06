@@ -28,6 +28,9 @@ const app = f
   .onError(createErrorHandler())
   .use(logger())
   .use("*", cors())
+  .get("/health", (c) => {
+    return c.json({ status: "ok" }, 200);
+  })
   .route("/products", product)
   .use("*", requireAuth)
   .use("/payments", requirePayment)
