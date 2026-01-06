@@ -44,14 +44,6 @@ jobs:
       - name: Build API
         run: pnpm --filter api build
 
-      - name: Build web app
-        run: pnpm --filter web build
-        env:
-          DATABASE_URL: postgresql://user:password@localhost:5432/db
-          NEXT_PUBLIC_PRIVY_APP_ID: dummy-app-id-for-build
-          NEXT_PUBLIC_PRIVY_CLIENT_ID: dummy-client-id-for-build
-          NEXT_PUBLIC_BACKEND_API_URL: http://localhost:3001
-
       - name: Build docs
         run: pnpm --filter docs build
         env:
