@@ -15,6 +15,7 @@ import { privateKeyToAccount } from "viem/accounts";
 import { avalanche } from "viem/chains";
 import { http, createWalletClient } from "viem";
 import { getSessionSignerPrivateKey } from "../utils/config";
+import { getBiconomyConfig } from "../config";
 
 export interface CreateSmartAccountResponse {
   id: string;
@@ -229,9 +230,10 @@ export const registerBiconomySessionKey = async (
       signer: walletClient,
     });
 
+    const biconomyConfig = getBiconomyConfig();
     const meeClient = await createMeeClient({
       account: orchestrator,
-      apiKey: process.env.BICONOMY_API_KEY,
+      apiKey: biconomyConfig.apiKey,
     });
 
     const sessionsMeeClient = meeClient.extend(meeSessionActions);

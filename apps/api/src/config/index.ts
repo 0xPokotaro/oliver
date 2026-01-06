@@ -1,8 +1,8 @@
 export interface AppConfig {
   openaiApiKey: string;
-  merchantAddress: string;
-  facilitatorBaseURL: string;
   defaultCurrency: string;
+  paymentServerWalletAddress: string;
+  paymentServerPrivateKey: string;
 }
 
 export interface DatabaseConfig {
@@ -14,6 +14,10 @@ export interface DatabaseConfig {
 export interface PrivyConfig {
   appId: string;
   appSecret: string;
+}
+
+export interface BiconomyConfig {
+  apiKey: string;
 }
 
 export function getDatabaseConfig(): DatabaseConfig {
@@ -44,25 +48,25 @@ export function getAppConfig(): AppConfig {
     throw new Error("OPENAI_API_KEY environment variable is not set");
   }
 
-  const merchantAddress = process.env.MERCHANT_ADDRESS;
-  if (!merchantAddress) {
-    throw new Error("MERCHANT_ADDRESS environment variable is not set");
-  }
-
-  const facilitatorBaseURL = process.env.FACILITATOR_BASE_URL;
-  if (!facilitatorBaseURL) {
-    throw new Error("FACILITATOR_BASE_URL environment variable is not set");
-  }
-
   const defaultCurrency =
     process.env.DEFAULT_CURRENCY ||
     "0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E";
 
+  const paymentServerWalletAddress = process.env.PAYMENT_SERVER_WALLET_ADDRESS;
+  if (!paymentServerWalletAddress) {
+    throw new Error("PAYMENT_SERVER_WALLET_ADDRESS environment variable is not set");
+  }
+
+  const paymentServerPrivateKey = process.env.PAYMENT_SERVER_PRIVATE_KEY;
+  if (!paymentServerPrivateKey) {
+    throw new Error("PAYMENT_SERVER_PRIVATE_KEY environment variable is not set");
+  }
+
   return {
     openaiApiKey,
-    merchantAddress,
-    facilitatorBaseURL,
     defaultCurrency,
+    paymentServerWalletAddress,
+    paymentServerPrivateKey,
   };
 }
 
@@ -80,5 +84,16 @@ export function getPrivyConfig(): PrivyConfig {
   return {
     appId,
     appSecret,
+  };
+}
+
+export function getBiconomyConfig(): BiconomyConfig {
+  const apiKey = process.env.BICONOMY_API_KEY;
+  if (!apiKey) {
+    throw new Error("BICONOMY_API_KEY environment variable is not set");
+  }
+
+  return {
+    apiKey,
   };
 }

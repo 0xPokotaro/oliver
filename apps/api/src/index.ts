@@ -6,7 +6,9 @@ import auth from "./routes/auth";
 import users from "./routes/users";
 import product from "./routes/product";
 import transaction from "./routes/transaction";
+import payment from "./routes/payment";
 import { requireAuthMiddleware } from "./middlewares/auth";
+import { requirePaymentMiddleware } from "./middlewares/payment";
 import { generateSecretKey } from "./utils/encryption";
 import { createErrorHandler } from "./lib/error/handler";
 import type { Env } from "./types";
@@ -17,6 +19,7 @@ generateSecretKey();
 // Create factory
 const f = createFactory<Env>();
 const requireAuth = f.createMiddleware(requireAuthMiddleware);
+const requirePayment = f.createMiddleware(requirePaymentMiddleware);
 
 // Create app
 const app = f
@@ -27,9 +30,11 @@ const app = f
   .use("*", cors())
   .route("/products", product)
   .use("*", requireAuth)
+  .use("/payments", requirePayment)
   .route("/auth", auth)
   .route("/users", users)
-  .route("/transactions", transaction);
+  .route("/transactions", transaction)
+  .route("/payments", payment)
 
 // サーバー起動コード（Cloud Runと開発環境の両方で動作）
 import { serve } from "@hono/node-server";

@@ -11,7 +11,7 @@ COPY packages/shared/package.json ./packages/shared/
 COPY packages/database/package.json ./packages/database/
 
 # Prismaファイルを先にコピー（postinstallスクリプトでprisma generateが実行されるため）
-COPY packages/database/prisma ./packages/database/prisma
+COPY packages/database/src/prisma ./packages/database/src/prisma
 
 # Install pnpm and dependencies
 # --filter @oliver/api... で依存関係も含めてインストール

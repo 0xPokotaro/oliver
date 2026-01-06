@@ -1,58 +1,88 @@
 import type { MiddlewareHandler } from "hono";
-import type { PaymentRequired } from "@x402/core/types";
-import { OrderConfirmRequest, type CartItem } from "@oliver/shared/schemas/api";
-import { PaymentManager } from "@oliver/api/lib/PaymentManager";
-import { createRepositories } from "../repositories";
-import { getAppConfig } from "@oliver/api/config";
+import { PaymentRequestSchema, type PaymentRequest, type PaymentResponse } from "@oliver/shared/schemas/api";
+import { getAppConfig } from "../config";
+import { CONTRACT_ADDRESSES } from "@oliver/shared/configs";
+import { privateKeyToAccount } from "viem/accounts";
+import { getSessionSignerPrivateKey } from "../utils/config";
+import { toMultichainNexusAccount, createMeeClient, meeSessionActions } from "@biconomy/abstractjs";
+import { NEXUS_ACCOUNT_CONFIG } from "@oliver/shared/configs/smart-account";
 
-function createPaymentManager(): PaymentManager {
-  const config = getAppConfig();
-  const repositories = createRepositories();
-
-  return new PaymentManager({
-    baseURL: config.facilitatorBaseURL,
-    merchantAddress: config.merchantAddress,
-    productRepository: repositories.product,
-    defaultCurrency: config.defaultCurrency,
-  });
-}
-
-// 遅延初期化: 実際に使用される時まで初期化を遅延
-let paymentManager: PaymentManager | null = null;
-
-function getPaymentManager(): PaymentManager {
-  if (!paymentManager) {
-    paymentManager = createPaymentManager();
-  }
-  return paymentManager;
-}
-
-export const paymentMiddleware: MiddlewareHandler = async (c, next) => {
+export const requirePaymentMiddleware: MiddlewareHandler = async (c, next) => {
   try {
-    const body = await c.req.json();
-    const validatedBody = OrderConfirmRequest.safeParse(body);
+    const payment = c.req.header("X-PAYMENT")
+    const appConfig = getAppConfig();
 
-    if (!validatedBody.success) {
-      return c.json({ error: "Invalid request body" }, 400);
+    const paymentResponse: PaymentResponse = {
+      error: "X-PAYMENT header is required",
+      accepts: [
+        {
+          scheme: "exact",
+          network: "base-sepolia",
+          maxAmountRequired: "5",
+          resource: "http://localhost:3001/api/payments",
+          description: "Access to paid content",
+          mimeType: "application/json",
+          payTo: appConfig.paymentServerWalletAddress,
+          maxTimeoutSeconds: 86400,
+          asset: CONTRACT_ADDRESSES.BASE_SEPOLIA.JPYC,
+          outputSchema: {
+            input: {
+              type: "http",
+              method: "POST",
+              discoverable: true
+            }
+          },
+          extra: {
+            name: "JPY Coin",
+            version: "1"
+          }
+        }
+      ],
+      x402Version: 1
+    };
+
+    if (!payment) {
+      return c.json(paymentResponse, 402);
     }
 
-    const { items } = validatedBody.data;
-    const paymentSignature = c.req.header("PAYMENT-SIGNATURE");
+    // Base64 decode
+    const decoded = atob(payment);
+    const json = JSON.parse(decoded);
+    const paymentRequest: PaymentRequest = PaymentRequestSchema.parse(json);
+    console.log("json: ", paymentRequest);
 
-    if (!items || items.length === 0) {
-      return c.json({ error: "items are missing" }, 400);
+    const sessionSigner = privateKeyToAccount(getSessionSignerPrivateKey());
+    console.log("sessionSigner: ", sessionSigner);
+
+    const sessionOrchestrator = await toMultichainNexusAccount({
+      chainConfigurations: [
+        {
+          ...NEXUS_ACCOUNT_CONFIG.BASE_SEPOLIA,
+          // TODO: ここにスマートアカウントをセット
+          accountAddress:
+            "0x9088453ab0a94Ba35306bB9Fb7e4Cff0E738EA34" as `0x${string}`,
+        },
+      ],
+      signer: sessionSigner,
+    });
+
+    const sessionMeeClient = await createMeeClient({
+      account: sessionOrchestrator,
+    });
+  
+    const sessionMeeSessionClient = sessionMeeClient.extend(meeSessionActions);
+
+    const user = c.get("user");
+
+    if (!user) {
+      return c.json({ error: "Unauthorized" }, 401);
     }
 
-    if (!paymentSignature) {
-      const manager = getPaymentManager();
-      const result: PaymentRequired = await manager.buildPaymentRequired(items);
-
-      return c.json(result, 402);
-    }
+    console.log("user: ", user);
 
     await next();
   } catch (error) {
-    console.error(error);
-    return c.json({ error: "Internal server error" }, 500);
+    console.error("error: ", error);
+    return c.json({ error: "Unauthorized" }, 401);
   }
-};
+}
