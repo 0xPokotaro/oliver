@@ -8,6 +8,11 @@ export const PrivyProvider = ({ children }: { children: React.ReactNode }) => {
   const appId = getPrivyAppId();
   const clientId = getPrivyClientId();
 
+  // ビルド時や無効な環境変数の場合は、PrivyProviderをスキップ
+  if (!appId || !clientId || appId.startsWith("dummy-") || clientId.startsWith("dummy-")) {
+    return <>{children}</>;
+  }
+
   return (
     <ReactPrivyProvider
       appId={appId}
