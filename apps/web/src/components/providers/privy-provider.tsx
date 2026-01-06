@@ -2,13 +2,16 @@
 
 import { PrivyProvider as ReactPrivyProvider } from "@privy-io/react-auth";
 import { baseSepolia } from "viem/chains";
+import { getPrivyAppId, getPrivyClientId } from "@/lib/config";
 
 export const PrivyProvider = ({ children }: { children: React.ReactNode }) => {
+  const appId = getPrivyAppId();
+  const clientId = getPrivyClientId();
+
   return (
     <ReactPrivyProvider
-      key="privy-provider"
-      appId="cmjs6bu1o00nnl10deie6wnie"
-      clientId="client-WY6UH1jTQC1e8QEkoKnm9EQR7dMsWGHuEbnHDrDJBs9yB"
+      appId={appId}
+      clientId={clientId}
       config={{
         // Create embedded wallets for users who don't have a wallet
         embeddedWallets: {

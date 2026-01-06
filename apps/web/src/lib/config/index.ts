@@ -1,2 +1,2 @@
-export * from "./constants";
+export * from "./app";
 export * from "./smart-account";

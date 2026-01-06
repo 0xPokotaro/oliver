@@ -42,7 +42,7 @@ import {
   User,
   Wallet,
 } from "lucide-react";
-import { APP_DATA } from "@/lib/config/constants";
+import { APP_DATA } from "@/lib/config";
 import { UserMenu } from "./user-menu";
 
 const DATA = {

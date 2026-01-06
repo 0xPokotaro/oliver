@@ -41,7 +41,7 @@ export const getInstruction = (address: `0x${string}`) => {
 };
 
 export const getSessionSignerPrivateKey = (): `0x${string}` => {
-  const key = process.env.NEXT_PUBLIC_PRIVY_PRIVATE_KEY;
+  const key = process.env.NEXT_PUBLIC_OLIVER_PRIVATE_KEY;
 
   if (!key) {
     throw new Error("Session signer private key not configured");

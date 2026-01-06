@@ -20,10 +20,9 @@ import {
 import { getInstruction } from "@/lib/config/smart-account";
 
 const executeSessionKeyTest = async (smartAccountAddress: `0x${string}`) => {
-  const sessionSigner = privateKeyToAccount(getSessionSignerPrivateKey());
-
   console.log("smartAccountAddress: ", smartAccountAddress);
-  console.log("sessionSigner.address: ", sessionSigner.address);
+
+  const sessionSigner = privateKeyToAccount(getSessionSignerPrivateKey());
 
   const sessionOrchestrator = await toMultichainNexusAccount({
     chainConfigurations: [
