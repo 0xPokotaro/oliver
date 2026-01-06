@@ -7,6 +7,7 @@ import users from "./routes/users";
 import product from "./routes/product";
 import transaction from "./routes/transaction";
 import payment from "./routes/payment";
+import health from "./routes/health";
 import { requireAuthMiddleware } from "./middlewares/auth";
 import { requirePaymentMiddleware } from "./middlewares/payment";
 import { generateSecretKey } from "./utils/encryption";
@@ -28,9 +29,7 @@ const app = f
   .onError(createErrorHandler())
   .use(logger())
   .use("*", cors())
-  .get("/health", (c) => {
-    return c.json({ status: "ok" }, 200);
-  })
+  .route("/health", health)
   .route("/products", product)
   .use("*", requireAuth)
   .use("/payments", requirePayment)
