@@ -10,12 +10,8 @@ import payment from "./routes/payment";
 import health from "./routes/health";
 import { requireAuthMiddleware } from "./middlewares/auth";
 import { requirePaymentMiddleware } from "./middlewares/payment";
-import { generateSecretKey } from "./utils/encryption";
 import { createErrorHandler } from "./lib/error/handler";
 import type { Env } from "./types";
-
-// 暗号化機能を初期化
-generateSecretKey();
 
 // Create factory
 const f = createFactory<Env>();

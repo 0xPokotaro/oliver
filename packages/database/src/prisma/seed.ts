@@ -1,8 +1,8 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "../generated/client";
-import type { Prisma } from "../generated/client";
-import { defineAttributes, ProductCategories } from "../src/lib/types/product-attributes";
+import { PrismaClient } from "../../generated/client";
+import type { Prisma } from "../../generated/client";
+import { defineAttributes, ProductCategories } from "../../src/lib/types/product-attributes";
 
 // PrismaClientを初期化
 const connectionString = process.env.DATABASE_URL || "postgresql://postgres:postgres@127.0.0.1:54322/postgres";

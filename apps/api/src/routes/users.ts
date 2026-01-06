@@ -26,12 +26,6 @@ const app = new Hono<Env>()
 
     const result = await userService.createSmartAccount(user.id);
     return c.json(result);
-  })
-  .post("/session-key", async (c) => {
-    const user = c.get("user");
-
-    const result = await userService.registerBiconomySessionKey(user.id);
-    return c.json(result);
   });
 
 export default app;
