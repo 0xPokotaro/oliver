@@ -14,7 +14,7 @@
     "paths": {
       "@oliver/api/*": ["./src/*"],
       "@oliver/shared/*": ["../../packages/shared/src/*"],
-      "@oliver/database/*": ["../../packages/database/*"]
+      "@oliver/database/*": ["../../packages/database/src/*"]
     },
     "resolveJsonModule": true
   },
