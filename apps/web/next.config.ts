@@ -13,6 +13,12 @@ const nextConfig: NextConfig = {
   ],
   images: {
     domains: ["assets.oliver.dev"],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'assets.oliver.dev',
+      },
+    ],
   },
   async redirects() {
     return [
