@@ -27,9 +27,17 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Generate Prisma Client
-        run: pnpm db:gen
+        run: pnpm --filter @oliver/database prisma:gen
         env:
           DATABASE_URL: postgresql://user:password@localhost:5432/db
+
+      - name: Verify Prisma Client generated
+        run: |
+          if [ ! -f "packages/database/generated/client/index.d.ts" ]; then
+            echo "Error: Prisma Client was not generated"
+            exit 1
+          fi
+          echo "Prisma Client generated successfully"
 
       - name: Build API
         run: pnpm --filter api build
