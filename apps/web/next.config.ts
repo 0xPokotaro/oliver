@@ -12,7 +12,6 @@ const nextConfig: NextConfig = {
     "@oliver/api",
   ],
   images: {
-    domains: ["assets.oliver.dev"],
     remotePatterns: [
       {
         protocol: 'https',
